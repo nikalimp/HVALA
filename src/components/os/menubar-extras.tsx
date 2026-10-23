@@ -23,11 +23,11 @@ export function MenubarExtras() {
   }, []);
   return (
     <>
-      <a href="/#app-spotlight" onClick={(e) => { e.preventDefault(); openApp("spotlight"); }} aria-label="Поиск по сайту (⌘K)" title="Поиск ⌘K" className="inline-flex size-9 items-center justify-center rounded-md hover:bg-accent">
-        <Search className="size-4" aria-hidden />
-      </a>
       <a href="/#app-wifi" onClick={(e) => { e.preventDefault(); openApp("wifi"); }} aria-label="Демо: Wi-Fi гостя" title="Демо Wi-Fi гостя" className="inline-flex size-9 items-center justify-center rounded-md hover:bg-accent">
         <Wifi className="size-4" aria-hidden />
+      </a>
+      <a href="/#app-spotlight" onClick={(e) => { e.preventDefault(); openApp("spotlight"); }} aria-label="Поиск по сайту (⌘K)" title="Поиск ⌘K" className="inline-flex size-9 items-center justify-center rounded-md hover:bg-accent">
+        <Search className="size-4" aria-hidden />
       </a>
       <span className="hidden min-w-[3rem] px-1.5 text-right text-[13px] font-medium tabular-nums text-foreground/80 lg:inline" suppressHydrationWarning>
         {now ? now.toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" }) : ""}

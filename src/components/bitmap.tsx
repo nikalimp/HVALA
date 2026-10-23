@@ -17,6 +17,7 @@ export function Bitmap({
   density = 0.55,
   speed = 1,
   variant = "waves",
+  interactive = false,
 }: {
   className?: string;
   cell?: number;
@@ -24,6 +25,7 @@ export function Bitmap({
   density?: number; // 0…1 — сколько клеток «горит»
   speed?: number;
   variant?: "waves" | "rain" | "ripple";
+  interactive?: boolean; // фон реагирует на курсор: узор «проявляется» вокруг него и расходится волной
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
 
@@ -36,6 +38,14 @@ export function Bitmap({
     let w = 0, h = 0, img: ImageData | null = null, raf = 0, last = 0, visible = true;
     let rgb = [255, 28, 53];
     const t0 = performance.now() - Math.random() * 10_000;
+    // Курсор в координатах клеток; energy — сила следа, затухает, когда мышь стоит
+    let mx = -1e4, my = -1e4, energy = 0;
+    const onMove = (e: PointerEvent) => {
+      if (e.pointerType !== "mouse") return;
+      const r = cv.getBoundingClientRect();
+      mx = (e.clientX - r.left) / cell; my = (e.clientY - r.top) / cell;
+      energy = 1;
+    };
 
     const readColor = () => {
       const probe = document.createElement("canvas").getContext("2d");
@@ -69,16 +79,21 @@ export function Bitmap({
           } else {
             v = 0.5 + 0.25 * Math.sin(x * 0.07 + t * 0.55) + 0.25 * Math.cos(y * 0.09 - t * 0.4) * Math.sin((x + y) * 0.035 + t * 0.25);
           }
+          if (interactive && energy > 0.01) {
+            const dx = x - mx, dy = y - my, d = Math.sqrt(dx * dx + dy * dy);
+            v += energy * (1.1 * Math.exp(-(d * d) / 90) + 0.35 * Math.exp(-d / 26) * Math.sin(d * 0.55 - t * 6));
+          }
           const on = v * density * 1.6 > BAYER[(y & 3) * 4 + (x & 3)];
           const i = (y * w + x) * 4;
           px[i] = rgb[0]; px[i + 1] = rgb[1]; px[i + 2] = rgb[2]; px[i + 3] = on ? A : 0;
         }
       }
       ctx.putImageData(img, 0, 0);
+      energy *= 0.97;
     };
     const loop = (now: number) => {
       raf = requestAnimationFrame(loop);
-      if (!visible || document.hidden || now - last < 80) return;
+      if (!visible || document.hidden || now - last < (energy > 0.05 ? 33 : 80)) return;
       last = now;
       draw(now);
     };
@@ -91,9 +106,10 @@ export function Bitmap({
     io.observe(cv);
     const mo = new MutationObserver(() => { readColor(); draw(performance.now()); });
     mo.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    if (interactive && !still) addEventListener("pointermove", onMove, { passive: true });
     if (!still) raf = requestAnimationFrame(loop);
-    return () => { cancelAnimationFrame(raf); ro.disconnect(); io.disconnect(); mo.disconnect(); };
-  }, [cell, alpha, density, speed, variant]);
+    return () => { cancelAnimationFrame(raf); ro.disconnect(); io.disconnect(); mo.disconnect(); removeEventListener("pointermove", onMove); };
+  }, [cell, alpha, density, speed, variant, interactive]);
 
   return <canvas ref={ref} aria-hidden className={cn("pointer-events-none absolute inset-0 -z-10 size-full [image-rendering:pixelated]", className)} />;
 }

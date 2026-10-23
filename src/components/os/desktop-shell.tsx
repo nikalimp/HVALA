@@ -46,10 +46,10 @@ const ICONS_KEY = "hvala-os-icons";
 
 const pageById = Object.fromEntries(pageApps.map((p) => [p.id, p]));
 const appById = Object.fromEntries(apps.map((a) => [a.id, a]));
-// На столе: папка «Направления» (внутри — 5 страниц), «Кейсы», «О компании», «Контакты»
+// На столе: папка «Направления» (внутри — 5 страниц), «Кейсы», «О компании», «Блог»
 const desktopIcons = [
   ...apps.filter((a) => a.desktop).map((a) => ({ id: a.id, label: a.label, icon: a.icon, href: a.fallback })),
-  ...pageApps.filter((p) => !p.href.startsWith("/services/")).map((p) => ({ id: p.id, label: p.label, icon: p.icon, href: p.href })),
+  ...pageApps.filter((p) => p.id === "page:about" || p.id === "page:blog").map((p) => ({ id: p.id, label: p.label, icon: p.icon, href: p.href })),
 ];
 const entries: Entry[] = [
   ...pageApps.map((p) => ({ id: p.id, label: p.label, hint: "Страница", icon: p.icon })),
@@ -85,7 +85,7 @@ export function DesktopShell() {
   const zTop = useRef(10);
   const [isDesktop, setIsDesktop] = useState(false);
   const [today, setToday] = useState<Date | null>(null);
-  const [overlay, setOverlay] = useState<null | "launchpad" | "spotlight">(null);
+  const [overlay, setOverlay] = useState<null | "launchpad" | "spotlight" | "wifi">(null);
   const [selected, setSelected] = useState<string | null>(null);
   const [offsets, setOffsets] = useState<Record<string, { dx: number; dy: number }>>({});
   const [wins, setWins] = useState<Win[]>([
@@ -146,7 +146,7 @@ export function DesktopShell() {
 
   const open = useCallback((id: string, payload?: string) => {
     setSelected(null);
-    if (id === "launchpad" || id === "spotlight") { setOverlay(id); return; }
+    if (id === "launchpad" || id === "spotlight" || id === "wifi") { setOverlay(id); return; }
     if (id.startsWith("page:")) {
       if (!matchMedia(DESKTOP_Q).matches) { location.href = pageById[id].href; return; }
       setOverlay(null); openPage(id); return;
@@ -288,7 +288,7 @@ export function DesktopShell() {
 
   return (
     <section aria-labelledby="hero-title" className="desktop relative -mt-14 overflow-hidden pt-14 lg:h-[100svh] lg:min-h-[640px]">
-      <Bitmap className="z-0" cell={6} alpha={0.2} density={0.45} />
+      <Bitmap className="z-0" cell={6} alpha={0.2} density={0.45} interactive />
       <div ref={area} className="relative mx-auto flex w-full max-w-[1680px] flex-col px-4 pb-10 pt-6 sm:px-6 lg:block lg:absolute lg:inset-x-0 lg:bottom-24 lg:top-14 lg:isolate lg:p-0" onPointerDown={(e) => { if (e.target === e.currentTarget) setSelected(null); }}>
         {/* Иконки рабочего стола */}
         <nav aria-label="Разделы сайта" className="order-2 mt-8 lg:absolute lg:left-6 lg:top-4 lg:mt-0">
@@ -377,6 +377,11 @@ export function DesktopShell() {
       </nav>
 
       {overlay === "launchpad" && <Launchpad entries={entries} renderIcon={glyph} onClose={() => setOverlay(null)} onOpen={(e) => open(e.id, e.payload)} />}
+      {overlay === "wifi" && (
+        <div role="dialog" aria-modal="true" aria-label="Демо: Wi‑Fi гостя" className="fixed inset-0 z-[60] flex items-center justify-center overflow-y-auto bg-foreground/10 p-4 backdrop-blur-md" onClick={(e) => e.target === e.currentTarget && setOverlay(null)}>
+          <WifiApp bare />
+        </div>
+      )}
       {overlay === "spotlight" && <Spotlight entries={entries} renderIcon={glyph} onClose={() => setOverlay(null)} onOpen={(e) => open(e.id, e.payload)} />}
       <p className="sr-only" aria-live="polite">{openWins.length > 2 ? `Открыто окон: ${openWins.length}` : ""}</p>
     </section>

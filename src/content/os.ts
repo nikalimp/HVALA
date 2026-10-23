@@ -25,12 +25,13 @@ export const pageApps = [
   { id: "page:franchise", href: "/services/franchise/", label: "Франшиза", icon: "handshake" },
   { id: "page:about", href: "/about/", label: "О компании", icon: "building" },
   { id: "page:contacts", href: "/contacts/", label: "Контакты", icon: "phone" },
+  { id: "page:blog", href: "/blog/", label: "Блог", icon: "newspaper" },
 ] as const;
 
 // Приложения: окна, которые существуют только на рабочем столе
 export const apps: { id: AppId; label: string; title: string; icon: string; dock: boolean; desktop?: boolean; fallback: string }[] = [
   { id: "directions", label: "Направления", title: "Направления", icon: "folder-wifi", dock: false, desktop: true, fallback: "/services/" },
-  { id: "cases", label: "Кейсы", title: "Кейсы", icon: "folder", dock: true, desktop: true, fallback: "/#cases" },
+  { id: "cases", label: "Кейсы", title: "Кейсы", icon: "folder", dock: true, desktop: true, fallback: "/cases/" },
   { id: "launchpad", label: "Все разделы", title: "Все разделы", icon: "grid", dock: true, fallback: "/services/" },
   { id: "mail", label: "Заявка", title: "Новая заявка", icon: "mail", dock: true, fallback: "https://t.me/kirillSyndicate" },
   { id: "calendar", label: "Созвон", title: "Созвон", icon: "calendar", dock: true, fallback: "https://t.me/kirillSyndicate" },

@@ -112,7 +112,7 @@ export function CasesApp({ payload }: { payload?: string }) {
           )}
         </div>
       </div>
-      <p className="border-t px-3 py-1 text-center text-[11px] text-muted-foreground">{current ? "1 кейс" : `Объектов: ${list.length}`}</p>
+      <p className="flex items-center justify-between border-t px-3 py-1 text-[11px] text-muted-foreground"><span>{current ? "1 кейс" : `Объектов: ${list.length}`}</span><a href={current ? `/cases/#${current.id}` : "/cases/"} className="underline underline-offset-4 hover:text-foreground">Открыть страницу кейсов</a></p>
     </div>
   );
 }
@@ -349,7 +349,7 @@ export function DirectionsApp({ open }: { open: OpenFn }) {
 }
 
 /* ───────── Демо Wi-Fi гостя: только мокап iPhone ───────── */
-export function WifiApp() {
+export function WifiApp({ bare = false }: { bare?: boolean }) {
   const [step, setStep] = useState<"login" | "online">("login");
   const [phone, setPhone] = useState("");
   const [vote, setVote] = useState<string | null>(null);
@@ -361,7 +361,7 @@ export function WifiApp() {
   const fmt = (d: string) => `+7 ${d.slice(0, 3)}${d.length > 3 ? ` ${d.slice(3, 6)}` : ""}${d.length > 6 ? `-${d.slice(6, 8)}` : ""}${d.length > 8 ? `-${d.slice(8, 10)}` : ""}`;
   const reset = () => { setStep("login"); setPhone(""); setVote(null); setCard(false); setSub(false); };
   return (
-    <div className="flex justify-center bg-muted/50 px-6 py-6">
+    <div className={bare ? "flex justify-center" : "flex justify-center bg-muted/50 px-6 py-6"}>
       {/* Корпус iPhone: рамка, Dynamic Island, строка состояния, полоска «домой» */}
       <div className="relative w-[17.5rem] rounded-[3.1rem] bg-desktop-ink p-[10px] shadow-2xl">
         <span aria-hidden className="absolute -left-[3px] top-28 h-8 w-[3px] rounded-l bg-desktop-ink" />
