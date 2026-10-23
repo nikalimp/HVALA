@@ -1,6 +1,6 @@
 # PR агента: проверка → автослияние → выкладка (deploy-kit pr.yml + site.yml). Стандарт — «Публикация — стандарт» §4.
 # Ветка claude/* с зелёным check сливается сама и сразу выкладывается этим же запуском.
-# Метка needs-nik или правка .github/ и publish.json — ждёт Ника. Значения with у deploy — как в publish.json.
+# В HVALA ручных слияний нет (решение Ника 23.10.2026): автослияние после зелёного check для любых файлов. Значения with у deploy — как в publish.json.
 name: PR
 on:
   pull_request:
@@ -12,6 +12,8 @@ jobs:
     uses: nikalimp/deploy-kit/.github/workflows/pr.yml@main
     with:
       site_dir: "."
+      # Решение Ника 23.10.2026: в HVALA всё публикуется автоматически — путей «только для Ника» нет
+      manual_paths: "-none-/"
   deploy:
     needs: pr
     if: needs.pr.outputs.merged == 'true'
