@@ -4,6 +4,8 @@ import { nav, site } from "@/content/site";
 import { Container } from "./container";
 import { Button } from "./ui/button";
 import { ThemeToggle } from "./theme-toggle";
+import { Logo } from "./logo";
+import { MenubarExtras } from "./os/menubar-extras";
 
 // Мобильное меню на <details>: открывается без JavaScript, ссылки — обычные <a>.
 function MobileMenu() {
@@ -27,15 +29,16 @@ function MobileMenu() {
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-40 border-b bg-background/85 backdrop-blur">
-      <Container className="grid h-14 grid-cols-[1fr_auto] items-center gap-6 md:grid-cols-[1fr_auto_1fr]">
-        <Link href="/" className="justify-self-start font-semibold tracking-tight">{site.name}</Link>
+    <header className="sticky top-0 z-40 border-b bg-background/70 backdrop-blur-xl">
+      <Container className="grid h-14 max-w-none grid-cols-[1fr_auto] items-center gap-6 md:grid-cols-[1fr_auto_1fr]">
+        <Link href="/" className="justify-self-start text-brand-vivid" aria-label={`${site.name} — на главную`}><Logo className="h-[18px] w-auto" /></Link>
         <nav aria-label="Основное меню" className="hidden items-center justify-center gap-6 text-sm text-muted-foreground md:flex">
           {nav.map((n) => (
             <Link key={n.href} href={n.href} className="hover:text-foreground">{n.label}</Link>
           ))}
         </nav>
         <div className="flex items-center justify-end gap-1">
+          <MenubarExtras />
           {site.darkTheme && <ThemeToggle />}
           <Button asChild size="sm" className="hidden sm:inline-flex"><a href={site.cta.href}>{site.cta.label}</a></Button>
           <MobileMenu />

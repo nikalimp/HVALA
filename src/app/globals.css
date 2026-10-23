@@ -76,6 +76,9 @@
   --color-brand-bg: var(--brand-bg);
   --color-brand-vivid: var(--brand-vivid);
   --color-desktop-ink: var(--desktop-ink);
+  --color-note: var(--note);
+  --color-note-ink: var(--note-ink);
+  --color-success: var(--success);
 }
 
 @layer base {
@@ -124,3 +127,12 @@
   .desktop .window + .window { animation-delay: .08s; }
 }
 @keyframes window-open { from { opacity: 0; transform: translateY(8px) scale(.985); } }
+
+/* Стикер «HVALA сегодня» */
+:root { --note: oklch(0.96 0.035 12); --note-ink: oklch(0.3 0.04 20); --success: oklch(0.55 0.15 145); }
+.dark { --note: oklch(0.88 0.06 12); --note-ink: oklch(0.3 0.04 20); --success: oklch(0.72 0.15 145); }
+
+/* Страница внутри окна рабочего стола: тот же HTML, что и на отдельной странице, с плотными отступами */
+.os-page > section { padding-block: 1.75rem; }
+.os-page > section:first-child { padding-top: 1.5rem; }
+.os-page .max-w-3xl, .os-page .max-w-6xl { max-width: 100%; }
