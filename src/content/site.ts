@@ -79,12 +79,13 @@ export const site = {
   darkTheme: true,
 
   features: {
-    blog: false, // контент-завод «позже» (spec §7)
+    blog: true, // блог: /blog/ и статьи /blog/<slug>/ (статьи — content/blog/*.md)
   },
 };
 
 export const nav = [
   { href: "/services/", label: "Направления" },
+  { href: "/cases/", label: "Кейсы" },
   ...(site.features.blog ? [{ href: "/blog/", label: "Блог" }] : []),
   { href: "/about/", label: "О компании" },
   { href: "/contacts/", label: "Контакты" },

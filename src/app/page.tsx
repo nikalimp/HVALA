@@ -134,6 +134,7 @@ export default function Home() {
               </li>
             ))}
           </ul>
+          <Button asChild variant="outline" className="mt-8"><Link href="/cases/">Все кейсы</Link></Button>
         </Container>
       </Section>
 

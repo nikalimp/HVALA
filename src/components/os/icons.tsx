@@ -1,12 +1,12 @@
 import {
   Blocks, Building2, Folder, FolderOpen, Handshake, Images, LayoutGrid, Mail, Megaphone, MessageCircle, PartyPopper, Phone, Radar,
-  Search, Smartphone, StickyNote, Trash, Wifi, type LucideIcon,
+  Newspaper, Search, Smartphone, StickyNote, Trash, Wifi, type LucideIcon,
 } from "lucide-react";
 
 const map: Record<string, LucideIcon> = {
   wifi: Wifi, megaphone: Megaphone, party: PartyPopper, radar: Radar, handshake: Handshake, building: Building2, phone: Phone,
   folder: FolderOpen, grid: LayoutGrid, mail: Mail, message: MessageCircle, search: Search, smartphone: Smartphone,
-  "folder-wifi": Folder, blocks: Blocks, images: Images, note: StickyNote, trash: Trash,
+  "folder-wifi": Folder, newspaper: Newspaper, blocks: Blocks, images: Images, note: StickyNote, trash: Trash,
 };
 
 const months = ["янв", "фев", "мар", "апр", "мая", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"];
