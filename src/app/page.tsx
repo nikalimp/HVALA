@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { ServiceCard } from "@/components/service-card";
 import { FaqList } from "@/components/faq";
 import { Cta } from "@/components/cta";
-import { Desktop } from "@/components/desktop";
+import { DesktopShell } from "@/components/os/desktop-shell";
 import { JsonLd } from "@/components/json-ld";
 import { faqSchema, graph } from "@/lib/schema";
 
@@ -18,7 +18,7 @@ export default function Home() {
     <>
       <JsonLd data={graph(home.faq.length > 0 && faqSchema(home.faq))} />
 
-      <Desktop />
+      <DesktopShell />
 
       <Section id="directions" className="border-t">
         <Container>
