@@ -13,7 +13,7 @@ export function Footer() {
           <p className="mt-2 text-muted-foreground">{site.tagline}</p>
         </div>
         <div>
-          <p className="mb-2 font-medium"><Link href="/services/" className="hover:underline">Услуги</Link></p>
+          <p className="mb-2 font-medium"><Link href="/services/" className="hover:underline">Направления</Link></p>
           <ul className="space-y-1.5 text-muted-foreground">
             {services.map((s) => (
               <li key={s.slug}><Link href={`/services/${s.slug}/`} className="hover:text-foreground">{s.title}</Link></li>

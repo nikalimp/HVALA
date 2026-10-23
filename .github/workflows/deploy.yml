@@ -18,12 +18,12 @@ jobs:
     permissions: { contents: write }
     uses: nikalimp/deploy-kit/.github/workflows/site.yml@main
     with:
-      adapter: manual-zip         # ssh-ftp | ftp | s3 | manual-zip | tilda
+      adapter: ftp                # ssh-ftp | ftp | s3 | manual-zip | tilda
       site_dir: "."               # монорепо: apps/site
       out_dir: out                # Vite: dist
       app_path: ""                # приложение в подпапке сайта: "test/app/"
       rsync_exclude: ""           # подпапки других приложений и файлы только на сервере: "test/ api/config.php api/logs/"
-      url: https://hvalawifi.ru
+      url: https://hvala.nikalimp.ru
       # media_brand: путь к brand.json от site_dir. По умолчанию content/factory/brand.json;
       # если завод ещё не переведён в content/factory/ — фактический путь (ECO-PRO: content/media/brand.json)
     secrets: inherit

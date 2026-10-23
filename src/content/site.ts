@@ -13,71 +13,78 @@ export type OrgType =
   | "Store";
 
 export const site = {
-  url: "https://example.ru", // TODO(клиент): боевой домен без слеша на конце
-  name: "TODO(клиент): Бренд",
-  legalName: "TODO(клиент): ООО «Название»",
+  url: "https://hvala.nikalimp.ru", // тестовый адрес v1; боевой домен — в «Пробелах» брифа
+  name: "HVALA",
+  legalName: "ООО «Креативный синдикат»",
   // Тип организации в Schema.org — самый точный из подходящих: https://schema.org/LocalBusiness#subtypes
-  orgType: "LocalBusiness" as OrgType,
-  title: "TODO(клиент): Бренд — услуга в городе", // title главной, до 60 символов
-  description: "TODO(клиент): описание компании для поиска и нейросетей, 120⁠–⁠160 символов, с фактами: что, где, для кого, цена или срок.",
+  orgType: "Organization" as OrgType,
+  title: "HVALA — гостевой Wi-Fi для бизнеса и реклама в Wi-Fi", // title главной, до 60 символов
+  description: "HVALA превращает гостевой Wi-Fi в контакты гостей и рекламный канал: 2000+ заведений, 25+ городов, подключение от 29 900 ₽ без абонентской платы.",
   // Одна фраза о компании для llms.txt и футера
-  tagline: "TODO(клиент): что делаем и для кого",
+  tagline: "Гостевой Wi-Fi для бизнеса: контакты гостей, маркетинг заведения и реклама брендов в момент подключения.",
   lang: "ru",
   locale: "ru_RU",
-  foundingYear: 2015, // TODO(клиент)
+  foundingYear: 2015, // «11 лет на рынке» (hvalawifi.ru/4u); ООО зарегистрировано в 2014
   areaServed: ["RU"],
 
+  // Цифры компании — как на hvalawifi.ru/4u (решение Ника 23.10.2026)
+  stats: [
+    { value: "11 лет", label: "на рынке" },
+    { value: "25+", label: "городов" },
+    { value: "2K+", label: "заведений" },
+    { value: "10M+", label: "пользователей" },
+  ],
+
   contacts: {
-    phone: "", // формат +7XXXXXXXXXX; пусто — блок не показывается
-    phoneDisplay: "",
-    email: "",
-    telegram: "", // https://t.me/…
-    whatsapp: "", // https://wa.me/7XXXXXXXXXX
+    phone: "+78002341166", // формат +7XXXXXXXXXX; пусто — блок не показывается
+    phoneDisplay: "8 800 234-11-66",
+    email: "sales@hvalacloud.ru",
+    telegram: "https://t.me/kirillSyndicate", // менеджер по продажам
+    support: "https://t.me/hvalacloud_support", // инженер техподдержки
+    whatsapp: "",
     address: {
-      street: "",
-      city: "",
-      region: "",
+      street: "", // офис по 2ГИС — ул. Пушкина, 9а; ждёт подтверждения клиента
+      city: "Екатеринбург",
+      region: "Свердловская область",
       postalCode: "",
       country: "RU",
     },
     geo: null as null | { lat: number; lng: number },
-    hours: "", // для людей: «Пн–Пт 9:00–19:00»
-    openingHours: [] as { days: string[]; opens: string; closes: string }[], // для Schema: days — Monday…Sunday
+    hours: "",
+    openingHours: [] as { days: string[]; opens: string; closes: string }[],
   },
 
-  // Главное целевое действие — на него ведут все CTA
+  // Главное целевое действие — на него ведут все CTA. v1: Telegram менеджера; форма — P1 (spec §7)
   cta: {
-    label: "TODO(клиент): Записаться",
-    href: "https://t.me/TODO", // TODO(клиент): ссылка на мессенджер, форму или tel:
+    label: "Оставить заявку",
+    href: "https://t.me/kirillSyndicate",
   },
 
   // Реквизиты для футера и политики ПДн (152-ФЗ)
   legal: {
-    inn: "TODO(клиент)",
-    ogrn: "TODO(клиент)",
-    privacyEmail: "", // почта для запросов по персональным данным; пусто — берётся contacts.email
+    inn: "6686051134",
+    ogrn: "1146686011867",
+    privacyEmail: "",
   },
 
-  // Профили бренда на внешних площадках: одинаковые название, адрес и телефон везде
-  sameAs: [] as string[],
-  socials: [] as { label: string; href: string }[], // Instagram и Facebook — с «*» в label
-  metaNote: "", // «*Meta Platforms Inc. признана экстремистской и запрещена в РФ» — если есть ссылки на Instagram/Facebook
+  // Профили бренда на внешних площадках
+  sameAs: ["https://2gis.ru/ekaterinburg/firm/70000001080382589"] as string[],
+  socials: [] as { label: string; href: string }[],
+  metaNote: "",
 
-  // Лицо компании — основатель или эксперт. null, если не нужен
+  // Лицо компании — ждём от клиента (бриф, «Пробелы»)
   person: null as null | { name: string; jobTitle: string; description: string; sameAs: string[] },
 
-  metrikaId: 0, // номер счётчика Яндекс Метрики; 0 — счётчик не подключается (на боевом домене npm run check этого не пропустит)
-  darkTheme: true, // переключатель темы в шапке
+  metrikaId: 0, // тестовый адрес без счётчика — исключение spec §9; к запуску обязателен
+  darkTheme: true,
 
-  // Функции включаются и выключаются флагами, а не удалением кода (стандарт §1.9):
-  // снятый с сайта блок остаётся в репозитории и возвращается одной строкой.
   features: {
-    blog: true, // блог: пункт меню, /blog/, статьи в sitemap и llms.txt
+    blog: false, // контент-завод «позже» (spec §7)
   },
 };
 
 export const nav = [
-  { href: "/services/", label: "Услуги" },
+  { href: "/services/", label: "Направления" },
   ...(site.features.blog ? [{ href: "/blog/", label: "Блог" }] : []),
   { href: "/about/", label: "О компании" },
   { href: "/contacts/", label: "Контакты" },

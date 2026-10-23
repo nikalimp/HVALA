@@ -5,40 +5,51 @@
 /* Токены бренда — из specs/03-design.md §3. Дефолт: нейтральная тема shadcn + синий акцент.
    Серая тема без настройки под бренд = недоделка (стандарт §6). */
 :root {
-  --radius: 0.5rem;
+  --radius: 0.75rem;
+  /* Бренд HVALA (03-design.md §1): #FF1C35 красный, #FFECEE розовый, #2D1B1E бордовый текст, #5A4448 приглушённый.
+     primary — затемнённый красный #D10F27: белый текст 5,5:1 (AA) */
   --background: oklch(1 0 0);
-  --foreground: oklch(0.205 0 0);
-  --card: oklch(0.99 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.52 0 0);
-  --accent: oklch(0.965 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --border: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --brand: oklch(0.55 0.15 255);
-  --brand-bg: oklch(0.97 0.02 255);
+  --foreground: oklch(0.247 0.029 8.5);
+  --card: oklch(0.985 0.007 10);
+  --primary: oklch(0.546 0.216 24.6);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.959 0.021 10.2);
+  --secondary-foreground: oklch(0.247 0.029 8.5);
+  --muted: oklch(0.972 0.012 10);
+  --muted-foreground: oklch(0.412 0.031 6.4);
+  --accent: oklch(0.959 0.021 10.2);
+  --accent-foreground: oklch(0.247 0.029 8.5);
+  --border: oklch(0.92 0.018 10);
+  --ring: oklch(0.637 0.248 24.4);
+  --brand: oklch(0.546 0.216 24.6);
+  --brand-bg: oklch(0.959 0.021 10.2);
+  --brand-vivid: oklch(0.637 0.248 24.4);
+  --desktop-ink: oklch(0.247 0.029 8.5);
+  --wallpaper: radial-gradient(120% 90% at 85% 0%, oklch(0.78 0.13 13.4 / 0.75), transparent 60%),
+    radial-gradient(90% 80% at 0% 100%, oklch(0.637 0.248 24.4 / 0.35), transparent 60%),
+    linear-gradient(160deg, oklch(0.975 0.015 10), oklch(0.93 0.04 12));
 }
 
 .dark {
-  --background: oklch(0.17 0 0);
-  --foreground: oklch(0.93 0 0);
-  --card: oklch(0.2 0 0);
-  --primary: oklch(0.93 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.26 0 0);
-  --secondary-foreground: oklch(0.93 0 0);
-  --muted: oklch(0.25 0 0);
-  --muted-foreground: oklch(0.66 0 0);
-  --accent: oklch(0.255 0 0);
-  --accent-foreground: oklch(0.93 0 0);
-  --border: oklch(1 0 0 / 10%);
-  --ring: oklch(0.556 0 0);
-  --brand: oklch(0.74 0.12 255);
-  --brand-bg: oklch(0.74 0.12 255 / 12%);
+  --background: oklch(0.19 0.02 10);
+  --foreground: oklch(0.959 0.021 10.2);
+  --card: oklch(0.22 0.022 10);  --primary: oklch(0.56 0.215 24.6);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.27 0.03 10);
+  --secondary-foreground: oklch(0.959 0.021 10.2);
+  --muted: oklch(0.25 0.025 10);
+  --muted-foreground: oklch(0.76 0.03 10);
+  --accent: oklch(0.27 0.03 10);
+  --accent-foreground: oklch(0.959 0.021 10.2);
+  --border: oklch(1 0 0 / 11%);
+  --ring: oklch(0.78 0.13 13.4);
+  --brand: oklch(0.78 0.13 13.4);
+  --brand-bg: oklch(0.78 0.13 13.4 / 12%);
+  --brand-vivid: oklch(0.637 0.248 24.4);
+  --desktop-ink: oklch(0.959 0.021 10.2);
+  --wallpaper: radial-gradient(120% 90% at 85% 0%, oklch(0.331 0.11 19.6 / 0.9), transparent 60%),
+    radial-gradient(90% 80% at 0% 100%, oklch(0.637 0.248 24.4 / 0.25), transparent 60%),
+    linear-gradient(160deg, oklch(0.2 0.02 10), oklch(0.16 0.03 15));
 }
 
 @theme inline {
@@ -63,13 +74,15 @@
   --color-ring: var(--ring);
   --color-brand: var(--brand);
   --color-brand-bg: var(--brand-bg);
+  --color-brand-vivid: var(--brand-vivid);
+  --color-desktop-ink: var(--desktop-ink);
 }
 
 @layer base {
   * { @apply border-border outline-ring/50; }
   html { scroll-behavior: smooth; }
   body { @apply bg-background text-foreground; font-size: 15px; -webkit-font-smoothing: antialiased; }
-  ::selection { background: oklch(0.55 0.15 255 / 20%); }
+  ::selection { background: oklch(0.637 0.248 24.4 / 20%); }
 }
 
 /* Типографика статей */
@@ -95,3 +108,19 @@
   details[open] > :not(summary) { animation: fade-in .25s ease-out; }
 }
 @keyframes fade-in { from { opacity: 0; translate: 0 -4px; } to { opacity: 1; translate: none; } }
+
+/* Рабочий стол (первый экран главной) */
+.desktop { background: var(--wallpaper); }
+.window { border: 1px solid var(--border); border-radius: 0.875rem; background: var(--background); overflow: hidden;
+  box-shadow: 0 1px 2px oklch(0.247 0.029 8.5 / 6%), 0 24px 60px -24px oklch(0.331 0.11 19.6 / 35%); }
+.app-tile { display: inline-flex; align-items: center; justify-content: center; border-radius: 1.1rem; color: var(--brand);
+  background: var(--background); border: 1px solid var(--border); box-shadow: 0 6px 18px -8px oklch(0.331 0.11 19.6 / 40%); }
+.app-tile-cta { background: var(--primary); color: var(--primary-foreground); border-color: transparent; }
+.desktop-app:hover .app-tile, .desktop-app:focus-visible .app-tile { border-color: var(--brand); }
+@media (prefers-reduced-motion: no-preference) {
+  .app-tile { transition: transform .15s ease-out, border-color .15s; }
+  .dock .desktop-app:hover .app-tile, .dock .desktop-app:focus-visible .app-tile { transform: translateY(-6px) scale(1.15); }
+  .desktop .window { animation: window-open .2s ease-out both; }
+  .desktop .window + .window { animation-delay: .08s; }
+}
+@keyframes window-open { from { opacity: 0; transform: translateY(8px) scale(.985); } }
