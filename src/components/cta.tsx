@@ -10,7 +10,7 @@ export function Cta({ title = "Подключим Wi-Fi или запустим
       <Container className="text-center">
         <h2 className="text-3xl font-semibold tracking-tight text-balance">{title}</h2>
         <p className="mx-auto mt-3 max-w-xl text-muted-foreground">{text}</p>
-        <Button asChild size="lg" className="mt-7"><a href={site.cta.href}>{site.cta.label}</a></Button>
+        <Button asChild size="lg" className="mt-7"><a href={site.cta.href} data-os-app="mail">{site.cta.label}</a></Button>
       </Container>
     </Section>
   );

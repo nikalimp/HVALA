@@ -45,7 +45,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
           <h1 className="text-3xl font-semibold leading-tight tracking-tight text-balance sm:text-4xl">{s.h1}</h1>
           <p className="mt-5 text-lg leading-relaxed text-muted-foreground">{s.answer}</p>
           <div className="mt-8 flex flex-wrap items-center gap-4">
-            <Button asChild size="lg"><a href={site.cta.href}>{site.cta.label}</a></Button>
+            <Button asChild size="lg"><a href={site.cta.href} data-os-app="mail" data-os-payload={s.title}>{site.cta.label}</a></Button>
             {s.prices[0] && <p className="text-sm text-muted-foreground">{s.prices[0].value} · {s.timeline}</p>}
           </div>
         </Container>

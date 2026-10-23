@@ -5,6 +5,7 @@ import { site } from "@/content/site";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { CookieBanner } from "@/components/cookie-banner";
+import { OverlayHost } from "@/components/os/overlay-host";
 import { JsonLd } from "@/components/json-ld";
 import { graph, orgSchema, personSchema, websiteSchema } from "@/lib/schema";
 
@@ -39,6 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main id="main" className="flex-1">{children}</main>
         <Footer />
         <CookieBanner />
+        <OverlayHost />
       </body>
     </html>
   );

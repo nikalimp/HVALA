@@ -7,6 +7,7 @@ import { ThemeToggle } from "./theme-toggle";
 import { Logo } from "./logo";
 import { MenubarExtras } from "./os/menubar-extras";
 import { MenubarNav } from "./os/menubar-nav";
+import { MenubarClock } from "./os/menubar-clock";
 
 // Мобильное меню на <details>: открывается без JavaScript, ссылки — обычные <a>.
 function MobileMenu() {
@@ -22,7 +23,7 @@ function MobileMenu() {
             <li key={n.href}><a href={n.href} className="block py-2.5 text-[15px]">{n.label}</a></li>
           ))}
         </ul>
-        <Button asChild size="lg" className="mt-5 w-full"><a href={site.cta.href}>{site.cta.label}</a></Button>
+        <Button asChild size="lg" className="mt-5 w-full"><a href={site.cta.href} data-os-app="mail">{site.cta.label}</a></Button>
       </div>
     </details>
   );
@@ -37,6 +38,7 @@ export function Header() {
         <div className="ml-auto flex items-center justify-end gap-1">
           <MenubarExtras />
           {site.darkTheme && <ThemeToggle />}
+          <MenubarClock />
           <Button asChild size="sm" className="hidden sm:inline-flex"><a href={site.cta.href} data-os-app="mail">{site.cta.label}</a></Button>
           <MobileMenu />
         </div>

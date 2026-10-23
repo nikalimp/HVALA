@@ -18,7 +18,7 @@ import { cn } from "@/lib/utils";
 import { AppGlyph } from "./icons";
 import { StatsWidgets } from "./stats-widgets";
 import {
-  CalendarApp, CasesApp, DirectionsApp, GalleryApp, Launchpad, MailApp, MessagesApp, Spotlight, ToolsApp, TrashApp, WifiApp, type Entry,
+  CalendarApp, CasesApp, DirectionsApp, GalleryApp, Launchpad, MailApp, MessagesApp, Spotlight, ToolsApp, TrashApp, type Entry,
 } from "./apps";
 
 type Win = {
@@ -81,16 +81,18 @@ function AboutWindowBody({ open }: { open: (id: string) => void }) {
 
 export function DesktopShell() {
   const area = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
   const winRefs = useRef(new Map<string, HTMLElement>());
   const openers = useRef(new Map<string, Element | null>());
   const zTop = useRef(10);
   const [isDesktop, setIsDesktop] = useState(false);
   const [today, setToday] = useState<Date | null>(null);
-  const [overlay, setOverlay] = useState<null | "launchpad" | "spotlight" | "wifi">(null);
+  const [overlay, setOverlay] = useState<null | "launchpad" | "spotlight">(null);
   const [selected, setSelected] = useState<string | null>(null);
   const [offsets, setOffsets] = useState<Record<string, { dx: number; dy: number }>>({});
   const [wins, setWins] = useState<Win[]>([
-    { key: "about", kind: "app", title: "О HVALA", icon: "logo", z: 3, w: 660, min: false, max: false },]);
+    { key: "about", kind: "app", title: "О HVALA", icon: "logo", z: 3, w: 660, min: true, max: false }, // на десктопе закрыто, пока не открыть «О HVALA» в доке; на телефоне видно всегда
+  ]);
   const winsRef = useRef(wins);
   winsRef.current = wins;
 
@@ -147,7 +149,8 @@ export function DesktopShell() {
 
   const open = useCallback((id: string, payload?: string) => {
     setSelected(null);
-    if (id === "launchpad" || id === "spotlight" || id === "wifi") { setOverlay(id); return; }
+    if (id === "mail" || id === "wifi") { dispatchEvent(new CustomEvent("hvala:overlay", { detail: { id, payload } })); return; }
+    if (id === "launchpad" || id === "spotlight") { setOverlay(id); return; }
     if (id.startsWith("page:")) {
       if (!matchMedia(DESKTOP_Q).matches) { location.href = pageById[id].href; return; }
       setOverlay(null); openPage(id); return;
@@ -197,12 +200,6 @@ export function DesktopShell() {
     (window as unknown as { __hvalaOS?: boolean }).__hvalaOS = true;
     const onOpen = (e: Event) => { const d = (e as CustomEvent<{ id: string; payload?: string }>).detail; open(d.id, d.payload); };
     addEventListener("hvala:open", onOpen);
-    const onDelegated = (e: MouseEvent) => {
-      const a = (e.target as HTMLElement).closest<HTMLElement>("[data-os-app]");
-      if (!a || !matchMedia(DESKTOP_Q).matches) return;
-      e.preventDefault(); open(a.dataset.osApp!);
-    };
-    addEventListener("click", onDelegated);
     const m = location.hash.match(/^#app-([a-z]+)$/);
     if (m) { history.replaceState(null, "", "/"); open(m[1]); }
     const onKey = (e: KeyboardEvent) => {
@@ -213,7 +210,7 @@ export function DesktopShell() {
       if (top && document.activeElement && winRefs.current.get(top.key)?.contains(document.activeElement)) close(top.key);
     };
     addEventListener("keydown", onKey);
-    return () => { removeEventListener("click", onDelegated); removeEventListener("hvala:open", onOpen); removeEventListener("keydown", onKey); (window as unknown as { __hvalaOS?: boolean }).__hvalaOS = false; };
+    return () => { removeEventListener("hvala:open", onOpen); removeEventListener("keydown", onKey); (window as unknown as { __hvalaOS?: boolean }).__hvalaOS = false; };
   }, [open, close]);
   const overlayRef = useRef(overlay);
   overlayRef.current = overlay;
@@ -277,7 +274,6 @@ export function DesktopShell() {
       case "directions": return <DirectionsApp open={open} />;
       case "gallery": return <GalleryApp />;
       case "trash": return <TrashApp />;
-      case "wifi": return <WifiApp />;
     }
     if (w.kind === "page") {
       if (w.html === null) return <p className="p-8 text-sm text-muted-foreground">Открываем…</p>;
@@ -288,12 +284,12 @@ export function DesktopShell() {
   };
 
   return (
-    <section aria-labelledby="hero-title" className="desktop relative -mt-14 overflow-hidden pt-14 lg:h-[100svh] lg:min-h-[640px]">
-      <Bitmap className="z-0" cell={6} alpha={0.2} density={0.45} interactive />
+    <section ref={sectionRef} aria-labelledby="hero-title" className="desktop relative -mt-14 overflow-hidden pt-14 lg:h-[100svh] lg:min-h-[640px]">
+      <Bitmap className="z-0" cell={6} alpha={0.2} density={0.45} interactive logo isBackground={(el) => el === area.current || el === sectionRef.current} />
       <div ref={area} className="relative mx-auto flex w-full max-w-[1680px] flex-col px-4 pb-10 pt-6 sm:px-6 lg:block lg:absolute lg:inset-x-0 lg:bottom-24 lg:top-14 lg:isolate lg:p-0" onPointerDown={(e) => { if (e.target === e.currentTarget) setSelected(null); }}>
         {/* Иконки рабочего стола */}
         <nav aria-label="Разделы сайта" className="order-2 mt-8 lg:absolute lg:left-6 lg:top-4 lg:mt-0">
-          <ul className="grid grid-cols-4 gap-x-2 gap-y-4 sm:grid-cols-9 lg:grid-cols-2 lg:gap-x-3 lg:gap-y-3">
+          <ul className="grid grid-cols-4 gap-x-2 gap-y-4 sm:grid-cols-9 lg:grid-cols-1 lg:gap-y-3">
             {desktopIcons.map((a) => {
               const o = offsets[a.id];
               return (
@@ -337,12 +333,12 @@ export function DesktopShell() {
               role={hero ? undefined : "dialog"}
               aria-labelledby={hero ? undefined : `${w.key}-title`}
               tabIndex={-1}
-              hidden={w.min}
+              hidden={w.min && !hero}
               onPointerDown={() => isDesktop && front(w.key)}
               style={style}
               className={cn(
                 "window flex flex-col outline-none",
-                hero ? "relative order-1 lg:absolute lg:left-[calc(50%-24rem)] lg:top-4 lg:w-[660px]" : "fixed inset-0 z-50 rounded-none lg:absolute lg:inset-auto lg:rounded-[0.875rem]",
+                hero ? cn("relative order-1 lg:absolute", w.min && "lg:hidden")+" lg:left-[calc(50%-24rem)] lg:top-4 lg:w-[660px]" : "fixed inset-0 z-50 rounded-none lg:absolute lg:inset-auto lg:rounded-[0.875rem]",
                 !hero && "lg:max-h-full",
                 
               )}
@@ -378,11 +374,6 @@ export function DesktopShell() {
       </nav>
 
       {overlay === "launchpad" && <Launchpad entries={entries} renderIcon={glyph} onClose={() => setOverlay(null)} onOpen={(e) => open(e.id, e.payload)} />}
-      {overlay === "wifi" && (
-        <div role="dialog" aria-modal="true" aria-label="Демо: Wi‑Fi гостя" className="fixed inset-0 z-[60] flex items-center justify-center overflow-y-auto bg-foreground/10 p-4 backdrop-blur-md" onClick={(e) => e.target === e.currentTarget && setOverlay(null)}>
-          <WifiApp bare />
-        </div>
-      )}
       {overlay === "spotlight" && <Spotlight entries={entries} renderIcon={glyph} onClose={() => setOverlay(null)} onOpen={(e) => open(e.id, e.payload)} />}
       <p className="sr-only" aria-live="polite">{openWins.length > 2 ? `Открыто окон: ${openWins.length}` : ""}</p>
     </section>
