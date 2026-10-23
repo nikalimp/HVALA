@@ -2,6 +2,7 @@ import Link from "next/link";
 import { nav, site } from "@/content/site";
 import { services } from "@/content/services";
 import { Container } from "./container";
+import { Logo } from "./logo";
 
 export function Footer() {
   const c = site.contacts;
@@ -41,6 +42,9 @@ export function Footer() {
             {c.hours && <li>{c.hours}</li>}
           </ul>
         </div>
+      </Container>
+      <Container className="mt-12">
+        <Link href="/" aria-label={`${site.name} — на главную`} className="block text-foreground transition-colors hover:text-brand-vivid"><Logo className="h-auto w-full" /></Link>
       </Container>
       <Container className="mt-10 flex flex-col gap-1 text-xs text-muted-foreground sm:flex-row sm:flex-wrap sm:justify-between">
         <span>© {new Date().getFullYear()} {site.legalName} · ИНН {site.legal.inn} · ОГРН {site.legal.ogrn}</span>

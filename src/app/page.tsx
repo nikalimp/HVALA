@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Check, MapPin, RefreshCw, Smartphone, Store, Users, Wallet, type LucideIcon } from "lucide-react";
-import { cases } from "@/content/os";
+import { cases, formats } from "@/content/os";
+import { FormatTabs } from "@/components/format-tabs";
 import { CaseCard } from "@/components/case-card";
 import { LogoMarquee } from "@/components/logo-marquee";
 import { ReviewWidget } from "@/components/review-widget";
@@ -50,6 +51,14 @@ export default function Home() {
               </li>
             ))}
           </ul>
+          <h3 className="mb-6 mt-14 text-xl font-semibold tracking-tight">Нам доверяют</h3>
+          <LogoMarquee items={home.clients} />
+          <p className="mt-8 text-sm text-muted-foreground">
+            О нас писали:{" "}
+            {home.press.map((p, i) => (
+              <span key={p.name}>{i > 0 && ", "}<a href={p.href} target="_blank" rel="noopener" className="underline underline-offset-4 hover:text-foreground">{p.name}</a></span>
+            ))}
+          </p>
         </Container>
       </Section>
 
@@ -90,40 +99,35 @@ export default function Home() {
               </div>
             ))}
           </dl>
-          <h3 className="mb-4 mt-10 text-xl font-semibold tracking-tight">Форматы</h3>
-          <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {home.network.formats.map((f) => (
-              <li key={f.title} className="rounded-xl border bg-background p-4">
-                <p className="font-medium">{f.title}</p>
-                <p className="mt-1 text-sm text-muted-foreground">{f.text}</p>
-              </li>
-            ))}
-          </ul>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <Button asChild variant="outline"><Link href="/ad-formats/">Все форматы с примерами</Link></Button>
-            <Button asChild variant="ghost"><Link href="/services/advertising/">Подробнее о сети</Link></Button>
-          </div>
-        </Container>
-      </Section>
-
-      <Section className="border-t">
-        <Container>
-          <Eyebrow>Таргетинги</Eyebrow>
-          <h2 className="mb-8 text-3xl font-semibold tracking-tight">Кому показать рекламу</h2>
-          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <h3 className="mb-4 mt-10 text-xl font-semibold tracking-tight">Таргетинги: кому показать рекламу</h3>
+          <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {home.network.targeting.map((t) => {
               const Icon = targetingIcons[t.icon];
               return (
-                <li key={t.title} className="flex gap-4 rounded-2xl border p-5">
+                <li key={t.title} className="flex gap-4 rounded-xl border bg-background p-4">
                   <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-bg text-brand"><Icon className="size-5" aria-hidden /></span>
                   <span>
-                    <span className="block font-semibold">{t.title}</span>
+                    <span className="block font-medium">{t.title}</span>
                     <span className="mt-1 block text-sm text-muted-foreground">{t.text}</span>
                   </span>
                 </li>
               );
             })}
           </ul>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Button asChild variant="outline"><a href="#formats">Форматы с примерами</a></Button>
+            <Button asChild variant="ghost"><Link href="/services/advertising/">Подробнее о сети</Link></Button>
+          </div>
+        </Container>
+      </Section>
+
+      <Section id="formats" className="scroll-mt-14 border-t">
+        <Container>
+          <Eyebrow>Форматы</Eyebrow>
+          <h2 className="mb-3 text-3xl font-semibold tracking-tight">4 формата рекламы в Wi-Fi</h2>
+          <p className="mb-8 max-w-2xl text-muted-foreground">Все форматы показываются на весь экран в момент подключения к Wi-Fi. Оплата — за тысячу показов (CPM), медиаплан рассчитываем по запросу.</p>
+          <FormatTabs items={formats} />
+          <Button asChild size="lg" className="mt-8"><a href={site.cta.href} data-os-app="mail" data-os-payload="Реклама в Wi-Fi">Рассчитать медиаплан</a></Button>
         </Container>
       </Section>
 
@@ -132,28 +136,17 @@ export default function Home() {
           <Eyebrow>Кейсы</Eyebrow>
           <h2 className="mb-8 text-3xl font-semibold tracking-tight">Результаты клиентов в цифрах</h2>
           <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {home.caseIds.map((id) => cases.find((c) => c.id === id)!).map((c) => <li key={c.id} className="flex"><CaseCard c={c} showGroup className="w-full" /></li>)}
+            {home.caseIds.map((id) => cases.find((c) => c.id === id)!).map((c) => <li key={c.id} className="flex"><CaseCard c={c.id === "akadem" ? { ...c, video: undefined } : c} showGroup className="w-full" /></li>)}
           </ul>
           <Button asChild variant="outline" className="mt-8"><Link href="/cases/">Все кейсы</Link></Button>
         </Container>
       </Section>
 
-      <Section className="border-t bg-card">
-        <Container>
-          <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_20rem]">
-            <div className="min-w-0">
-              <Eyebrow>Клиенты</Eyebrow>
-              <h2 className="mb-6 text-3xl font-semibold tracking-tight">Нам доверяют</h2>
-              <LogoMarquee items={home.clients} />
-              <p className="mt-8 text-sm text-muted-foreground">
-                О нас писали:{" "}
-                {home.press.map((p, i) => (
-                  <span key={p.name}>{i > 0 && ", "}<a href={p.href} target="_blank" rel="noopener" className="underline underline-offset-4 hover:text-foreground">{p.name}</a></span>
-                ))}
-              </p>
-            </div>
-            <ReviewWidget rating={home.rating.value} count={home.rating.count} name={home.rating.name} address={home.rating.address} href={home.rating.href} />
-          </div>
+      <Section id="reviews" className="border-t bg-card">
+        <Container className="max-w-3xl">
+          <Eyebrow className="text-center">Отзывы</Eyebrow>
+          <h2 className="mb-8 text-center text-3xl font-semibold tracking-tight">Что говорят клиенты</h2>
+          <ReviewWidget rating={home.rating.value} count={home.rating.count} name={home.rating.name} address={home.rating.address} href={home.rating.href} />
         </Container>
       </Section>
 

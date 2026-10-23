@@ -16,7 +16,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${site.url}/services/`, priority: 0.9 },
     ...services.map((s) => ({ url: `${site.url}/services/${s.slug}/`, priority: 0.8 })),
     { url: `${site.url}/cases/`, priority: 0.8 },
-    { url: `${site.url}/ad-formats/`, priority: 0.8 },
     { url: `${site.url}/about/`, priority: 0.6 },
     { url: `${site.url}/contacts/`, priority: 0.6 },
     ...(posts.length ? [{ url: `${site.url}/blog/`, lastModified: posts.map((p) => p.updated ?? p.date).sort().at(-1), priority: 0.7 }] : []),

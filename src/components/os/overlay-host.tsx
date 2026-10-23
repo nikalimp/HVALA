@@ -2,7 +2,7 @@
 
 // Попапы на любой странице сайта: форма заявки, демо Wi‑Fi, поиск (⌘K) и ответы на вопросы — поверх размытого фона.
 // Открываются кнопками с data-os-app="mail" | "wifi" (data-os-payload — тема заявки) или событием hvala:overlay.
-// Поиск открывается на текущей странице. Результат на главной открывает окно рабочего стола, на других — ведёт на страницу.
+// Поиск открывается на текущей странице. Результат всегда ведёт на страницу сайта (не окно рабочего стола); вопрос — попап «Сообщения».
 // Без JavaScript кнопки остаются обычными ссылками (Telegram менеджера, страница направления).
 import { useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
@@ -19,7 +19,6 @@ const entries: Entry[] = [
   ...apps.filter((a) => a.id !== "launchpad" && a.id !== "spotlight").map((a) => ({ id: a.id, label: a.label, hint: "Приложение", icon: a.icon })),
 ];
 const glyph = (icon: string) => (icon === "logo" ? <Logo className="h-3 w-auto text-brand-vivid" /> : <AppGlyph icon={icon} />);
-const isOS = () => !!(window as unknown as { __hvalaOS?: boolean }).__hvalaOS && matchMedia("(min-width: 1024px)").matches;
 
 export function OverlayHost() {
   const [ov, setOv] = useState<Overlay>(null);
@@ -70,10 +69,9 @@ export function OverlayHost() {
     if (opener.current instanceof HTMLElement) opener.current.focus({ preventScroll: true });
     opener.current = null;
   };
-  // Результат поиска: на рабочем столе — окно, на других страницах — переход или попап
+  // Результат поиска: переход на страницу; заявка, демо и вопрос — попап
   const pick = (e: Entry) => {
     if (e.id === "mail" || e.id === "wifi") { setOv({ id: e.id, payload: e.payload }); return; }
-    if (isOS()) { setOv(null); opener.current = null; dispatchEvent(new CustomEvent("hvala:open", { detail: { id: e.id, payload: e.payload } })); return; }
     if (e.id === "messages") { setOv({ id: "messages", payload: e.payload }); return; }
     setOv(null); opener.current = null;
     const page = pageApps.find((p) => p.id === e.id);

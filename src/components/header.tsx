@@ -32,7 +32,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-40 border-b bg-background/70 backdrop-blur-xl">
       <Container className="flex h-14 max-w-none items-center gap-4">
-        <Link href="/" className="shrink-0 text-brand-vivid" aria-label={`${site.name} — на главную`}><Logo className="h-[18px] w-auto" /></Link>
+        <Link href="/" className="shrink-0 text-foreground transition-colors hover:text-brand-vivid focus-visible:text-brand-vivid" aria-label={`${site.name} — на главную`}><Logo className="h-[18px] w-auto" /></Link>
         <MenubarNav />
         <div className="ml-auto flex items-center justify-end gap-1">
           <MenubarExtras />
