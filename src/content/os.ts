@@ -26,7 +26,6 @@ export const pageApps = [
   { id: "page:about", href: "/about/", label: "О компании", icon: "building" },
   { id: "page:contacts", href: "/contacts/", label: "Контакты", icon: "phone" },
   { id: "page:blog", href: "/blog/", label: "Блог", icon: "newspaper" },
-  { id: "page:formats", href: "/#formats", label: "Форматы", icon: "images" },
 ] as const;
 
 // Приложения: окна, которые существуют только на рабочем столе

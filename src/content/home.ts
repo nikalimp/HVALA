@@ -79,7 +79,9 @@ export const home = {
     { name: "DK.ru", href: "https://www.dk.ru/news/237138733" },
     { name: "URA.news", href: "https://m.ura.news/articles/1036277932" },
   ],
-  rating: { value: "5,0", count: "13 отзывов", name: "HVALA", address: "Екатеринбург, ул. Пушкина, 9а, 6 этаж", href: "https://2gis.ru/ekaterinburg/firm/70000001080382589" },
+  rating: { value: "5,0", count: "13 отзывов", name: "HVALA", address: "Екатеринбург, ул. Пушкина, 9а, 6 этаж", href: "https://2gis.ru/ekaterinburg/firm/70000001080382589",
+    // Живая лента отзывов: адрес iframe из кабинета 2ГИС (или сервиса отзывов). Пусто — показываем только карточку рейтинга (T42).
+    embed: "" },
 
   faq: [
     { q: "Что такое HVALA?", a: "HVALA — технологии гостевого Wi-Fi для бизнеса. Заведения получают контакты гостей и маркетинговые инструменты, бренды — рекламу в момент подключения к Wi-Fi, организаторы — Wi-Fi на мероприятиях." },
