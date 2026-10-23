@@ -146,7 +146,12 @@ export function Bitmap({
     const AL = Math.min(255, Math.round(alpha * 255 * 2.4)); // буквы плотнее фона
     const base = (x: number, y: number, t: number) => {
       if (variant === "rain") return 0.5 + 0.5 * Math.sin(y * 0.22 - t * 2.2 + Math.sin(x * 1.7) * 6) * Math.sin(x * 0.9 + t * 0.3);
-      if (variant === "ripple") { const dx = x - w * 0.8, dy = y - h * 0.2; return 0.5 + 0.5 * Math.sin(Math.sqrt(dx * dx + dy * dy) * 0.35 - t * 1.6); }
+      if (variant === "ripple") {
+        // Волны Wi‑Fi: центр по середине чуть ниже нижнего края, дуги расходятся вверх в конусе ±55°
+        const dx = x - w * 0.5, dy = y - h * 1.12, d = Math.sqrt(dx * dx + dy * dy);
+        const cone = Math.max(0, 1 - Math.abs(Math.atan2(dx, -dy)) / 0.96);
+        return (0.5 + 0.5 * Math.sin(d * 0.24 - t * 1.6)) * Math.min(1, cone * 2.2);
+      }
       return 0.5 + 0.25 * Math.sin(x * 0.07 + t * 0.55) + 0.25 * Math.cos(y * 0.09 - t * 0.4) * Math.sin((x + y) * 0.035 + t * 0.25);
     };
     const ring = (x: number, y: number, sx: number, sy: number, rad: number) => { const d = Math.hypot(x - sx, y - sy) - rad; return Math.exp(-(d * d) / 18); };
