@@ -11,7 +11,6 @@ import { services } from "@/content/services";
 import { site } from "@/content/site";
 import { Container, Eyebrow, Section } from "@/components/container";
 import { Button } from "@/components/ui/button";
-import { ServiceCard } from "@/components/service-card";
 import { FaqList } from "@/components/faq";
 import { Cta } from "@/components/cta";
 import { Bitmap } from "@/components/bitmap";
@@ -27,18 +26,7 @@ export default function Home() {
 
       <DesktopShell />
 
-      <Section id="directions" className="border-t">
-        <Container>
-          <Eyebrow>Направления</Eyebrow>
-          <h2 className="mb-3 text-3xl font-semibold tracking-tight">Пять продуктов на одной технологии</h2>
-          <p className="mb-8 max-w-2xl text-muted-foreground">Гостевой Wi-Fi собирает контакты для заведения и даёт брендам рекламный канал. Выберите своё направление.</p>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {services.map((s) => <ServiceCard key={s.slug} s={s} />)}
-          </div>
-        </Container>
-      </Section>
-
-      <Section className="border-t bg-card">
+      <Section id="after-desktop" className="scroll-mt-14 border-t bg-card">
         <Container>
           <Eyebrow>Для заведений</Eyebrow>
           <h2 className="mb-8 text-3xl font-semibold tracking-tight">Каждое подключение — новый контакт</h2>

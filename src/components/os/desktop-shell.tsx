@@ -7,7 +7,7 @@
 // На экранах уже 1024 px окон нет: страницы открываются ссылками, приложения — на весь экран.
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { FolderOpen, Send } from "lucide-react";
+import { ChevronDown, FolderOpen, Send } from "lucide-react";
 import { Bitmap } from "@/components/bitmap";
 import { home } from "@/content/home";
 import { site } from "@/content/site";
@@ -47,11 +47,16 @@ const ICONS_KEY = "hvala-os-icons";
 
 const pageById = Object.fromEntries(pageApps.map((p) => [p.id, p]));
 const appById = Object.fromEntries(apps.map((a) => [a.id, a]));
-// На столе: папка «Направления» (внутри — 5 страниц), «Кейсы», «О компании», «Блог»
-const desktopIcons = [
-  ...apps.filter((a) => a.desktop).map((a) => ({ id: a.id, label: a.label, icon: a.icon, href: a.fallback })),
-  ...pageApps.filter((p) => p.id === "page:about" || p.id === "page:blog").map((p) => ({ id: p.id, label: p.label, icon: p.icon, href: p.href })),
-];
+// На столе — в том же порядке, что меню: О компании, Направления (папка с 5 страницами), Кейсы, Форматы, Блог, Контакты.
+// Корзина — отдельно, в правом нижнем углу.
+const iconById = (id: string) => {
+  const p = pageApps.find((x) => x.id === id);
+  if (p) return { id: p.id, label: p.label, icon: p.icon, href: p.href };
+  const a = apps.find((x) => x.id === id)!;
+  return { id: a.id, label: a.label, icon: a.icon, href: a.fallback };
+};
+const desktopIcons = ["page:about", "directions", "cases", "page:formats", "page:blog", "page:contacts"].map(iconById);
+const trashIcon = iconById("trash");
 const entries: Entry[] = [
   ...pageApps.map((p) => ({ id: p.id, label: p.label, hint: "Страница", icon: p.icon })),
   ...apps.filter((a) => a.id !== "launchpad" && a.id !== "spotlight").map((a) => ({ id: a.id, label: a.label, hint: "Приложение", icon: a.icon })),
@@ -261,7 +266,6 @@ export function DesktopShell() {
   const glyph = useCallback((icon: string) => (icon === "logo" ? <Logo className="h-3 w-auto text-brand-vivid" /> : <AppGlyph icon={icon} today={today} />), [today]);
   const openWins = wins.filter((w) => !w.min);
   const isOpen = (id: string) => wins.some((w) => w.key === id);
-  const dockApps = useMemo(() => apps.filter((a) => a.dock && a.id !== "trash"), []); // док: Все разделы, Спросить HVALA
 
   const body = (w: Win) => {
     switch (w.key) {
@@ -312,6 +316,29 @@ export function DesktopShell() {
           </ul>
         </nav>
 
+        {/* Корзина — правый нижний угол стола */}
+        <ul aria-label="Корзина" className="absolute bottom-0 right-6 hidden lg:block">
+            {[trashIcon].map((a) => {
+              const o = offsets[a.id];
+              return (
+                <li key={a.id} style={isDesktop && o ? { transform: `translate(${o.dx}px, ${o.dy}px)` } : undefined} className="relative">
+                  <a
+                    href={a.href}
+                    onClick={clickIcon(a.id)}
+                    onDoubleClick={() => isDesktop && open(a.id)}
+                    onPointerDown={dragIcon(a.id)}
+                    draggable={false}
+                    aria-current={selected === a.id ? "true" : undefined}
+                    className="desktop-app group flex touch-none select-none flex-col items-center gap-1.5 rounded-xl p-1.5 text-center outline-offset-2"
+                  >
+                    <span className="app-tile size-14 sm:size-16"><AppGlyph icon={a.icon} className="size-7" today={today} /></span>
+                    <span className={cn("max-w-24 rounded px-1.5 py-0.5 text-xs font-medium leading-tight text-desktop-ink backdrop-blur-sm", selected === a.id ? "bg-primary text-primary-foreground" : "bg-background/60")}>{a.label}</span>
+                  </a>
+                </li>
+              );
+            })}
+        </ul>
+
         {/* Виджеты справа: цифры компании */}
         <aside aria-label="HVALA в цифрах" className="absolute right-6 top-4 hidden w-[17rem] lg:block">
           <StatsWidgets />
@@ -357,37 +384,15 @@ export function DesktopShell() {
         })}
       </div>
 
-      {/* Док */}
-      <nav aria-label="Док" className="dock absolute inset-x-0 bottom-4 z-10 hidden justify-center lg:flex">
-        <ul className="flex items-end gap-1 rounded-2xl border bg-background/70 p-1.5 shadow-lg backdrop-blur-md">
-          {dockApps.map((a) => (
-            <DockItem key={a.id} label={a.label} href={a.fallback} active={isOpen(a.id)} onClick={() => open(a.id)}><AppGlyph icon={a.icon} className="size-5" today={today} /></DockItem>
-          ))}
-          {wins.some((w) => w.kind === "page") && <li aria-hidden className="mx-1 h-9 w-px self-center bg-border" />}
-          {wins.filter((w) => w.kind === "page").map((w) => (
-            <DockItem key={w.key} label={w.title} href={w.href!} active onClick={() => openPage(w.key)}><AppGlyph icon={w.icon} className="size-5" /></DockItem>
-          ))}
-          <li aria-hidden className="mx-1 h-9 w-px self-center bg-border" />
-          <DockItem label="Корзина" href="/" active={isOpen("trash")} onClick={() => open("trash")}><AppGlyph icon="trash" className="size-5" /></DockItem>
-        </ul>
-      </nav>
+      {/* Призыв листать: первый экран — не весь сайт */}
+      <a href="#after-desktop" className="scroll-cue absolute bottom-6 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-1 rounded-full px-4 py-2 text-xs font-medium text-desktop-ink lg:flex">
+        <span className="rounded-full bg-background/70 px-3 py-1 backdrop-blur-md">Листайте вниз — там тарифы, кейсы и ответы</span>
+        <ChevronDown className="scroll-cue-arrow size-5" aria-hidden />
+      </a>
 
       {overlay === "launchpad" && <Launchpad entries={entries} renderIcon={glyph} onClose={() => setOverlay(null)} onOpen={(e) => open(e.id, e.payload)} />}
       {overlay === "spotlight" && <Spotlight entries={entries} renderIcon={glyph} onClose={() => setOverlay(null)} onOpen={(e) => open(e.id, e.payload)} />}
       <p className="sr-only" aria-live="polite">{openWins.length > 2 ? `Открыто окон: ${openWins.length}` : ""}</p>
     </section>
-  );
-}
-
-function DockItem({ label, href, active, onClick, children }: { label: string; href: string; active?: boolean; onClick: () => void; children: React.ReactNode }) {
-  return (
-    <li className="group/dock relative flex flex-col items-center">
-      <span role="tooltip" className="pointer-events-none absolute -top-8 hidden whitespace-nowrap rounded-md bg-foreground px-2 py-1 text-xs text-background group-hover/dock:block group-focus-within/dock:block">{label}</span>
-      <a href={href} onClick={(e) => { e.preventDefault(); onClick(); }} className="desktop-app flex rounded-xl p-1">
-        <span className="app-tile size-11">{children}</span>
-        <span className="sr-only">{label}</span>
-      </a>
-      <span aria-hidden className={cn("mt-0.5 size-1 rounded-full", active ? "bg-desktop-ink" : "bg-transparent")} />
-    </li>
   );
 }
