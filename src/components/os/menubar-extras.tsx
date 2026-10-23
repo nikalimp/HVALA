@@ -29,8 +29,8 @@ export function MenubarExtras() {
       <a href="/#app-wifi" onClick={(e) => { e.preventDefault(); openApp("wifi"); }} aria-label="Демо: Wi-Fi гостя" title="Демо Wi-Fi гостя" className="inline-flex size-9 items-center justify-center rounded-md hover:bg-accent">
         <Wifi className="size-4" aria-hidden />
       </a>
-      <span className="hidden min-w-[9.5rem] px-1 text-right text-[13px] tabular-nums text-muted-foreground xl:inline" suppressHydrationWarning>
-        {now ? now.toLocaleString("ru-RU", { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) : ""}
+      <span className="hidden min-w-[3rem] px-1.5 text-right text-[13px] font-medium tabular-nums text-foreground/80 lg:inline" suppressHydrationWarning>
+        {now ? now.toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" }) : ""}
       </span>
     </>
   );

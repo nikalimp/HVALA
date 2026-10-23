@@ -5,7 +5,8 @@ import { ArrowRight, Check, ChevronLeft, ChevronRight, Copy, FileText, FolderOpe
 import { home } from "@/content/home";
 import { site } from "@/content/site";
 import { services } from "@/content/services";
-import { caseGroups, caseTags, cases, formats, trashFiles, type CaseItem } from "@/content/os";
+import { caseGroups, caseTags, cases, formats, pageApps, trashFiles, type CaseItem } from "@/content/os";
+import { AppGlyph } from "./icons";
 import { ConsentCheckbox } from "@/components/consent-checkbox";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -324,75 +325,91 @@ export function TrashApp() {
   );
 }
 
-/* ───────── Демо Wi-Fi гостя ───────── */
+/* ───────── Направления (папка) ───────── */
+export function DirectionsApp({ open }: { open: OpenFn }) {
+  return (
+    <div className="p-4">
+      <ul className="grid grid-cols-2 gap-2 @lg:grid-cols-3">
+        {pageApps.filter((p) => p.href.startsWith("/services/")).map((p) => {
+          const s = services.find((x) => `/services/${x.slug}/` === p.href)!;
+          return (
+            <li key={p.id}>
+              <a href={p.href} onClick={(e) => { e.preventDefault(); open(p.id); }} className="flex h-full flex-col gap-2 rounded-xl border p-3 hover:border-brand hover:bg-accent">
+                <span className="app-tile size-10"><AppGlyph icon={p.icon} className="size-5" /></span>
+                <span className="font-medium leading-tight">{s.title}</span>
+                <span className="text-xs text-muted-foreground">{s.short}</span>
+                <span className="mt-auto text-xs font-medium">{s.prices[0]?.value}</span>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+/* ───────── Демо Wi-Fi гостя: только мокап iPhone ───────── */
 export function WifiApp() {
   const [step, setStep] = useState<"login" | "online">("login");
   const [phone, setPhone] = useState("");
   const [vote, setVote] = useState<string | null>(null);
   const [card, setCard] = useState(false);
   const [sub, setSub] = useState(false);
-  const [time, setTime] = useState("");
+  const [clock, setClock] = useState("");
+  useEffect(() => { const f = () => setClock(new Date().toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" })); f(); const t = setInterval(f, 20_000); return () => clearInterval(t); }, []);
   const digits = phone.replace(/\D/g, "").replace(/^[78]/, "").slice(0, 10);
   const fmt = (d: string) => `+7 ${d.slice(0, 3)}${d.length > 3 ? ` ${d.slice(3, 6)}` : ""}${d.length > 6 ? `-${d.slice(6, 8)}` : ""}${d.length > 8 ? `-${d.slice(8, 10)}` : ""}`;
-  const masked = digits.length === 10 ? `+7 ${digits.slice(0, 1)}•• •••-••-${digits.slice(8)}` : "—";
   const reset = () => { setStep("login"); setPhone(""); setVote(null); setCard(false); setSub(false); };
-  const rows: [string, string][] = [
-    ["Телефон", step === "online" ? masked : "—"],
-    ["Визит", step === "online" ? time : "—"],
-    ["Опрос", vote ?? "—"],
-    ["Подписка на канал", sub ? "да" : "—"],
-    ["Карта лояльности", card ? "в телефоне" : "—"],
-  ];
-  return (    <div className="grid gap-5 p-5 @xl:grid-cols-[1fr_15rem]">
-      <div className="mx-auto w-full max-w-[15rem] rounded-[2rem] @xl:order-2 border-[7px] border-desktop-ink bg-background p-4 shadow-sm">
-        <p className="flex items-center justify-center gap-1.5 text-[11px] font-semibold text-muted-foreground"><Wifi className="size-3" aria-hidden />Coffee Point · Wi-Fi</p>
-        {step === "login" ? (
-          <form
-            className="mt-3"
-            onSubmit={(e) => { e.preventDefault(); if (digits.length !== 10) return; setTime(new Date().toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" })); setStep("online"); }}
-          >
-            <div className="rounded-xl bg-brand-bg p-3 text-center">
-              <p className="text-xs text-muted-foreground">Акция дня</p>
-              <p className="mt-1 text-sm font-semibold leading-snug">Второй капучино в подарок</p>
-            </div>
-            <label className="mt-4 block text-[11px] text-muted-foreground" htmlFor="demo-phone">Номер телефона</label>
-            <input id="demo-phone" inputMode="tel" autoComplete="off" value={digits ? fmt(digits) : phone} onChange={(e) => setPhone(e.target.value)} placeholder="+7 900 000-00-00" className="mt-1 w-full rounded-lg border bg-background px-2.5 py-2 text-sm tabular-nums outline-none focus-visible:ring-2 focus-visible:ring-ring/50" />
-            <button type="submit" disabled={digits.length !== 10} className="mt-3 w-full rounded-lg bg-primary px-2.5 py-2 text-sm font-medium text-primary-foreground disabled:opacity-50">Подключиться</button>
-            <p className="mt-2 text-center text-[10px] leading-tight text-muted-foreground">Демо: номер никуда не отправляется</p>
-          </form>
-        ) : (
-          <div className="mt-3 space-y-3 text-sm">
-            <p className="flex items-center justify-center gap-1.5 font-semibold text-success"><Check className="size-4" aria-hidden />Вы в сети</p>
-            <div className="rounded-xl bg-brand-bg p-3 text-center">
-              <p className="text-xs text-muted-foreground">Ваш подарок</p>
-              <p className="font-semibold">Второй капучино — 0 ₽</p>
-            </div>
-            <div>
-              <p className="text-xs text-muted-foreground">Как вам у нас?</p>
-              <div className="mt-1 flex gap-1">
-                {["Отлично", "Хорошо", "Есть идеи"].map((v) => (
-                  <button key={v} type="button" aria-pressed={vote === v} onClick={() => setVote(v)} className={cn("flex-1 rounded-md border px-1 py-1 text-[11px]", vote === v && "border-brand bg-brand-bg")}>{v}</button>
-                ))}
-              </div>
-            </div>
-            <button type="button" onClick={() => setSub(true)} className="w-full rounded-lg border px-2 py-1.5 text-xs">{sub ? "Вы подписаны ✓" : "Подписаться на канал кофейни"}</button>
-            <button type="button" onClick={() => setCard(true)} className="w-full rounded-lg bg-primary px-2 py-1.5 text-xs font-medium text-primary-foreground">{card ? "Карта в телефоне ✓" : "Скачать карту лояльности"}</button>
+  return (
+    <div className="flex justify-center bg-muted/50 px-6 py-6">
+      {/* Корпус iPhone: рамка, Dynamic Island, строка состояния, полоска «домой» */}
+      <div className="relative w-[17.5rem] rounded-[3.1rem] bg-desktop-ink p-[10px] shadow-2xl">
+        <span aria-hidden className="absolute -left-[3px] top-28 h-8 w-[3px] rounded-l bg-desktop-ink" />
+        <span aria-hidden className="absolute -left-[3px] top-40 h-12 w-[3px] rounded-l bg-desktop-ink" />
+        <span aria-hidden className="absolute -right-[3px] top-36 h-16 w-[3px] rounded-r bg-desktop-ink" />
+        <div className="relative flex h-[34rem] flex-col overflow-hidden rounded-[2.5rem] bg-background">
+          <div aria-hidden className="flex items-center justify-between px-7 pb-1 pt-3.5 text-[12px] font-semibold tabular-nums">
+            <span>{clock}</span>
+            <span className="absolute left-1/2 top-2.5 h-[26px] w-[88px] -translate-x-1/2 rounded-full bg-desktop-ink" />
+            <span className="flex items-center gap-1"><Wifi className="size-3.5" /><span className="h-2.5 w-5 rounded-[3px] border border-current p-[1px]"><span className="block h-full w-3/4 rounded-[1px] bg-current" /></span></span>
           </div>
-        )}
-      </div>
-      <div className="text-sm">
-        <p className="text-xs font-medium uppercase tracking-wider text-brand">Кабинет заведения</p>
-        <h3 className="mt-1 text-lg font-semibold leading-snug">Так гость видит Wi-Fi с HVALA, а так — заведение</h3>
-        <p className="mt-2 text-muted-foreground">Введите любой номер в телефоне и пройдите путь гостя. В таблице появятся данные, которые получает заведение.</p>
-        <dl className="mt-4 divide-y rounded-xl border">
-          {rows.map(([k, v]) => (
-            <div key={k} className="flex justify-between gap-3 px-3 py-2">
-              <dt className="text-muted-foreground">{k}</dt>
-              <dd className={cn("tabular-nums", v !== "—" && "font-medium")}>{v}</dd>
-            </div>
-          ))}
-        </dl>
-        {step === "online" && <button type="button" onClick={reset} className="mt-3 inline-flex items-center gap-1 text-xs text-muted-foreground underline underline-offset-4">Начать заново</button>}
+          <div className="flex min-h-0 flex-1 flex-col px-5 pb-6 pt-6">
+            <p className="flex items-center justify-center gap-1.5 text-[11px] font-semibold text-muted-foreground"><Wifi className="size-3" aria-hidden />Coffee Point · Wi‑Fi</p>
+            {step === "login" ? (
+              <form className="mt-4 flex flex-1 flex-col" onSubmit={(e) => { e.preventDefault(); if (digits.length === 10) setStep("online"); }}>
+                <div className="rounded-2xl bg-brand-bg p-4 text-center">
+                  <p className="text-xs text-muted-foreground">Акция дня</p>
+                  <p className="mt-1 font-semibold leading-snug">Второй капучино в подарок</p>
+                </div>
+                <label className="mt-5 block text-[11px] text-muted-foreground" htmlFor="demo-phone">Номер телефона</label>
+                <input id="demo-phone" inputMode="tel" autoComplete="off" value={digits ? fmt(digits) : phone} onChange={(e) => setPhone(e.target.value)} placeholder="+7 900 000-00-00" className="mt-1 w-full rounded-xl border bg-background px-3 py-2.5 text-sm tabular-nums outline-none focus-visible:ring-2 focus-visible:ring-ring/50" />
+                <button type="submit" disabled={digits.length !== 10} className="mt-3 w-full rounded-xl bg-primary px-3 py-2.5 text-sm font-medium text-primary-foreground disabled:opacity-50">Подключиться</button>
+                <p className="mt-auto text-center text-[10px] leading-tight text-muted-foreground">Демо: номер никуда не отправляется</p>
+              </form>
+            ) : (
+              <div className="mt-4 flex flex-1 flex-col gap-3 text-sm">
+                <p className="flex items-center justify-center gap-1.5 font-semibold text-success"><Check className="size-4" aria-hidden />Вы в сети</p>
+                <div className="rounded-2xl bg-brand-bg p-3 text-center">
+                  <p className="text-xs text-muted-foreground">Ваш подарок</p>
+                  <p className="font-semibold">Второй капучино — 0 ₽</p>
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">Как вам у нас?</p>
+                  <div className="mt-1 flex gap-1">
+                    {["Отлично", "Хорошо", "Есть идеи"].map((v) => (
+                      <button key={v} type="button" aria-pressed={vote === v} onClick={() => setVote(v)} className={cn("flex-1 rounded-lg border px-1 py-1.5 text-[11px]", vote === v && "border-brand bg-brand-bg")}>{v}</button>
+                    ))}
+                  </div>
+                  {vote && <p className="mt-1 text-center text-[11px] text-muted-foreground">Спасибо за ответ!</p>}
+                </div>
+                <button type="button" onClick={() => setSub(true)} className="w-full rounded-xl border px-2 py-2 text-xs">{sub ? "Вы подписаны ✓" : "Подписаться на канал кофейни"}</button>
+                <button type="button" onClick={() => setCard(true)} className="w-full rounded-xl bg-primary px-2 py-2 text-xs font-medium text-primary-foreground">{card ? "Карта в телефоне ✓" : "Скачать карту лояльности"}</button>
+                <button type="button" onClick={reset} className="mt-auto text-center text-[11px] text-muted-foreground underline underline-offset-4">Начать заново</button>
+              </div>
+            )}
+          </div>
+          <span aria-hidden className="absolute bottom-2 left-1/2 h-1 w-28 -translate-x-1/2 rounded-full bg-desktop-ink/80" />
+        </div>
       </div>
     </div>
   );

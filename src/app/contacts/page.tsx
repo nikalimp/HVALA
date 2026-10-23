@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { site } from "@/content/site";
 import { Container, Section } from "@/components/container";
 import { Button } from "@/components/ui/button";
+import { Bitmap } from "@/components/bitmap";
 import { JsonLd } from "@/components/json-ld";
 import { graph, orgId } from "@/lib/schema";
 
@@ -25,7 +26,8 @@ export default function Contacts() {
   return (
     <>
       <JsonLd data={graph({ "@type": "ContactPage", about: { "@id": orgId } })} />
-      <Section className="pt-12">
+      <Section className="relative isolate overflow-hidden pt-12">
+        <Bitmap variant="ripple" alpha={0.2} density={0.45} className="[mask-image:linear-gradient(to_left,black,transparent_55%)]" />
         <Container className="max-w-3xl">
           <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Контакты</h1>
           <dl className="mt-8 divide-y border-y">

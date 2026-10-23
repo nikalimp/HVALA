@@ -4,6 +4,7 @@ import remarkGfm from "remark-gfm";
 import { about } from "@/content/home";
 import { Container, Section } from "@/components/container";
 import { Cta } from "@/components/cta";
+import { Bitmap } from "@/components/bitmap";
 import { JsonLd } from "@/components/json-ld";
 import { graph, orgId } from "@/lib/schema";
 
@@ -17,7 +18,8 @@ export default function About() {
   return (
     <>
       <JsonLd data={graph({ "@type": "AboutPage", mainEntity: { "@id": orgId } })} />
-      <Section className="pt-12">
+      <Section className="relative isolate overflow-hidden pt-12">
+        <Bitmap variant="ripple" alpha={0.2} density={0.45} className="[mask-image:linear-gradient(to_left,black,transparent_55%)]" />
         <Container className="max-w-3xl">
           <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">{about.h1}</h1>
           <div className="prose-site mt-8">

@@ -13,7 +13,8 @@ export type AppId =
   | "now"
   | "gallery"
   | "trash"
-  | "wifi";
+  | "wifi"
+  | "directions";
 
 // Страницы сайта, которые открываются окнами поверх рабочего стола
 export const pageApps = [
@@ -28,16 +29,16 @@ export const pageApps = [
 
 // Приложения: окна, которые существуют только на рабочем столе
 export const apps: { id: AppId; label: string; title: string; icon: string; dock: boolean; desktop?: boolean; fallback: string }[] = [
+  { id: "directions", label: "Направления", title: "Направления", icon: "folder-wifi", dock: false, desktop: true, fallback: "/services/" },
   { id: "cases", label: "Кейсы", title: "Кейсы", icon: "folder", dock: true, desktop: true, fallback: "/#cases" },
   { id: "launchpad", label: "Все разделы", title: "Все разделы", icon: "grid", dock: true, fallback: "/services/" },
   { id: "mail", label: "Заявка", title: "Новая заявка", icon: "mail", dock: true, fallback: "https://t.me/kirillSyndicate" },
   { id: "calendar", label: "Созвон", title: "Созвон", icon: "calendar", dock: true, fallback: "https://t.me/kirillSyndicate" },
   { id: "messages", label: "Спросить HVALA", title: "Сообщения", icon: "message", dock: true, fallback: "/#faq" },
-  { id: "spotlight", label: "Поиск", title: "Поиск", icon: "search", dock: true, fallback: "/services/" },
-  { id: "wifi", label: "Демо Wi‑Fi", title: "Демо: Wi-Fi гостя", icon: "smartphone", dock: true, desktop: true, fallback: "/services/guest-wifi/" },
-  { id: "tools", label: "Инструменты", title: "Инструменты", icon: "blocks", dock: true, fallback: "/services/guest-wifi/" },
+  { id: "spotlight", label: "Поиск", title: "Поиск", icon: "search", dock: false, fallback: "/services/" },
+  { id: "wifi", label: "Демо Wi‑Fi", title: "Демо: Wi-Fi гостя", icon: "smartphone", dock: false, fallback: "/services/guest-wifi/" },
+  { id: "tools", label: "Инструменты", title: "Инструменты", icon: "blocks", dock: false, fallback: "/services/guest-wifi/" },
   { id: "gallery", label: "Форматы рекламы", title: "Форматы рекламы", icon: "images", dock: true, fallback: "/services/advertising/" },
-  { id: "now", label: "Цифры", title: "HVALA сегодня", icon: "note", dock: true, fallback: "/about/" },
   { id: "trash", label: "Корзина", title: "Корзина", icon: "trash", dock: true, fallback: "/" },
 ];
 
