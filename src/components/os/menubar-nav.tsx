@@ -1,6 +1,6 @@
 "use client";
 
-// Меню слева от логотипа — как строка меню macOS: О компании, Направления ▾, Кейсы, Форматы рекламы, Блог, Контакты.
+// Меню слева от логотипа — как строка меню macOS: О компании, Направления ▾, Кейсы, Форматы (секция главной), Блог, Контакты.
 // Все пункты — обычные ссылки на страницы сайта (решение Ника 23.10.2026: из шапки — страницы, не окна).
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
@@ -17,7 +17,7 @@ const menus = [
 ];
 const linksAfter = [
   { href: "/cases/", label: "Кейсы" },
-  { href: "/ad-formats/", label: "Форматы" },
+  { href: "/#formats", label: "Форматы" },
   ...(site.features.blog ? [{ href: "/blog/", label: "Блог" }] : []),
   { href: "/contacts/", label: "Контакты" },
 ];

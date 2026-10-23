@@ -156,6 +156,7 @@ export function DesktopShell() {
     setSelected(null);
     if (id === "mail" || id === "wifi" || id === "spotlight") { dispatchEvent(new CustomEvent("hvala:overlay", { detail: { id, payload } })); return; }
     if (id === "launchpad") { setOverlay(id); return; }
+    if (pageById[id]?.href.includes("#")) { location.href = pageById[id].href; return; }
     if (id.startsWith("page:")) {
       if (!matchMedia(DESKTOP_Q).matches) { location.href = pageById[id].href; return; }
       setOverlay(null); openPage(id); return;

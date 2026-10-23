@@ -87,7 +87,7 @@ export const nav = [
   { href: "/about/", label: "О компании" },
   { href: "/services/", label: "Направления" },
   { href: "/cases/", label: "Кейсы" },
-  { href: "/ad-formats/", label: "Форматы" },
+  { href: "/#formats", label: "Форматы" },
   ...(site.features.blog ? [{ href: "/blog/", label: "Блог" }] : []),
   { href: "/about/", label: "О компании" },
   { href: "/contacts/", label: "Контакты" },
