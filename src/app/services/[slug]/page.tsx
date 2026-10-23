@@ -9,6 +9,7 @@ import { Cta } from "@/components/cta";
 import { FaqList } from "@/components/faq";
 import { ServiceCard } from "@/components/service-card";
 import { Button } from "@/components/ui/button";
+import { Bitmap } from "@/components/bitmap";
 import { JsonLd } from "@/components/json-ld";
 import { breadcrumbs, faqSchema, graph, serviceSchema } from "@/lib/schema";
 
@@ -37,7 +38,8 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
     <>
       <JsonLd data={graph(serviceSchema(s), breadcrumbs([{ name: "Главная", path: "/" }, { name: "Направления", path: "/services/" }, { name: s.title, path }]), s.faq.length > 0 && faqSchema(s.faq))} />
 
-      <Section className="pt-12">
+      <Section className="relative isolate overflow-hidden pt-12">
+        <Bitmap variant="ripple" alpha={0.22} density={0.5} className="[mask-image:linear-gradient(to_left,black,transparent_60%)]" />
         <Container className="max-w-3xl">
           <Crumbs items={[{ name: "Главная", path: "/" }, { name: "Направления", path: "/services/" }, { name: s.title }]} />
           <h1 className="text-3xl font-semibold leading-tight tracking-tight text-balance sm:text-4xl">{s.h1}</h1>

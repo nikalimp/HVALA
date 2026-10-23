@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { ServiceCard } from "@/components/service-card";
 import { FaqList } from "@/components/faq";
 import { Cta } from "@/components/cta";
+import { Bitmap } from "@/components/bitmap";
 import { DesktopShell } from "@/components/os/desktop-shell";
 import { JsonLd } from "@/components/json-ld";
 import { faqSchema, graph } from "@/lib/schema";
@@ -79,7 +80,8 @@ export default function Home() {
         </Container>
       </Section>
 
-      <Section className="border-t bg-card">
+      <Section className="relative isolate overflow-hidden border-t bg-card">
+        <Bitmap alpha={0.14} density={0.5} className="[mask-image:linear-gradient(to_bottom,transparent,black)]" />
         <Container>
           <Eyebrow>Для рекламодателей</Eyebrow>
           <h2 className="mb-3 text-3xl font-semibold tracking-tight">Реклама в момент подключения к Wi-Fi</h2>

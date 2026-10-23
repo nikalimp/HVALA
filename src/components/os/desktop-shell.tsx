@@ -7,7 +7,8 @@
 // На экранах уже 1024 px окон нет: страницы открываются ссылками, приложения — на весь экран.
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { Send, Smartphone } from "lucide-react";
+import { FolderOpen, Send } from "lucide-react";
+import { Bitmap } from "@/components/bitmap";
 import { home } from "@/content/home";
 import { site } from "@/content/site";
 import { apps, pageApps, type AppId } from "@/content/os";
@@ -16,7 +17,7 @@ import { Logo } from "@/components/logo";
 import { cn } from "@/lib/utils";
 import { AppGlyph } from "./icons";
 import {
-  CalendarApp, CasesApp, GalleryApp, Launchpad, MailApp, MessagesApp, NowApp, Spotlight, ToolsApp, TrashApp, WifiApp, type Entry,
+  CalendarApp, CasesApp, DirectionsApp, GalleryApp, Launchpad, MailApp, MessagesApp, NowApp, Spotlight, ToolsApp, TrashApp, WifiApp, type Entry,
 } from "./apps";
 
 type Win = {
@@ -38,16 +39,17 @@ type Win = {
 
 const sizes: Partial<Record<AppId, { w: number; h?: number }>> = {
   cases: { w: 820, h: 520 }, mail: { w: 580, h: 540 }, calendar: { w: 360 }, messages: { w: 440, h: 540 },
-  tools: { w: 560 }, now: { w: 290 }, gallery: { w: 680, h: 500 }, trash: { w: 400 }, wifi: { w: 660 },
+  tools: { w: 560 }, gallery: { w: 680, h: 500 }, trash: { w: 400 }, wifi: { w: 380 }, directions: { w: 600 },
 };
 const DESKTOP_Q = "(min-width: 1024px)";
 const ICONS_KEY = "hvala-os-icons";
 
 const pageById = Object.fromEntries(pageApps.map((p) => [p.id, p]));
 const appById = Object.fromEntries(apps.map((a) => [a.id, a]));
+// На столе: папка «Направления» (внутри — 5 страниц), «Кейсы», «О компании», «Контакты»
 const desktopIcons = [
-  ...pageApps.map((p) => ({ id: p.id, label: p.label, icon: p.icon, href: p.href })),
   ...apps.filter((a) => a.desktop).map((a) => ({ id: a.id, label: a.label, icon: a.icon, href: a.fallback })),
+  ...pageApps.filter((p) => !p.href.startsWith("/services/")).map((p) => ({ id: p.id, label: p.label, icon: p.icon, href: p.href })),
 ];
 const entries: Entry[] = [
   ...pageApps.map((p) => ({ id: p.id, label: p.label, hint: "Страница", icon: p.icon })),
@@ -70,7 +72,7 @@ function AboutWindowBody({ open }: { open: (id: string) => void }) {
       </dl>
       <div className="mt-7 flex flex-wrap gap-3">
         <Button asChild size="lg"><a href={site.cta.href} onClick={(e) => { e.preventDefault(); open("mail"); }}><Send aria-hidden />{site.cta.label}</a></Button>
-        <Button asChild size="lg" variant="outline"><a href="/services/guest-wifi/" onClick={(e) => { e.preventDefault(); open("wifi"); }}><Smartphone aria-hidden />Демо Wi-Fi гостя</a></Button>
+        <Button asChild size="lg" variant="outline"><a href="/services/" onClick={(e) => { if (matchMedia(DESKTOP_Q).matches) { e.preventDefault(); open("directions"); } }}><FolderOpen aria-hidden />Направления</a></Button>
       </div>
     </div>
   );
@@ -87,17 +89,13 @@ export function DesktopShell() {
   const [selected, setSelected] = useState<string | null>(null);
   const [offsets, setOffsets] = useState<Record<string, { dx: number; dy: number }>>({});
   const [wins, setWins] = useState<Win[]>([
-    { key: "about", kind: "app", title: "О HVALA", icon: "logo", z: 3, w: 660, min: false, max: false },
-    { key: "wifi", kind: "app", title: "Демо: Wi-Fi гостя", icon: "smartphone", z: 2, w: 660, min: false, max: false },
-  ]);
+    { key: "about", kind: "app", title: "О HVALA", icon: "logo", z: 3, w: 660, min: false, max: false },]);
   const winsRef = useRef(wins);
   winsRef.current = wins;
 
   useLayoutEffect(() => {
     const mq = matchMedia(DESKTOP_Q);
-    const on = () => setIsDesktop(mq.matches);    on(); mq.addEventListener("change", on);
-    if (!mq.matches) setWins((ws) => ws.filter((w) => w.key !== "wifi"));
-    setToday(new Date());
+    const on = () => setIsDesktop(mq.matches);    on(); mq.addEventListener("change", on);setToday(new Date());
     try { const s = localStorage.getItem(ICONS_KEY); if (s) setOffsets(JSON.parse(s)); } catch {}
     return () => mq.removeEventListener("change", on);
   }, []);
@@ -107,9 +105,7 @@ export function DesktopShell() {
     if (!isDesktop || !area.current) return;
     const r = area.current.getBoundingClientRect();
     setWins((ws) => ws.map((w) => {
-      if (w.x !== undefined) return w;
-      if (w.key === "about") return { ...w, w: Math.min(660, r.width - 360), x: Math.max(250, r.width * 0.5 - 470), y: 16 };
-      if (w.key === "wifi") return { ...w, w: 600, x: Math.max(240, r.width - 600 - 8), y: Math.min(150, Math.max(16, r.height - 500)) };
+      if (w.x !== undefined) return w;      if (w.key === "about") return { ...w, w: Math.min(660, r.width - 560), x: Math.max(250, (r.width - 660) / 2 - 30), y: 16 };
       return w;
     }));
   }, [isDesktop]);
@@ -164,7 +160,9 @@ export function DesktopShell() {
     if (existing) setWins((ws) => ws.map((w) => (w.key === id ? { ...w, z: ++zTop.current, min: false, payload: payload ?? w.payload } : w)));
     else {
       const s = sizes[id as AppId] ?? { w: 520 };
-      setWins((ws) => [...ws, { key: id, kind: "app", title: a.title, icon: a.icon, payload, z: ++zTop.current, w: s.w, h: s.h, ...placeNew(s.w, s.h), min: false, max: false }]);
+      // Демо Wi-Fi открывается под значком Wi-Fi в строке меню, как меню-экстра macOS
+      const pos = id === "wifi" && area.current ? { x: area.current.getBoundingClientRect().width - s.w - 16, y: 4 } : placeNew(s.w, s.h);
+      setWins((ws) => [...ws, { key: id, kind: "app", title: a.title, icon: a.icon, payload, z: ++zTop.current, w: s.w, h: s.h, ...pos, min: false, max: false }]);
     }
     focusWin(id);
   }, [front, openPage]);
@@ -198,6 +196,12 @@ export function DesktopShell() {
     (window as unknown as { __hvalaOS?: boolean }).__hvalaOS = true;
     const onOpen = (e: Event) => { const d = (e as CustomEvent<{ id: string; payload?: string }>).detail; open(d.id, d.payload); };
     addEventListener("hvala:open", onOpen);
+    const onDelegated = (e: MouseEvent) => {
+      const a = (e.target as HTMLElement).closest<HTMLElement>("[data-os-app]");
+      if (!a || !matchMedia(DESKTOP_Q).matches) return;
+      e.preventDefault(); open(a.dataset.osApp!);
+    };
+    addEventListener("click", onDelegated);
     const m = location.hash.match(/^#app-([a-z]+)$/);
     if (m) { history.replaceState(null, "", "/"); open(m[1]); }
     const onKey = (e: KeyboardEvent) => {
@@ -208,7 +212,7 @@ export function DesktopShell() {
       if (top && document.activeElement && winRefs.current.get(top.key)?.contains(document.activeElement)) close(top.key);
     };
     addEventListener("keydown", onKey);
-    return () => { removeEventListener("hvala:open", onOpen); removeEventListener("keydown", onKey); (window as unknown as { __hvalaOS?: boolean }).__hvalaOS = false; };
+    return () => { removeEventListener("click", onDelegated); removeEventListener("hvala:open", onOpen); removeEventListener("keydown", onKey); (window as unknown as { __hvalaOS?: boolean }).__hvalaOS = false; };
   }, [open, close]);
   const overlayRef = useRef(overlay);
   overlayRef.current = overlay;
@@ -269,7 +273,7 @@ export function DesktopShell() {
       case "calendar": return <CalendarApp />;
       case "messages": return <MessagesApp payload={w.payload} />;
       case "tools": return <ToolsApp />;
-      case "now": return <NowApp />;
+      case "directions": return <DirectionsApp open={open} />;
       case "gallery": return <GalleryApp />;
       case "trash": return <TrashApp />;
       case "wifi": return <WifiApp />;
@@ -284,6 +288,7 @@ export function DesktopShell() {
 
   return (
     <section aria-labelledby="hero-title" className="desktop relative -mt-14 overflow-hidden pt-14 lg:h-[100svh] lg:min-h-[640px]">
+      <Bitmap className="z-0" cell={6} alpha={0.2} density={0.45} />
       <div ref={area} className="relative mx-auto flex w-full max-w-[1680px] flex-col px-4 pb-10 pt-6 sm:px-6 lg:block lg:absolute lg:inset-x-0 lg:bottom-24 lg:top-14 lg:isolate lg:p-0" onPointerDown={(e) => { if (e.target === e.currentTarget) setSelected(null); }}>
         {/* Иконки рабочего стола */}
         <nav aria-label="Разделы сайта" className="order-2 mt-8 lg:absolute lg:left-6 lg:top-4 lg:mt-0">
@@ -302,13 +307,18 @@ export function DesktopShell() {
                     className="desktop-app group flex touch-none select-none flex-col items-center gap-1.5 rounded-xl p-1.5 text-center outline-offset-2"
                   >
                     <span className="app-tile size-14 sm:size-16"><AppGlyph icon={a.icon} className="size-7" today={today} /></span>
-                    <span className={cn("max-w-24 rounded px-1 text-xs font-medium leading-tight text-desktop-ink", selected === a.id && "bg-primary text-primary-foreground")}>{a.label}</span>
+                    <span className={cn("max-w-24 rounded px-1.5 py-0.5 text-xs font-medium leading-tight text-desktop-ink backdrop-blur-sm", selected === a.id ? "bg-primary text-primary-foreground" : "bg-background/60")}>{a.label}</span>
                   </a>
                 </li>
               );
             })}
           </ul>
         </nav>
+
+        {/* Виджет справа: цифры компании */}
+        <aside aria-label="HVALA сегодня" className="absolute right-6 top-4 hidden w-60 rotate-[1.2deg] lg:block">
+          <div className="window overflow-hidden"><NowApp /></div>
+        </aside>
 
         {/* Окна */}
         {wins.map((w) => {
@@ -333,18 +343,16 @@ export function DesktopShell() {
                 "window flex flex-col outline-none",
                 hero ? "relative order-1 lg:absolute lg:left-[calc(50%-24rem)] lg:top-4 lg:w-[660px]" : "fixed inset-0 z-50 rounded-none lg:absolute lg:inset-auto lg:rounded-[0.875rem]",
                 !hero && "lg:max-h-full",
-                w.key === "wifi" && w.z === 2 && "hidden lg:flex lg:left-[calc(100%-668px)] lg:top-[150px] lg:w-[660px]",
+                
               )}
             >
-              <div className="flex shrink-0 cursor-default items-center gap-3 border-b bg-muted/60 px-4 py-2.5 lg:cursor-grab lg:active:cursor-grabbing" onPointerDown={dragWin(w.key)} onDoubleClick={() => isDesktop && setWins((ws) => ws.map((x) => (x.key === w.key ? { ...x, max: !x.max } : x)))}>
+              <div className="flex shrink-0 cursor-default items-center gap-3 border-b bg-muted/60 px-4 py-2.5 lg:cursor-grab lg:active:cursor-grabbing" onPointerDown={dragWin(w.key)}>
                 {!hero && <button type="button" onClick={() => close(w.key)} className="text-sm font-medium text-brand lg:hidden">‹ Назад</button>}
                 <span className="hidden gap-1.5 lg:flex">
                   <button type="button" aria-label={hero ? "Свернуть окно" : "Закрыть окно"} onClick={() => close(w.key)} className="size-3 rounded-full bg-brand ring-offset-1 focus-visible:ring-2" />
-                  <button type="button" aria-label="Свернуть в док" onClick={() => setWins((ws) => ws.map((x) => (x.key === w.key ? { ...x, min: true } : x)))} className="hidden size-3 rounded-full bg-brand/45 lg:block" />
-                  <button type="button" aria-label={w.max ? "Вернуть размер" : "Развернуть"} onClick={() => setWins((ws) => ws.map((x) => (x.key === w.key ? { ...x, max: !x.max } : x)))} className="hidden size-3 rounded-full bg-brand/20 lg:block" />
                 </span>
                 <span id={`${w.key}-title`} className="flex-1 truncate text-center text-xs font-medium text-muted-foreground">{w.title}</span>
-                {w.kind === "page" ? <a href={w.href} className="text-xs text-muted-foreground underline-offset-4 hover:underline">Открыть страницу</a> : <span aria-hidden className="w-[3.25rem]" />}
+                {w.kind === "page" ? <a href={w.href} className="text-xs text-muted-foreground underline-offset-4 hover:underline">Открыть страницу</a> : <span aria-hidden className="w-3" />}
               </div>
               <div className={cn("@container min-h-0 flex-1 overflow-auto", !hero && "lg:max-h-[calc(100svh-15rem)]", w.max && "lg:max-h-none")}>{body(w)}</div>
             </article>

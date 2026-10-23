@@ -4,6 +4,7 @@ import { site } from "@/content/site";
 import { Container, Section } from "@/components/container";
 import { Cta } from "@/components/cta";
 import { ServiceCard } from "@/components/service-card";
+import { Bitmap } from "@/components/bitmap";
 import { JsonLd } from "@/components/json-ld";
 import { graph } from "@/lib/schema";
 
@@ -21,7 +22,8 @@ export default function Services() {
           { "@type": "ItemList", name: `Направления ${site.name}`, itemListElement: services.map((s, i) => ({ "@type": "ListItem", position: i + 1, name: s.title, url: `${site.url}/services/${s.slug}/` })) },
         )}
       />
-      <Section className="pt-12">
+      <Section className="relative isolate overflow-hidden pt-12">
+        <Bitmap variant="ripple" alpha={0.2} density={0.45} className="[mask-image:linear-gradient(to_left,black,transparent_55%)]" />
         <Container>
           <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Направления HVALA</h1>
           <p className="mt-5 max-w-3xl text-lg leading-relaxed text-muted-foreground">У HVALA пять направлений на одной технологии гостевого Wi-Fi. Заведения подключают Wi-Fi с авторизацией гостей за 29 900 ₽ без абонентской платы. Бренды покупают рекламу в момент подключения к Wi-Fi в 2000 заведений. Организаторы ставят Wi-Fi на мероприятия, ритейл собирает офлайн-аудиторию через TRAP, а партнёры открывают франшизу в своём городе.</p>
