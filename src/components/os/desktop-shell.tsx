@@ -18,7 +18,7 @@ import { cn } from "@/lib/utils";
 import { AppGlyph } from "./icons";
 import { StatsWidgets } from "./stats-widgets";
 import {
-  CalendarApp, CasesApp, DirectionsApp, GalleryApp, Launchpad, MailApp, MessagesApp, Spotlight, ToolsApp, TrashApp, type Entry,
+  CalendarApp, CasesApp, DirectionsApp, GalleryApp, Launchpad, MailApp, MessagesApp, ToolsApp, TrashApp, type Entry,
 } from "./apps";
 
 type Win = {
@@ -92,7 +92,7 @@ export function DesktopShell() {
   const zTop = useRef(10);
   const [isDesktop, setIsDesktop] = useState(false);
   const [today, setToday] = useState<Date | null>(null);
-  const [overlay, setOverlay] = useState<null | "launchpad" | "spotlight">(null);
+  const [overlay, setOverlay] = useState<null | "launchpad">(null);
   const [selected, setSelected] = useState<string | null>(null);
   const [offsets, setOffsets] = useState<Record<string, { dx: number; dy: number }>>({});
   const [wins, setWins] = useState<Win[]>([
@@ -154,8 +154,8 @@ export function DesktopShell() {
 
   const open = useCallback((id: string, payload?: string) => {
     setSelected(null);
-    if (id === "mail" || id === "wifi") { dispatchEvent(new CustomEvent("hvala:overlay", { detail: { id, payload } })); return; }
-    if (id === "launchpad" || id === "spotlight") { setOverlay(id); return; }
+    if (id === "mail" || id === "wifi" || id === "spotlight") { dispatchEvent(new CustomEvent("hvala:overlay", { detail: { id, payload } })); return; }
+    if (id === "launchpad") { setOverlay(id); return; }
     if (id.startsWith("page:")) {
       if (!matchMedia(DESKTOP_Q).matches) { location.href = pageById[id].href; return; }
       setOverlay(null); openPage(id); return;
@@ -208,7 +208,6 @@ export function DesktopShell() {
     const m = location.hash.match(/^#app-([a-z]+)$/);
     if (m) { history.replaceState(null, "", "/"); open(m[1]); }
     const onKey = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); setOverlay((o) => (o === "spotlight" ? null : "spotlight")); return; }
       if (e.key !== "Escape") return;
       if (overlayRef.current) { setOverlay(null); return; }
       const top = [...winsRef.current].filter((w) => !w.min).sort((a, b) => b.z - a.z)[0];
@@ -391,7 +390,6 @@ export function DesktopShell() {
       </a>
 
       {overlay === "launchpad" && <Launchpad entries={entries} renderIcon={glyph} onClose={() => setOverlay(null)} onOpen={(e) => open(e.id, e.payload)} />}
-      {overlay === "spotlight" && <Spotlight entries={entries} renderIcon={glyph} onClose={() => setOverlay(null)} onOpen={(e) => open(e.id, e.payload)} />}
       <p className="sr-only" aria-live="polite">{openWins.length > 2 ? `Открыто окон: ${openWins.length}` : ""}</p>
     </section>
   );

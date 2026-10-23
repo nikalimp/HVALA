@@ -6,8 +6,8 @@
 // prefers-reduced-motion — один неподвижный кадр. Декор: aria-hidden, текст поверх читается без него.
 //
 // Обои рабочего стола (interactive + logo):
-//   logo — по центру крупно «HVALA» пикселями, буквы мерцают; логотип — «тело»: курсор и волны его отталкивают,
-//          он отскакивает от краёв и пружиной возвращается в центр; узор фона вокруг букв расступается;
+//   logo — по центру крупно «HVALA» пикселями, буквы мерцают и стоят на месте; частицы фона отталкиваются от букв
+//          и от краёв экрана; волна от клика отражается от краёв и от логотипа;
 //   курсор над пустым фоном «проявляет» узор вокруг себя; над окном, иконкой или виджетом — нет (isBackground);
 //   клик по пустому фону запускает волну, которая расходится кольцом.
 
@@ -50,11 +50,11 @@ export function Bitmap({
     const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
     let w = 0, h = 0, img: ImageData | null = null, raf = 0, last = 0, visible = true;
     let rgb = [255, 28, 53];
-    // Логотип — «тело»: маска размером с логотип (lw×lh клеток), позиция lx,ly (левый верхний угол), скорость lvx,lvy.
-    // Стоит в центре; курсор и волны от клика отталкивают его, от краёв холста он отскакивает, пружина возвращает в центр.
-    // halo — кольцо в 2 клетки вокруг букв: узор фона там расступается.
-    let mask: Uint8Array | null = null, halo: Uint8Array | null = null;
-    let lw = 0, lh = 0, lx = 0, ly = 0, lvx = 0, lvy = 0, lastT = 0;
+    // Логотип стоит на месте, по центру. Частицы фона (клетки узора) отталкиваются от него и от краёв холста:
+    // dist — расстояние в клетках до ближайшей буквы, (nx, ny) — направление «от букв»; dispX/dispY — сдвиг узора наружу.
+    // Вокруг букв — пустая кайма. Волна от клика отражается от краёв (зеркальные источники) и от логотипа (эхо из точки касания).
+    let mask: Uint8Array | null = null;
+    let dist: Float32Array | null = null, dispX: Float32Array | null = null, dispY: Float32Array | null = null;
     const t0 = performance.now() - Math.random() * 10_000;
     const now = () => ((performance.now() - t0) / 1000) * speed;
     const onBg = (e: Event) => { const el = e.target as Element | null; return !!el && (bgRef.current ? bgRef.current(el) : true); };
@@ -67,19 +67,16 @@ export function Bitmap({
       [mx, my] = toCells(e);
       energy = 1;
     };
-    // Волны от клика: кольцо расходится ~3 с
-    const waves: { x: number; y: number; t: number }[] = [];
+    // Волны: кольцо расходится ~3,2 с; amp — сила; echo — эхо от логотипа уже запущено
+    type Wave = { x: number; y: number; t: number; amp: number; echo: boolean };
+    const waves: Wave[] = [];
+    const WAVE_SPEED = 38, WAVE_LIFE = 3.2;
     const onDown = (e: PointerEvent) => {
       if (!onBg(e)) return;
       const [x, y] = toCells(e);
       if (x < 0 || y < 0 || x > w || y > h) return;
-      waves.push({ x, y, t: now() });
-      if (mask) { // волна толкает логотип от точки клика
-        const dx = lx + lw / 2 - x, dy = ly + lh / 2 - y, n = Math.hypot(dx, dy) || 1;
-        const k = 300 / (1 + n / 30);
-        lvx += (dx / n) * k; lvy += (dy / n) * k;
-      }
-      if (waves.length > 6) waves.shift();
+      waves.push({ x, y, t: now(), amp: 1.3, echo: false });
+      if (waves.length > 8) waves.shift();
     };
 
     const readColor = () => {
@@ -90,49 +87,49 @@ export function Bitmap({
       const d = probe.getImageData(0, 0, 1, 1).data;
       rgb = [d[0], d[1], d[2]];
     };
-    // Маска названия: логотип в клетках — половина ширины холста, старт — точно по центру
-    const buildMask = () => {
-      if (!logo) { mask = null; halo = null; return; }
-      const [vx, vy, vw, vh] = LOGO_VIEWBOX;
-      const scale = Math.min((w * 0.5) / vw, (h * 0.34) / vh);
-      lw = Math.max(1, Math.ceil(vw * scale)); lh = Math.max(1, Math.ceil(vh * scale));
+    // Маска логотипа по центру холста (половина ширины) и поле отталкивания
+    const buildField = () => {
+      mask = null; dist = null; dispX = null; dispY = null;
+      if (!logo) return;
       const m = document.createElement("canvas");
-      m.width = lw; m.height = lh;
+      m.width = w; m.height = h;
       const c = m.getContext("2d");
       if (!c) return;
+      const [vx, vy, vw, vh] = LOGO_VIEWBOX;
+      const scale = Math.min((w * 0.5) / vw, (h * 0.34) / vh);
+      c.translate((w - vw * scale) / 2 - vx * scale, (h - vh * scale) / 2 - vy * scale);
       c.scale(scale, scale);
-      c.translate(-vx, -vy);
       c.fillStyle = "#000";
       for (const d of LOGO_PATHS) c.fill(new Path2D(d));
-      const a = c.getImageData(0, 0, lw, lh).data;
-      mask = new Uint8Array(lw * lh);
-      for (let i = 0; i < lw * lh; i++) mask[i] = a[i * 4 + 3] > 110 ? 1 : 0;
-      // halo: клетки рядом с буквами (радиус 2), но не сами буквы
-      halo = new Uint8Array(lw * lh);
-      for (let y = 0; y < lh; y++) for (let x = 0; x < lw; x++) {
-        if (mask[y * lw + x]) continue;
-        let near = 0;
-        for (let dy = -2; dy <= 2 && !near; dy++) for (let dx = -2; dx <= 2; dx++) {
+      const a = c.getImageData(0, 0, w, h).data;
+      const n = w * h;
+      mask = new Uint8Array(n);
+      dist = new Float32Array(n).fill(1e4);
+      const queue = new Int32Array(n);
+      let qh = 0, qt = 0;
+      for (let i = 0; i < n; i++) if (a[i * 4 + 3] > 110) { mask[i] = 1; dist[i] = 0; queue[qt++] = i; }
+      // Расстояние до букв: волна по сетке (BFS, 8 соседей), до 60 клеток
+      while (qh < qt) {
+        const i = queue[qh++], x = i % w, y = (i / w) | 0, d0 = dist[i];
+        if (d0 > 60) continue;
+        for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+          if (!dx && !dy) continue;
           const xx = x + dx, yy = y + dy;
-          if (xx >= 0 && yy >= 0 && xx < lw && yy < lh && mask[yy * lw + xx]) { near = 1; break; }
+          if (xx < 0 || yy < 0 || xx >= w || yy >= h) continue;
+          const j = yy * w + xx, nd = d0 + (dx && dy ? 1.414 : 1);
+          if (nd < dist[j]) { dist[j] = nd; queue[qt++] = j; }
         }
-        halo[y * lw + x] = near;
       }
-      lx = (w - lw) / 2; ly = (h - lh) / 2; lvx = 0; lvy = 0;
-    };
-    const step = (t: number) => {
-      if (!mask) return;
-      const dt = Math.min(0.1, Math.max(0, t - lastT)); lastT = t;
-      const cx = lx + lw / 2, cy = ly + lh / 2;
-      let ax = ((w - lw) / 2 - lx) * 2.4, ay = ((h - lh) / 2 - ly) * 2.4; // пружина к центру
-      if (interactive && energy > 0.05) { // курсор рядом — отталкивает
-        const dx = cx - mx, dy = cy - my, d = Math.hypot(dx / (lw / 2 + 12), dy / (lh / 2 + 12));
-        if (d < 1.4) { const f = (1.4 - d) * 160 * energy; const n = Math.hypot(dx, dy) || 1; ax += (dx / n) * f; ay += (dy / n) * f; }
+      // Сдвиг узора: от букв (по градиенту расстояния) и от краёв (внутрь холста)
+      dispX = new Float32Array(n); dispY = new Float32Array(n);
+      for (let y = 1; y < h - 1; y++) for (let x = 1; x < w - 1; x++) {
+        const i = y * w + x;
+        let gx = dist[i + 1] - dist[i - 1], gy = dist[i + w] - dist[i - w];
+        const gl = Math.hypot(gx, gy) || 1; gx /= gl; gy /= gl;
+        const pl = dist[i] < 60 ? 6 * Math.exp(-dist[i] / 8) : 0;
+        const ex = Math.exp(-x / 6) - Math.exp(-(w - 1 - x) / 6), ey = Math.exp(-y / 6) - Math.exp(-(h - 1 - y) / 6);
+        dispX[i] = gx * pl + ex * 5; dispY[i] = gy * pl + ey * 5;
       }
-      lvx = (lvx + ax * dt) * Math.pow(0.12, dt); lvy = (lvy + ay * dt) * Math.pow(0.12, dt); // затухание
-      lx += lvx * dt; ly += lvy * dt;
-      if (lx < 0) { lx = 0; lvx = Math.abs(lvx) * 0.8; } if (lx + lw > w) { lx = w - lw; lvx = -Math.abs(lvx) * 0.8; }
-      if (ly < 0) { ly = 0; lvy = Math.abs(lvy) * 0.8; } if (ly + lh > h) { ly = h - lh; lvy = -Math.abs(lvy) * 0.8; }
     };
     const resize = () => {
       const r = cv.getBoundingClientRect();
@@ -140,44 +137,64 @@ export function Bitmap({
       h = Math.max(1, Math.ceil(r.height / cell));
       cv.width = w; cv.height = h;
       img = ctx.createImageData(w, h);
-      buildMask();
+      buildField();
       draw();
     };
     const A = Math.round(alpha * 255);
     const AL = Math.min(255, Math.round(alpha * 255 * 2.4)); // буквы плотнее фона
+    const base = (x: number, y: number, t: number) => {
+      if (variant === "rain") return 0.5 + 0.5 * Math.sin(y * 0.22 - t * 2.2 + Math.sin(x * 1.7) * 6) * Math.sin(x * 0.9 + t * 0.3);
+      if (variant === "ripple") { const dx = x - w * 0.8, dy = y - h * 0.2; return 0.5 + 0.5 * Math.sin(Math.sqrt(dx * dx + dy * dy) * 0.35 - t * 1.6); }
+      return 0.5 + 0.25 * Math.sin(x * 0.07 + t * 0.55) + 0.25 * Math.cos(y * 0.09 - t * 0.4) * Math.sin((x + y) * 0.035 + t * 0.25);
+    };
+    const ring = (x: number, y: number, sx: number, sy: number, rad: number) => { const d = Math.hypot(x - sx, y - sy) - rad; return Math.exp(-(d * d) / 18); };
     const draw = () => {
       if (!img) return;
       const t = now();
-      step(t);
-      const ox = Math.round(lx), oy = Math.round(ly);
-      while (waves.length && t - waves[0].t > 3.2) waves.shift();
+      while (waves.length && t - waves[0].t > WAVE_LIFE) waves.shift();
+      // Эхо: когда кольцо дошло до ближайшей буквы, из точки касания идёт отражённая волна
+      if (dist) for (const wv of waves) {
+        if (wv.echo || wv.amp < 1) continue;
+        const rad = (t - wv.t) * WAVE_SPEED;
+        const sx = Math.min(w - 1, Math.max(0, Math.round(wv.x))), sy = Math.min(h - 1, Math.max(0, Math.round(wv.y)));
+        if (rad >= dist[sy * w + sx]) {
+          wv.echo = true;
+          // точка касания: идём от источника по убыванию расстояния до букв
+          let px = sx, py = sy;
+          for (let s = 0; s < 400 && dist[py * w + px] > 0.5; s++) {
+            let best = dist[py * w + px], bx = px, by = py;
+            for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+              const xx = px + dx, yy = py + dy;
+              if (xx >= 0 && yy >= 0 && xx < w && yy < h && dist[yy * w + xx] < best) { best = dist[yy * w + xx]; bx = xx; by = yy; }
+            }
+            if (bx === px && by === py) break;
+            px = bx; py = by;
+          }
+          waves.push({ x: px, y: py, t, amp: 0.8, echo: true });
+        }
+      }
       const px = img.data;
       for (let y = 0; y < h; y++) {
         for (let x = 0; x < w; x++) {
           const k = y * w + x;
-          let v: number;
-          if (variant === "rain") {
-            v = 0.5 + 0.5 * Math.sin(y * 0.22 - t * 2.2 + Math.sin(x * 1.7) * 6) * Math.sin(x * 0.9 + t * 0.3);
-          } else if (variant === "ripple") {
-            const dx = x - w * 0.8, dy = y - h * 0.2;
-            v = 0.5 + 0.5 * Math.sin(Math.sqrt(dx * dx + dy * dy) * 0.35 - t * 1.6);
-          } else {
-            v = 0.5 + 0.25 * Math.sin(x * 0.07 + t * 0.55) + 0.25 * Math.cos(y * 0.09 - t * 0.4) * Math.sin((x + y) * 0.035 + t * 0.25);
-          }
+          const inLogo = mask !== null && mask[k] === 1;
+          // частицы фона сдвинуты наружу — от букв и от краёв
+          const sx = dispX ? x - dispX[k] : x, sy = dispY ? y - dispY[k] : y;
+          let v = base(sx, sy, t);
           if (interactive && energy > 0.01) {
-            const dx = x - mx, dy = y - my, d = Math.sqrt(dx * dx + dy * dy);
+            const dx = sx - mx, dy = sy - my, d = Math.sqrt(dx * dx + dy * dy);
             v += energy * (1.1 * Math.exp(-(d * d) / 90) + 0.35 * Math.exp(-d / 26) * Math.sin(d * 0.55 - t * 6));
           }
+          let wave = 0;
           for (const wv of waves) {
-            const age = t - wv.t, rad = age * 38, dx = x - wv.x, dy = y - wv.y;
-            const d = Math.sqrt(dx * dx + dy * dy) - rad;
-            v += 1.3 * Math.exp(-(d * d) / 18) * (1 - age / 3.2);
+            const age = t - wv.t, rad = age * WAVE_SPEED, fade = wv.amp * (1 - age / WAVE_LIFE);
+            wave += fade * ring(x, y, wv.x, wv.y, rad);
+            // отражения от краёв холста: зеркальные источники
+            wave += 0.5 * fade * (ring(x, y, -wv.x, wv.y, rad) + ring(x, y, 2 * w - wv.x, wv.y, rad) + ring(x, y, wv.x, -wv.y, rad) + ring(x, y, wv.x, 2 * h - wv.y, rad));
           }
-          const mx2 = x - ox, my2 = y - oy;
-          const inBox = mask !== null && mx2 >= 0 && my2 >= 0 && mx2 < lw && my2 < lh;
-          const inLogo = inBox && mask![my2 * lw + mx2] === 1;
-          if (inBox && !inLogo && halo![my2 * lw + mx2]) v *= 0.15; // фон расступается вокруг букв
-          if (inLogo) v = 0.62 + 0.3 * Math.sin(t * 1.8 + x * 0.21 - y * 0.13) + (v - 0.5) * 0.4;
+          v += wave;
+          if (dist && !inLogo) v *= 1 - 0.9 * Math.exp(-dist[k] / 1.6); // пустая кайма вокруг букв
+          if (inLogo) v = 0.62 + 0.3 * Math.sin(t * 1.8 + x * 0.21 - y * 0.13) + wave * 0.6;
           const on = v * (inLogo ? 1 : density * 1.6) > BAYER[(y & 3) * 4 + (x & 3)];
           const i = k * 4;
           px[i] = rgb[0]; px[i + 1] = rgb[1]; px[i + 2] = rgb[2]; px[i + 3] = on ? (inLogo ? AL : A) : 0;
@@ -188,7 +205,7 @@ export function Bitmap({
     };
     const loop = (ts: number) => {
       raf = requestAnimationFrame(loop);
-      const busy = energy > 0.05 || waves.length > 0 || Math.abs(lvx) + Math.abs(lvy) > 0.5;
+      const busy = energy > 0.05 || waves.length > 0;
       if (!visible || document.hidden || ts - last < (busy ? 33 : 80)) return;
       last = ts;
       draw();
