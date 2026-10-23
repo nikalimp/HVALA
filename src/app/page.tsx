@@ -73,7 +73,7 @@ export default function Home() {
                     <li key={p} className="flex gap-2.5 text-sm"><Check className="mt-0.5 size-4 shrink-0 text-brand" aria-hidden />{p}</li>
                   ))}
                 </ul>
-                <Button asChild size="lg" className="mt-8"><a href={site.cta.href}>Получить консультацию</a></Button>
+                <Button asChild size="lg" className="mt-8"><a href={site.cta.href} data-os-app="mail" data-os-payload={services[0].title}>Получить консультацию</a></Button>
               </div>
             ))}
           </div>

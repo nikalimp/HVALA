@@ -14,7 +14,7 @@ export function StatsWidgets() {
   return (
     <ul className="grid grid-cols-2 gap-3">
       {tiles.map(({ value, label, Icon }) => (
-        <li key={label} className="flex aspect-square flex-col rounded-[1.4rem] border bg-background/80 p-3.5 shadow-[0_10px_30px_-18px_var(--desktop-ink)] backdrop-blur-xl">
+        <li key={label} className="flex aspect-square flex-col rounded-[1.4rem] border bg-background/80 p-3.5 backdrop-blur-xl">
           <span className="flex size-8 items-center justify-center rounded-xl bg-brand-bg text-brand"><Icon className="size-4" strokeWidth={2} aria-hidden /></span>
           <span className="mt-auto text-[1.75rem] font-semibold leading-none tracking-tight tabular-nums">{value}</span>
           <span className="mt-1.5 text-xs leading-tight text-muted-foreground">{label}</span>

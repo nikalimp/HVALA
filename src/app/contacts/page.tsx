@@ -39,7 +39,7 @@ export default function Contacts() {
               </div>
             ))}
           </dl>
-          <Button asChild size="lg" className="mt-8"><a href={site.cta.href}>{site.cta.label}</a></Button>
+          <Button asChild size="lg" className="mt-8"><a href={site.cta.href} data-os-app="mail">{site.cta.label}</a></Button>
           <p className="mt-10 text-sm text-muted-foreground">{site.legalName} · ИНН {site.legal.inn} · ОГРН {site.legal.ogrn}</p>
         </Container>
       </Section>
