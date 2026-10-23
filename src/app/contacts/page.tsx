@@ -6,8 +6,8 @@ import { JsonLd } from "@/components/json-ld";
 import { graph, orgId } from "@/lib/schema";
 
 export const metadata: Metadata = {
-  title: "Контакты: телефон, адрес и часы работы", // бренд добавит шаблон title из layout
-  description: `Как связаться с ${site.name}: телефон, мессенджеры, адрес и часы работы.`,
+  title: "Контакты: телефон, почта, Telegram и поддержка", // бренд добавит шаблон title из layout
+  description: `Контакты ${site.name}: телефон 8 800 234-11-66, почта sales@hvalacloud.ru, менеджер и техподдержка в Telegram. Ответим по Wi-Fi и рекламе.`,
   alternates: { canonical: "/contacts/" },
 };
 
@@ -15,8 +15,8 @@ export default function Contacts() {
   const c = site.contacts;
   const rows = [
     c.phone && { label: "Телефон", value: c.phoneDisplay || c.phone, href: `tel:${c.phone}` },
-    c.email && { label: "Почта", value: c.email, href: `mailto:${c.email}` },
-    c.telegram && { label: "Telegram", value: c.telegram.replace("https://t.me/", "@"), href: c.telegram },
+    c.email && { label: "Почта", value: c.email, href: `mailto:${c.email}` },    c.telegram && { label: "Менеджер в Telegram", value: c.telegram.replace("https://t.me/", "@"), href: c.telegram },
+    c.support && { label: "Техподдержка", value: c.support.replace("https://t.me/", "@"), href: c.support },
     c.whatsapp && { label: "WhatsApp", value: "Написать в WhatsApp", href: c.whatsapp },
     c.address.street && { label: "Адрес", value: [c.address.postalCode, c.address.city, c.address.street].filter(Boolean).join(", ") },
     c.hours && { label: "Часы работы", value: c.hours },

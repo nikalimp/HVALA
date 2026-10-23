@@ -35,11 +35,11 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
 
   return (
     <>
-      <JsonLd data={graph(serviceSchema(s), breadcrumbs([{ name: "Главная", path: "/" }, { name: "Услуги", path: "/services/" }, { name: s.title, path }]), s.faq.length > 0 && faqSchema(s.faq))} />
+      <JsonLd data={graph(serviceSchema(s), breadcrumbs([{ name: "Главная", path: "/" }, { name: "Направления", path: "/services/" }, { name: s.title, path }]), s.faq.length > 0 && faqSchema(s.faq))} />
 
       <Section className="pt-12">
         <Container className="max-w-3xl">
-          <Crumbs items={[{ name: "Главная", path: "/" }, { name: "Услуги", path: "/services/" }, { name: s.title }]} />
+          <Crumbs items={[{ name: "Главная", path: "/" }, { name: "Направления", path: "/services/" }, { name: s.title }]} />
           <h1 className="text-3xl font-semibold leading-tight tracking-tight text-balance sm:text-4xl">{s.h1}</h1>
           <p className="mt-5 text-lg leading-relaxed text-muted-foreground">{s.answer}</p>
           <div className="mt-8 flex flex-wrap items-center gap-4">
@@ -126,7 +126,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
         <Section className="border-t">
           <Container>
             <Eyebrow>Вместе с этим</Eyebrow>
-            <h2 className="mb-8 text-2xl font-semibold tracking-tight">Связанные услуги</h2>
+            <h2 className="mb-8 text-2xl font-semibold tracking-tight">Связанные направления</h2>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {related.map((r) => <ServiceCard key={r.slug} s={r} />)}
             </div>

@@ -122,6 +122,7 @@ if (!fs.readdirSync(path.join(ROOT, "public")).some((f) => /^[a-f0-9]{32}\.txt$/
 // 4. Блокирующее перед выкладкой
 const home = fs.readFileSync(path.join(OUT, "index.html"), "utf8");
 if (/mc\.yandex\.ru\/metrika/.test(home)) ok("Яндекс Метрика подключена");
+else if (/Метрика/.test(fs.readFileSync(path.join(ROOT, "specs", "02-spec.md"), "utf8").split(/^## 9\./m)[1]?.split(/^## 10\./m)[0] ?? "")) warn("Яндекс Метрика не подключена — исключение в specs/02-spec.md §9 (тестовый адрес); к запуску обязательна");
 else prodFail("Яндекс Метрика не подключена — номер счётчика в site.metrikaId (src/content/site.ts)");
 for (const page of ["privacy-policy", "consent"]) {
   if (!fs.existsSync(path.join(OUT, page, "index.html"))) prodFail(`Нет страницы /${page}/ — политика и отдельное согласие на обработку ПДн обязательны (стандарт §8)`);
