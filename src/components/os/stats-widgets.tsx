@@ -6,7 +6,7 @@ import { site } from "@/content/site";
 const icons: LucideIcon[] = [CalendarDays, MapPin, Store, Users];
 const tiles = [
   ...site.stats.map((s, i) => ({ value: s.value, label: s.label, Icon: icons[i] })),
-  { value: "500+", label: "брендов в рекламе", Icon: Megaphone },
+  { value: "500+", label: "рекламодателей", Icon: Megaphone },
   { value: "5,0", label: "рейтинг в 2ГИС", Icon: Star },
 ];
 
