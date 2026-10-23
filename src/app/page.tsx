@@ -147,6 +147,9 @@ export default function Home() {
           <Eyebrow className="text-center">Отзывы</Eyebrow>
           <h2 className="mb-8 text-center text-3xl font-semibold tracking-tight">Что говорят клиенты</h2>
           <ReviewWidget rating={home.rating.value} count={home.rating.count} name={home.rating.name} address={home.rating.address} href={home.rating.href} />
+          {home.rating.embed && (
+            <iframe src={home.rating.embed} title="Отзывы о HVALA в 2ГИС" loading="lazy" className="mt-4 h-[42rem] w-full rounded-2xl border bg-background" />
+          )}
         </Container>
       </Section>
 

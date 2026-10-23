@@ -47,7 +47,7 @@ const ICONS_KEY = "hvala-os-icons";
 
 const pageById = Object.fromEntries(pageApps.map((p) => [p.id, p]));
 const appById = Object.fromEntries(apps.map((a) => [a.id, a]));
-// На столе — в том же порядке, что меню: О компании, Направления (папка с 5 страницами), Кейсы, Форматы, Блог, Контакты.
+// На столе — в том же порядке, что меню: О компании, Направления (папка с 5 страницами), Кейсы, Блог, Контакты.
 // Корзина — отдельно, в правом нижнем углу.
 const iconById = (id: string) => {
   const p = pageApps.find((x) => x.id === id);
@@ -55,7 +55,7 @@ const iconById = (id: string) => {
   const a = apps.find((x) => x.id === id)!;
   return { id: a.id, label: a.label, icon: a.icon, href: a.fallback };
 };
-const desktopIcons = ["page:about", "directions", "cases", "page:formats", "page:blog", "page:contacts"].map(iconById);
+const desktopIcons = ["page:about", "directions", "cases", "page:blog", "page:contacts"].map(iconById);
 const trashIcon = iconById("trash");
 const entries: Entry[] = [
   ...pageApps.map((p) => ({ id: p.id, label: p.label, hint: "Страница", icon: p.icon })),
