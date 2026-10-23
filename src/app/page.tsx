@@ -1,5 +1,11 @@
 import Link from "next/link";
-import { Check, Star } from "lucide-react";
+import { Check, MapPin, RefreshCw, Smartphone, Store, Users, Wallet, type LucideIcon } from "lucide-react";
+import { cases } from "@/content/os";
+import { CaseCard } from "@/components/case-card";
+import { LogoMarquee } from "@/components/logo-marquee";
+import { ReviewWidget } from "@/components/review-widget";
+
+const targetingIcons: Record<string, LucideIcon> = { geo: MapPin, venue: Store, people: Users, income: Wallet, os: Smartphone, freq: RefreshCw };
 import { home } from "@/content/home";
 import { services } from "@/content/services";
 import { site } from "@/content/site";
@@ -94,28 +100,40 @@ export default function Home() {
               </div>
             ))}
           </dl>
-          <div className="mt-10 grid gap-10 lg:grid-cols-[1fr_18rem]">
-            <div>
-              <h3 className="mb-4 text-xl font-semibold tracking-tight">Форматы</h3>
-              <ul className="grid gap-3 sm:grid-cols-2">
-                {home.network.formats.map((f) => (
-                  <li key={f.title} className="rounded-xl border bg-background p-4">
-                    <p className="font-medium">{f.title}</p>
-                    <p className="mt-1 text-sm text-muted-foreground">{f.text}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h3 className="mb-4 text-xl font-semibold tracking-tight">Таргетинги</h3>
-              <ul className="space-y-2.5">
-                {home.network.targeting.map((t) => (
-                  <li key={t} className="flex gap-2.5 text-sm"><Check className="mt-0.5 size-4 shrink-0 text-brand" aria-hidden />{t}</li>
-                ))}
-              </ul>
-              <Button asChild variant="outline" className="mt-6"><Link href="/services/advertising/">Подробнее о сети</Link></Button>
-            </div>
+          <h3 className="mb-4 mt-10 text-xl font-semibold tracking-tight">Форматы</h3>
+          <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {home.network.formats.map((f) => (
+              <li key={f.title} className="rounded-xl border bg-background p-4">
+                <p className="font-medium">{f.title}</p>
+                <p className="mt-1 text-sm text-muted-foreground">{f.text}</p>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Button asChild variant="outline"><Link href="/ad-formats/">Все форматы с примерами</Link></Button>
+            <Button asChild variant="ghost"><Link href="/services/advertising/">Подробнее о сети</Link></Button>
           </div>
+        </Container>
+      </Section>
+
+      <Section className="border-t">
+        <Container>
+          <Eyebrow>Таргетинги</Eyebrow>
+          <h2 className="mb-8 text-3xl font-semibold tracking-tight">Кому показать рекламу</h2>
+          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {home.network.targeting.map((t) => {
+              const Icon = targetingIcons[t.icon];
+              return (
+                <li key={t.title} className="flex gap-4 rounded-2xl border p-5">
+                  <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-bg text-brand"><Icon className="size-5" aria-hidden /></span>
+                  <span>
+                    <span className="block font-semibold">{t.title}</span>
+                    <span className="mt-1 block text-sm text-muted-foreground">{t.text}</span>
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
         </Container>
       </Section>
 
@@ -124,15 +142,7 @@ export default function Home() {
           <Eyebrow>Кейсы</Eyebrow>
           <h2 className="mb-8 text-3xl font-semibold tracking-tight">Результаты клиентов в цифрах</h2>
           <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {home.cases.map((c) => (
-              <li key={c.title} className="flex flex-col rounded-2xl border p-6">
-                <p className="w-fit rounded-full bg-brand-bg px-2.5 py-0.5 text-xs font-medium text-brand">{c.group}</p>
-                <h3 className="mt-3 font-semibold leading-snug">{c.title}</h3>
-                <ul className="mt-4 space-y-1.5 text-sm text-muted-foreground">
-                  {c.metrics.map((m) => <li key={m} className="tabular-nums">{m}</li>)}
-                </ul>
-              </li>
-            ))}
+            {home.caseIds.map((id) => cases.find((c) => c.id === id)!).map((c) => <li key={c.id} className="flex"><CaseCard c={c} showGroup className="w-full" /></li>)}
           </ul>
           <Button asChild variant="outline" className="mt-8"><Link href="/cases/">Все кейсы</Link></Button>
         </Container>
@@ -140,15 +150,11 @@ export default function Home() {
 
       <Section className="border-t bg-card">
         <Container>
-          <div className="grid gap-10 lg:grid-cols-[1fr_20rem]">
-            <div>
+          <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_20rem]">
+            <div className="min-w-0">
               <Eyebrow>Клиенты</Eyebrow>
               <h2 className="mb-6 text-3xl font-semibold tracking-tight">Нам доверяют</h2>
-              <ul className="flex flex-wrap gap-2">
-                {home.clients.map((c) => (
-                  <li key={c} className="rounded-full border bg-background px-3.5 py-1.5 text-sm font-medium">{c}</li>
-                ))}
-              </ul>
+              <LogoMarquee items={home.clients} />
               <p className="mt-8 text-sm text-muted-foreground">
                 О нас писали:{" "}
                 {home.press.map((p, i) => (
@@ -156,11 +162,7 @@ export default function Home() {
                 ))}
               </p>
             </div>
-            <a href={home.rating.href} target="_blank" rel="noopener" className="flex flex-col justify-center rounded-2xl border bg-background p-6 hover:border-brand">
-              <p className="flex items-center gap-2 text-4xl font-semibold tracking-tight">{home.rating.value}<Star className="size-6 fill-brand text-brand" aria-hidden /></p>
-              <p className="mt-2 text-sm text-muted-foreground">Рейтинг в {home.rating.source} · {home.rating.count}</p>
-              <p className="mt-4 text-sm font-medium text-brand">Читать отзывы →</p>
-            </a>
+            <ReviewWidget rating={home.rating.value} count={home.rating.count} name={home.rating.name} address={home.rating.address} href={home.rating.href} />
           </div>
         </Container>
       </Section>

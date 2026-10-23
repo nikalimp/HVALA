@@ -84,8 +84,10 @@ export const site = {
 };
 
 export const nav = [
+  { href: "/about/", label: "О компании" },
   { href: "/services/", label: "Направления" },
   { href: "/cases/", label: "Кейсы" },
+  { href: "/ad-formats/", label: "Форматы рекламы" },
   ...(site.features.blog ? [{ href: "/blog/", label: "Блог" }] : []),
   { href: "/about/", label: "О компании" },
   { href: "/contacts/", label: "Контакты" },

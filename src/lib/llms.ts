@@ -31,6 +31,9 @@ export function llmsTxt() {
 ## Направления
 ${services.map((s) => `- [${s.title}](${site.url}/services/${s.slug}/): ${s.short} ${s.prices[0] ? `${s.prices[0].name} — ${s.prices[0].value}.` : ""}`).join("\n")}
 ${posts.length ? `\n## Статьи\n${posts.map((p) => `- [${p.title}](${site.url}/blog/${p.slug}/): ${p.description}`).join("\n")}\n` : ""}
+## Форматы рекламы
+- [Форматы рекламы](${site.url}/ad-formats/): Fullscreen, Action banner, Survey banner, 2 Level Banner — оплата за показы (CPM)
+
 ## Кейсы
 - [Кейсы](${site.url}/cases/): результаты клиентов — заведения, реклама в Wi-Fi, TRAP
 
