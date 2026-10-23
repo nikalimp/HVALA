@@ -1,6 +1,6 @@
 "use client";
 
-// Меню слева от логотипа — как строка меню macOS. «Направления» и «Кейсы» — выпадающие меню.
+// Меню слева от логотипа — как строка меню macOS: О компании, Направления ▾, Кейсы, Форматы рекламы, Блог, Контакты.
 // Все пункты — обычные ссылки на страницы сайта (решение Ника 23.10.2026: из шапки — страницы, не окна).
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
@@ -14,19 +14,11 @@ const menus = [
     items: services.map((s) => ({ href: `/services/${s.slug}/`, label: s.title })),
     all: { href: "/services/", label: "Все направления" },
   },
-  {
-    label: "Кейсы",
-    items: [
-      { href: "/cases/#venues", label: "Заведения" },
-      { href: "/cases/#advertising", label: "Реклама в Wi‑Fi" },
-      { href: "/cases/#trap", label: "TRAP" },
-    ],
-    all: { href: "/cases/", label: "Все кейсы" },
-  },
 ];
-const links = [
+const linksAfter = [
+  { href: "/cases/", label: "Кейсы" },
+  { href: "/ad-formats/", label: "Форматы рекламы" },
   ...(site.features.blog ? [{ href: "/blog/", label: "Блог" }] : []),
-  { href: "/about/", label: "О компании" },
   { href: "/contacts/", label: "Контакты" },
 ];
 
@@ -44,6 +36,7 @@ export function MenubarNav() {
   return (
     <nav aria-label="Основное меню" className="hidden md:block">
       <ul ref={box} className="flex items-center gap-0.5">
+        <li><a href="/about/" className={item}>О компании</a></li>
         {menus.map((m) => (
           <li key={m.label} className="relative">
             <button type="button" aria-expanded={open === m.label} aria-haspopup="true" onClick={() => setOpen((o) => (o === m.label ? null : m.label))} onMouseEnter={() => open && setOpen(m.label)} className={cn(item, "inline-flex items-center gap-1", open === m.label && "bg-foreground/[.08] text-foreground")}>
@@ -60,7 +53,7 @@ export function MenubarNav() {
             )}
           </li>
         ))}
-        {links.map((l) => <li key={l.href}><a href={l.href} className={item}>{l.label}</a></li>)}
+        {linksAfter.map((l) => <li key={l.href}><a href={l.href} className={item}>{l.label}</a></li>)}
       </ul>
     </nav>
   );

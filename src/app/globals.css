@@ -129,10 +129,22 @@
 @keyframes window-open { from { opacity: 0; transform: translateY(8px) scale(.985); } }
 
 /* Стикер «HVALA сегодня» */
-:root { --note: oklch(0.96 0.035 12); --note-ink: oklch(0.3 0.04 20); --success: oklch(0.55 0.15 145); }
-.dark { --note: oklch(0.88 0.06 12); --note-ink: oklch(0.3 0.04 20); --success: oklch(0.72 0.15 145); }
+:root { --star: oklch(0.8 0.16 80); --note: oklch(0.96 0.035 12); --note-ink: oklch(0.3 0.04 20); --success: oklch(0.55 0.15 145); }
+.dark { --star: oklch(0.82 0.15 80); --note: oklch(0.88 0.06 12); --note-ink: oklch(0.3 0.04 20); --success: oklch(0.72 0.15 145); }
 
 /* Страница внутри окна рабочего стола: тот же HTML, что и на отдельной странице, с плотными отступами */
 .os-page > section { padding-block: 1.75rem; }
 .os-page > section:first-child { padding-top: 1.5rem; }
 .os-page .max-w-3xl, .os-page .max-w-6xl { max-width: 100%; }
+
+/* Бегущая строка клиентов: две одинаковые ленты едут влево; пауза при наведении */
+@media (prefers-reduced-motion: no-preference) {
+  .marquee-row { animation: marquee 40s linear infinite; }
+  .marquee:hover .marquee-row { animation-play-state: paused; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee { flex-wrap: wrap; mask-image: none; }
+  .marquee-row[aria-hidden] { display: none; }
+  .marquee-row { flex-wrap: wrap; row-gap: 1rem; }
+}
+@keyframes marquee { to { transform: translateX(-100%); } }

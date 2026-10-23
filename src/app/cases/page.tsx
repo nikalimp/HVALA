@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Check } from "lucide-react";
 import { site } from "@/content/site";
 import { caseGroups, cases } from "@/content/os";
 import { Container, Eyebrow, Section } from "@/components/container";
 import { Bitmap } from "@/components/bitmap";
+import { CaseCard } from "@/components/case-card";
 import { Cta } from "@/components/cta";
 import { JsonLd } from "@/components/json-ld";
 import { graph } from "@/lib/schema";
@@ -50,16 +50,7 @@ export default function Cases() {
             <h2 className="mb-3 text-2xl font-semibold tracking-tight">{g === "Заведения" ? "Кейсы заведений" : g === "Реклама" ? "Рекламные кампании" : "Кейсы TRAP"}</h2>
             <p className="mb-8 max-w-2xl text-muted-foreground">{groupIntro[g]}</p>
             <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {cases.filter((c) => c.group === g).map((c) => (
-                <li key={c.id} id={c.id} className="flex scroll-mt-20 flex-col rounded-2xl border bg-background p-6">
-                  {c.brand && <p className="text-sm font-semibold text-brand">{c.brand}</p>}
-                  <h3 className="mt-1 font-semibold leading-snug">{c.title}</h3>
-                  <p className="mt-2 text-sm text-muted-foreground">{c.text}</p>
-                  <ul className="mt-4 space-y-1.5 text-sm">
-                    {c.metrics.map((m) => <li key={m} className="flex gap-2 tabular-nums"><Check className="mt-0.5 size-4 shrink-0 text-brand" aria-hidden />{m}</li>)}
-                  </ul>
-                </li>
-              ))}
+              {cases.filter((c) => c.group === g).map((c) => <li key={c.id} className="flex"><CaseCard c={c} className="w-full" /></li>)}
             </ul>
           </Container>
         </Section>

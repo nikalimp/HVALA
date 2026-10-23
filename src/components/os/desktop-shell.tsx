@@ -261,7 +261,7 @@ export function DesktopShell() {
   const glyph = useCallback((icon: string) => (icon === "logo" ? <Logo className="h-3 w-auto text-brand-vivid" /> : <AppGlyph icon={icon} today={today} />), [today]);
   const openWins = wins.filter((w) => !w.min);
   const isOpen = (id: string) => wins.some((w) => w.key === id);
-  const dockApps = useMemo(() => apps.filter((a) => a.dock && a.id !== "trash"), []);
+  const dockApps = useMemo(() => apps.filter((a) => a.dock && a.id !== "trash"), []); // док: Все разделы, Спросить HVALA
 
   const body = (w: Win) => {
     switch (w.key) {
@@ -360,7 +360,6 @@ export function DesktopShell() {
       {/* Док */}
       <nav aria-label="Док" className="dock absolute inset-x-0 bottom-4 z-10 hidden justify-center lg:flex">
         <ul className="flex items-end gap-1 rounded-2xl border bg-background/70 p-1.5 shadow-lg backdrop-blur-md">
-          <DockItem label="О HVALA" href="/" active={!wins.find((w) => w.key === "about")?.min} onClick={() => open("about")}><Logo className="h-2.5 w-auto text-brand-vivid" /></DockItem>
           {dockApps.map((a) => (
             <DockItem key={a.id} label={a.label} href={a.fallback} active={isOpen(a.id)} onClick={() => open(a.id)}><AppGlyph icon={a.icon} className="size-5" today={today} /></DockItem>
           ))}

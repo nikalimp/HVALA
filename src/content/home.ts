@@ -55,25 +55,31 @@ export const home = {
       { title: "Survey banner", text: "Опрос: пользователь выбирает, что ему интересно" },
       { title: "2 Level Banner", text: "Форма заявки на втором уровне баннера" },
     ],
-    targeting: ["Город, район, заведение", "Тип заведения", "Пол и возраст", "Доход", "iOS или Android", "Контроль частоты"],
+    targeting: [
+      { title: "Гео", text: "Город, район, конкретное заведение", icon: "geo" },
+      { title: "Тип заведения", text: "Кафе, ТЦ, фитнес и другие", icon: "venue" },
+      { title: "Пол и возраст", text: "Демография аудитории", icon: "people" },
+      { title: "Доход", text: "Средний и высокий", icon: "income" },
+      { title: "Операционная система", text: "iOS или Android", icon: "os" },
+      { title: "Частота", text: "Контроль повторных показов", icon: "freq" },
+    ],
   },
 
-  cases: [
-    { group: "Заведение", title: "Всплывающая акция при входе в Wi-Fi", metrics: ["40 уникальных подключений в день", "средний чек 1 500 ₽", "конверсия 4%"] },
-    { group: "Заведение", title: "SMS со скидкой на доставку по базе Wi-Fi", metrics: ["80% SMS доставлено", "конверсия 1,5%", "средний чек доставки 1 000 ₽"] },
-    { group: "Заведение", title: "Реклама фестиваля по базе гостей", metrics: ["25 000 номеров выгружено", "аудитория в Яндексе — 13 862", "45 000 показов, CTR 1,41%"] },
-    { group: "Реклама", title: "Соколов: подвеска за визит в магазин рядом с рестораном", metrics: ["охват 540 000", "CTR 5,4%"] },
-    { group: "Реклама", title: "УБРиР: кредитная карта с заявкой в баннере", metrics: ["143 заявки", "56 выданных карт"] },
-    { group: "TRAP", title: "Бизнес-ланч: реклама прохожим с 12:00 до 16:00", metrics: ["173 гостя вернулись", "+253 ланча за месяц", "+59 607 ₽ выручки при бюджете 10 000 ₽"] },
-  ],
+  // Кейсы на главной — из src/content/os.ts по id
+  caseIds: ["popup", "festival", "sokolov", "akadem", "ubrir", "trap-lunch"],
 
-  clients: ["METRO", "Шоколадница", "Tele2", "Toyota", "World Class", "Engels", "Екатеринбург Арена", "Simple Coffee", "Совкомбанк", "ВкусВилл", "ЛитРес", "Соколов", "Технопарк", "СКМ"],
+  // Логотипы — public/clients/<файл>.svg (поле logo), пока файлов нет — названия
+  clients: [
+    { name: "METRO" }, { name: "Шоколадница" }, { name: "Tele2" }, { name: "Toyota" }, { name: "World Class" }, { name: "Engels" },
+    { name: "Екатеринбург Арена" }, { name: "Simple Coffee" }, { name: "Совкомбанк" }, { name: "ВкусВилл" }, { name: "ЛитРес" },
+    { name: "Соколов" }, { name: "Технопарк" }, { name: "СКМ" }, { name: "MOJO" }, { name: "RCC" },
+  ] as { name: string; logo?: string }[],
   press: [
     { name: "The Village", href: "https://www.the-village.ru/business/businessmen/338577-hvala" },
     { name: "DK.ru", href: "https://www.dk.ru/news/237138733" },
     { name: "URA.news", href: "https://m.ura.news/articles/1036277932" },
   ],
-  rating: { value: "5,0", count: "13 отзывов", source: "2ГИС", href: "https://2gis.ru/ekaterinburg/firm/70000001080382589/tab/reviews" },
+  rating: { value: "5,0", count: "13 отзывов", name: "HVALA", address: "Екатеринбург, ул. Пушкина, 9а, 6 этаж", href: "https://2gis.ru/ekaterinburg/firm/70000001080382589" },
 
   faq: [
     { q: "Что такое HVALA?", a: "HVALA — технологии гостевого Wi-Fi для бизнеса. Заведения получают контакты гостей и маркетинговые инструменты, бренды — рекламу в момент подключения к Wi-Fi, организаторы — Wi-Fi на мероприятиях." },
