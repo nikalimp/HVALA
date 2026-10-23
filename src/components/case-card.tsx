@@ -1,6 +1,7 @@
 import { Check } from "lucide-react";
 import type { CaseItem } from "@/content/os";
 import { cn } from "@/lib/utils";
+import { CaseVideo } from "./case-video";
 
 // Карточка кейса: главная цифра — крупно над заголовком, остальные результаты — списком ниже
 export function CaseCard({ c, showGroup = false, className }: { c: CaseItem; showGroup?: boolean; className?: string }) {
@@ -12,8 +13,13 @@ export function CaseCard({ c, showGroup = false, className }: { c: CaseItem; sho
         <span className="font-semibold text-brand">{c.brand ?? (showGroup ? c.group : "")}</span>
         {showGroup && c.brand && <span className="rounded-full bg-brand-bg px-2.5 py-0.5 text-xs font-medium text-brand">{c.group}</span>}
       </p>
-      <p className="mt-3 text-4xl font-semibold leading-none tracking-tight tabular-nums">{c.kpi.value}</p>
-      <p className="mt-1.5 text-sm text-muted-foreground">{c.kpi.label}</p>
+      <div className="mt-4 flex items-start justify-between gap-4">
+        <div>
+          <p className="text-4xl font-semibold leading-none tracking-tight tabular-nums">{c.kpi.value}</p>
+          <p className="mt-1.5 text-sm text-muted-foreground">{c.kpi.label}</p>
+        </div>
+        {c.video && <div className="w-20 shrink-0"><CaseVideo src={c.video} label={`Креатив кампании ${c.brand ?? c.title}`} /></div>}
+      </div>
       <h3 className="mt-5 font-semibold leading-snug">{c.title}</h3>
       <p className="mt-1.5 text-sm text-muted-foreground">{c.text}</p>
       {rest.length > 0 && (

@@ -351,7 +351,8 @@ export function DirectionsApp({ open }: { open: OpenFn }) {
 /* ───────── Демо Wi-Fi гостя: только мокап iPhone ───────── */
 export function WifiApp({ bare = false }: { bare?: boolean }) {
   const [step, setStep] = useState<"login" | "online">("login");
-  const [phone, setPhone] = useState("");
+  const DEMO_PHONE = "+78002341166"; // предзаполнено: +7 800 234-11-66 (телефон HVALA), гостю остаётся нажать «Подключиться»
+  const [phone, setPhone] = useState(DEMO_PHONE);
   const [vote, setVote] = useState<string | null>(null);
   const [card, setCard] = useState(false);
   const [sub, setSub] = useState(false);
@@ -359,7 +360,7 @@ export function WifiApp({ bare = false }: { bare?: boolean }) {
   useEffect(() => { const f = () => setClock(new Date().toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" })); f(); const t = setInterval(f, 20_000); return () => clearInterval(t); }, []);
   const digits = phone.replace(/\D/g, "").replace(/^[78]/, "").slice(0, 10);
   const fmt = (d: string) => `+7 ${d.slice(0, 3)}${d.length > 3 ? ` ${d.slice(3, 6)}` : ""}${d.length > 6 ? `-${d.slice(6, 8)}` : ""}${d.length > 8 ? `-${d.slice(8, 10)}` : ""}`;
-  const reset = () => { setStep("login"); setPhone(""); setVote(null); setCard(false); setSub(false); };
+  const reset = () => { setStep("login"); setPhone(DEMO_PHONE); setVote(null); setCard(false); setSub(false); };
   return (
     <div className={bare ? "flex justify-center" : "flex justify-center bg-muted/50 px-6 py-6"}>
       {/* Корпус iPhone: рамка, Dynamic Island, строка состояния, полоска «домой» */}

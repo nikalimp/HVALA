@@ -42,11 +42,13 @@ export default function Home() {
         <Container>
           <Eyebrow>Для заведений</Eyebrow>
           <h2 className="mb-8 text-3xl font-semibold tracking-tight">Каждое подключение — новый контакт</h2>
-          <ol className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          {/* 4 этапа на одной линии: точки-номера соединены линией (на телефоне — вертикально) */}
+          <ol className="relative grid gap-8 lg:grid-cols-4 lg:gap-6">
+            <span aria-hidden className="absolute bottom-0 left-4 top-0 w-px bg-border lg:bottom-auto lg:left-4 lg:right-4 lg:top-4 lg:h-px lg:w-auto" />
             {home.venueSteps.map((s, i) => (
-              <li key={s.title}>
-                <p className="font-mono text-sm text-brand">{String(i + 1).padStart(2, "0")}</p>
-                <h3 className="mt-2 font-semibold">{s.title}</h3>
+              <li key={s.title} className="relative pl-12 lg:pl-0 lg:pt-14">
+                <span className="absolute left-0 top-0 flex size-8 items-center justify-center rounded-full bg-primary font-mono text-sm font-semibold text-primary-foreground ring-4 ring-card">{i + 1}</span>
+                <h3 className="font-semibold">{s.title}</h3>
                 <p className="mt-2 text-sm text-muted-foreground">{s.text}</p>
               </li>
             ))}
