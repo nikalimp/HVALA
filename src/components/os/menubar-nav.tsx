@@ -17,7 +17,7 @@ const menus = [
 ];
 const linksAfter = [
   { href: "/cases/", label: "Кейсы" },
-  { href: "/ad-formats/", label: "Форматы рекламы" },
+  { href: "/ad-formats/", label: "Форматы" },
   ...(site.features.blog ? [{ href: "/blog/", label: "Блог" }] : []),
   { href: "/contacts/", label: "Контакты" },
 ];
