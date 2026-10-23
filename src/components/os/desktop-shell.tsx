@@ -16,8 +16,9 @@ import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/logo";
 import { cn } from "@/lib/utils";
 import { AppGlyph } from "./icons";
+import { StatsWidgets } from "./stats-widgets";
 import {
-  CalendarApp, CasesApp, DirectionsApp, GalleryApp, Launchpad, MailApp, MessagesApp, NowApp, Spotlight, ToolsApp, TrashApp, WifiApp, type Entry,
+  CalendarApp, CasesApp, DirectionsApp, GalleryApp, Launchpad, MailApp, MessagesApp, Spotlight, ToolsApp, TrashApp, WifiApp, type Entry,
 } from "./apps";
 
 type Win = {
@@ -62,7 +63,7 @@ function AboutWindowBody({ open }: { open: (id: string) => void }) {
       <p className="font-mono text-xs uppercase tracking-wider text-brand">{home.slogan}</p>
       <h1 id="hero-title" className="mt-3 text-3xl font-semibold leading-tight tracking-tight text-balance sm:text-4xl 2xl:text-5xl">{home.h1}</h1>
       <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-[17px]">{home.answer}</p>
-      <dl className="mt-6 grid grid-cols-2 gap-4 border-t pt-5 sm:grid-cols-4">
+      <dl className="mt-6 grid grid-cols-2 gap-4 border-t pt-5 sm:grid-cols-4 lg:hidden">
         {site.stats.map((s) => (
           <div key={s.label}>
             <dd className="text-2xl font-semibold tracking-tight tabular-nums">{s.value}</dd>
@@ -315,9 +316,9 @@ export function DesktopShell() {
           </ul>
         </nav>
 
-        {/* Виджет справа: цифры компании */}
-        <aside aria-label="HVALA сегодня" className="absolute right-6 top-4 hidden w-60 rotate-[1.2deg] lg:block">
-          <div className="window overflow-hidden"><NowApp /></div>
+        {/* Виджеты справа: цифры компании */}
+        <aside aria-label="HVALA в цифрах" className="absolute right-6 top-4 hidden w-[17rem] lg:block">
+          <StatsWidgets />
         </aside>
 
         {/* Окна */}
