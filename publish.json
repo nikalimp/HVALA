@@ -1,0 +1,17 @@
+{
+  "project": "HVALA",
+  "repo": "nikalimp/hvala",
+  "site_dir": ".",
+  "url": "https://hvalawifi.ru",
+  "adapter": "manual-zip",
+  "mode": "approval",
+  "content_dir": "content",
+  "factory": "content/factory/content.config.json",
+  "schedule": { "daily": "09:05", "weekly": "mon 08:50", "tz": "Europe/Moscow", "days": "1-5" },
+  "version": 1,
+  "notes": "adapter manual-zip до pre-flight хостинга (этап 5); домен hvalawifi.ru сейчас на Tilda; контент-завод — позже",
+  "out_dir": "out",
+  "app_path": "",
+  "rsync_exclude": "",
+  "manual_script": "scripts/deploy-site.sh"
+}
