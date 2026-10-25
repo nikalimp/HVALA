@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { FaqList } from "@/components/faq";
 import { Cta } from "@/components/cta";
 import { Bitmap } from "@/components/bitmap";
+import { cn } from "@/lib/utils";
 import { DesktopShell } from "@/components/os/desktop-shell";
 import { JsonLd } from "@/components/json-ld";
 import { faqSchema, graph } from "@/lib/schema";
@@ -69,8 +70,8 @@ export default function Home() {
           <p className="mb-8 max-w-2xl text-muted-foreground">Подключение — от 2 рабочих дней. Выберите модель оплаты: разовый платёж или подписку без сторонней рекламы.</p>
           <div className="grid gap-4 md:grid-cols-2">
             {home.tariffs.map((t) => (
-              <div key={t.name} className="flex flex-col rounded-2xl border p-6 sm:p-8">
-                <h3 className="font-semibold">{t.name}</h3>
+              <div key={t.name} className={cn("flex flex-col rounded-2xl border p-6 sm:p-8", "featured" in t && t.featured && "border-2 border-primary bg-brand-bg shadow-lg shadow-primary/10")}>
+                <h3 className="flex items-center justify-between gap-3 font-semibold">{t.name}{"badge" in t && t.badge && <span className="rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-foreground">{t.badge}</span>}</h3>
                 <p className="mt-4 text-4xl font-semibold tracking-tight tabular-nums">{t.price}</p>
                 <p className="mt-1 text-sm text-muted-foreground">{t.note}</p>
                 <ul className="mt-6 flex-1 space-y-2.5">
@@ -78,7 +79,7 @@ export default function Home() {
                     <li key={p} className="flex gap-2.5 text-sm"><Check className="mt-0.5 size-4 shrink-0 text-brand" aria-hidden />{p}</li>
                   ))}
                 </ul>
-                <Button asChild size="lg" className="mt-8"><a href={site.cta.href} data-os-app="mail" data-os-payload={services[0].title}>Получить консультацию</a></Button>
+                <Button asChild size="lg" variant={"featured" in t && t.featured ? "default" : "outline"} className="mt-8"><a href={site.cta.href} data-os-app="mail" data-os-payload={services[0].title}>Получить консультацию</a></Button>
               </div>
             ))}
           </div>
@@ -148,7 +149,7 @@ export default function Home() {
           <h2 className="mb-8 text-center text-3xl font-semibold tracking-tight">Что говорят клиенты</h2>
           <ReviewWidget rating={home.rating.value} count={home.rating.count} name={home.rating.name} address={home.rating.address} href={home.rating.href} />
           {home.rating.embed && (
-            <iframe src={home.rating.embed} title="Отзывы о HVALA в 2ГИС" loading="lazy" className="mt-4 h-[42rem] w-full rounded-2xl border bg-background" />
+            <iframe src={home.rating.embed} title="Отзывы о HVALA в 2ГИС" loading="lazy" className="mt-4 h-[52rem] w-full rounded-2xl border bg-background" />
           )}
         </Container>
       </Section>
