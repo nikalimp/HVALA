@@ -1,6 +1,6 @@
 "use client";
 
-// Форматы рекламы: табы отдельной строкой под заголовком секции, ниже — плашка выбранного формата (видео и описание).
+// Форматы рекламы: табы отдельной строкой под заголовком секции, ниже — плашка выбранного формата: описание слева, видео справа (без рамки и обрезки).
 // Все 4 панели — в HTML (неактивные скрыты атрибутом hidden), видео играет только у открытой панели.
 // Клавиатура: стрелки влево/вправо, Home, End — как у табов WAI-ARIA.
 import { useRef, useState } from "react";
@@ -33,10 +33,7 @@ export function FormatTabs({ items }: { items: Format[] }) {
         ))}
       </div>
       {items.map((f, i) => (
-        <div key={f.id} role="tabpanel" id={`panel-${f.id}`} aria-labelledby={`tab-${f.id}`} hidden={i !== cur} className="grid items-center gap-8 rounded-2xl border bg-background p-6 sm:p-8 md:grid-cols-[14rem_1fr]">
-          {i === cur
-            ? <video src={f.video} autoPlay muted loop playsInline preload="none" className="mx-auto aspect-[9/16] w-full max-w-56 rounded-[2rem] border-[6px] border-desktop-ink bg-muted object-cover" aria-label={`Пример формата ${f.title}`} />
-            : <span aria-hidden className="mx-auto block aspect-[9/16] w-full max-w-56 rounded-[2rem] border-[6px] border-desktop-ink bg-muted" />}
+        <div key={f.id} role="tabpanel" id={`panel-${f.id}`} aria-labelledby={`tab-${f.id}`} hidden={i !== cur} className="grid items-center gap-8 rounded-2xl border bg-background p-6 sm:p-8 md:grid-cols-[1fr_16rem]">
           <div>
             <p className="font-mono text-xs uppercase tracking-wider text-muted-foreground">Формат {i + 1} из {items.length}</p>
             <h3 className="mt-2 text-2xl font-semibold tracking-tight">{f.title}</h3>
@@ -45,6 +42,7 @@ export function FormatTabs({ items }: { items: Format[] }) {
               {f.points.map((p) => <li key={p} className="flex gap-2.5 text-sm"><Check className="mt-0.5 size-4 shrink-0 text-brand" aria-hidden />{p}</li>)}
             </ul>
           </div>
+          {i === cur && <video src={f.video} autoPlay muted loop playsInline preload="none" className="mx-auto h-auto max-h-[32rem] w-full max-w-64 rounded-xl md:mx-0" aria-label={`Пример формата ${f.title}`} />}
         </div>
       ))}
     </div>
