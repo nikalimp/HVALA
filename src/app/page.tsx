@@ -5,6 +5,7 @@ import { FormatTabs } from "@/components/format-tabs";
 import { CaseCard } from "@/components/case-card";
 import { LogoMarquee } from "@/components/logo-marquee";
 import { ReviewWidget } from "@/components/review-widget";
+import { TwoGisReviews } from "@/components/twogis-reviews";
 
 const targetingIcons: Record<string, LucideIcon> = { geo: MapPin, venue: Store, people: Users, income: Wallet, os: Smartphone, freq: RefreshCw };
 import { home } from "@/content/home";
@@ -147,9 +148,16 @@ export default function Home() {
         <Container className="max-w-3xl">
           <Eyebrow className="text-center">Отзывы</Eyebrow>
           <h2 className="mb-8 text-center text-3xl font-semibold tracking-tight">Что говорят клиенты</h2>
-          <ReviewWidget rating={home.rating.value} count={home.rating.count} name={home.rating.name} address={home.rating.address} href={home.rating.href} />
-          {home.rating.embed && (
-            <iframe src={home.rating.embed} title="Отзывы о HVALA в 2ГИС" loading="lazy" className="mt-4 h-[52rem] w-full rounded-2xl border bg-background" />
+          {home.rating.widget.orgId ? (
+            <>
+              <TwoGisReviews orgId={home.rating.widget.orgId} branchId={home.rating.widget.branchId} title="Отзывы о HVALA в 2ГИС" className="block h-[824px] w-full rounded-2xl border bg-background" />
+              <p className="mt-4 text-center text-sm text-muted-foreground">
+                Рейтинг {home.rating.value} · {home.rating.count} ·{" "}
+                <a href={`${home.rating.href}/tab/reviews/addreview`} target="_blank" rel="noopener" className="underline underline-offset-4 hover:text-foreground">Оставить отзыв в 2ГИС</a>
+              </p>
+            </>
+          ) : (
+            <ReviewWidget rating={home.rating.value} count={home.rating.count} name={home.rating.name} address={home.rating.address} href={home.rating.href} />
           )}
         </Container>
       </Section>
