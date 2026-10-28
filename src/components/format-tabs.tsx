@@ -1,9 +1,9 @@
 "use client";
 
 // Форматы рекламы: табы отдельной строкой под заголовком секции, ниже — плашка выбранного формата: описание слева, видео справа (без рамки и обрезки).
-// Все 4 панели — в HTML (неактивные скрыты атрибутом hidden), видео играет только у открытой панели.
+// Все 4 панели — в HTML (неактивные скрыты атрибутом hidden). Все 4 видео грузятся сразу (preload=auto), чтобы переключение было мгновенным.
 // Клавиатура: стрелки влево/вправо, Home, End — как у табов WAI-ARIA.
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -12,10 +12,17 @@ type Format = { id: string; title: string; text: string; points: string[]; video
 export function FormatTabs({ items }: { items: Format[] }) {
   const [cur, setCur] = useState(0);
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
+  const box = useRef<HTMLDivElement>(null);
+  // Видео открытой панели — с начала и в воспроизведение; остальные — на паузу
+  useEffect(() => {
+    box.current?.querySelectorAll<HTMLVideoElement>("video").forEach((v, i) => {
+      if (i === cur) { v.currentTime = 0; v.play().catch(() => {}); } else v.pause();
+    });
+  }, [cur]);
   const go = (i: number) => { const n = (i + items.length) % items.length; setCur(n); tabs.current[n]?.focus(); };
   return (
-    <div>
-      <div role="tablist" aria-label="Форматы рекламы" className="mb-4 flex w-fit max-w-full gap-1 overflow-x-auto rounded-xl bg-muted p-1">
+    <div ref={box}>
+      <div role="tablist" aria-label="Форматы рекламы" className="mx-auto mb-4 flex w-fit max-w-full gap-1 overflow-x-auto rounded-xl bg-muted p-1">
         {items.map((f, i) => (
           <button
             key={f.id} ref={(el) => { tabs.current[i] = el; }} type="button" role="tab" id={`tab-${f.id}`} aria-controls={`panel-${f.id}`}
@@ -42,7 +49,7 @@ export function FormatTabs({ items }: { items: Format[] }) {
               {f.points.map((p) => <li key={p} className="flex gap-2.5 text-sm"><Check className="mt-0.5 size-4 shrink-0 text-brand" aria-hidden />{p}</li>)}
             </ul>
           </div>
-          {i === cur && <video src={f.video} autoPlay muted loop playsInline preload="none" className="mx-auto h-auto max-h-[32rem] w-full max-w-64 rounded-xl md:mx-0" aria-label={`Пример формата ${f.title}`} />}
+          <video src={f.video} autoPlay muted loop playsInline preload="auto" className="mx-auto h-auto max-h-[32rem] w-full max-w-64 rounded-xl md:mx-0" aria-label={`Пример формата ${f.title}`} />
         </div>
       ))}
     </div>

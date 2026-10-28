@@ -25,6 +25,7 @@ export function Bitmap({
   speed = 1,
   variant = "waves",
   interactive = false,
+  quiet = false,
   logo = false,
   isBackground,
 }: {
@@ -35,6 +36,8 @@ export function Bitmap({
   speed?: number;
   variant?: "waves" | "rain" | "ripple";
   interactive?: boolean;
+  /** Фон без узора: битмап проявляется только у курсора и в волне от клика */
+  quiet?: boolean;
   logo?: boolean;
   isBackground?: (el: Element) => boolean; // по умолчанию фоном считается всё
 }) {
@@ -166,17 +169,25 @@ export function Bitmap({
           const inLogo = mask !== null && mask[k] === 1;
           // частицы фона сдвинуты наружу — от букв и от краёв
           const sx = dispX ? x - dispX[k] : x, sy = dispY ? y - dispY[k] : y;
-          let v = base(sx, sy, t);
-          if (interactive && energy > 0.01) {
-            const dx = sx - mx, dy = sy - my, d = Math.sqrt(dx * dx + dy * dy);
-            v += energy * (1.1 * Math.exp(-(d * d) / 90) + 0.35 * Math.exp(-d / 26) * Math.sin(d * 0.55 - t * 6));
-          }
           let wave = 0;
           for (const wv of waves) {
             const age = t - wv.t, rad = age * WAVE_SPEED, fade = wv.amp * (1 - age / WAVE_LIFE);
             wave += fade * ring(x, y, wv.x, wv.y, rad);
           }
-          v += wave;
+          let v: number;
+          if (quiet && !inLogo) {
+            // Тихий режим: фон пустой, узор проявляется только у курсора и в волне от клика
+            let rev = wave;
+            if (energy > 0.01) { const dx = sx - mx, dy = sy - my; rev += energy * Math.exp(-(dx * dx + dy * dy) / 320); }
+            v = rev > 0.03 ? base(sx, sy, t) * Math.min(1.3, rev * 1.6) + rev * 0.2 : 0;
+          } else {
+            v = base(sx, sy, t);
+            if (interactive && energy > 0.01) {
+              const dx = sx - mx, dy = sy - my, d = Math.sqrt(dx * dx + dy * dy);
+              v += energy * (1.1 * Math.exp(-(d * d) / 90) + 0.35 * Math.exp(-d / 26) * Math.sin(d * 0.55 - t * 6));
+            }
+            v += wave;
+          }
           if (keep && !inLogo) v *= keep[k]; // пустая кайма вокруг букв
           if (inLogo) v = 0.62 + 0.3 * Math.sin(t * 1.8 + x * 0.21 - y * 0.13) + wave * 0.6;
           const on = v * (inLogo ? 1 : density * 1.6) > BAYER[(y & 3) * 4 + (x & 3)];
@@ -212,7 +223,7 @@ export function Bitmap({
       cancelAnimationFrame(raf); ro.disconnect(); io.disconnect(); mo.disconnect();
       removeEventListener("pointermove", onMove); removeEventListener("pointerdown", onDown);
     };
-  }, [cell, alpha, density, speed, variant, interactive, logo]);
+  }, [cell, alpha, density, speed, variant, interactive, logo, quiet]);
 
   return <canvas ref={ref} aria-hidden className={cn("pointer-events-none absolute inset-0 -z-10 size-full [image-rendering:pixelated]", className)} />;
 }

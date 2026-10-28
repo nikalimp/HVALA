@@ -31,8 +31,8 @@ export default function Home() {
 
       <Section id="after-desktop" className="scroll-mt-14 border-t bg-card">
         <Container>
-          <Eyebrow>Для заведений</Eyebrow>
-          <h2 className="mb-8 text-3xl font-semibold tracking-tight">Каждое подключение — новый контакт</h2>
+          <Eyebrow className="text-center">Для заведений</Eyebrow>
+          <h2 className="mb-8 text-center text-3xl font-semibold tracking-tight text-balance">Каждое подключение — новый контакт</h2>
           {/* 4 этапа на одной линии: точки-номера соединены линией (на телефоне — вертикально) */}
           <ol className="relative grid gap-8 lg:grid-cols-4 lg:gap-6">
             <span aria-hidden className="absolute bottom-0 left-4 top-0 w-px bg-border lg:bottom-auto lg:left-4 lg:right-4 lg:top-4 lg:h-px lg:w-auto" />
@@ -44,7 +44,7 @@ export default function Home() {
               </li>
             ))}
           </ol>
-          <h3 className="mb-5 mt-14 text-xl font-semibold tracking-tight">10 инструментов на странице входа</h3>
+          <h3 className="mb-5 mt-14 text-center text-xl font-semibold tracking-tight">10 инструментов на странице входа</h3>
           <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
             {home.tools.map((t) => (
               <li key={t.title} className="rounded-xl border bg-background p-4">
@@ -53,7 +53,7 @@ export default function Home() {
               </li>
             ))}
           </ul>
-          <h3 className="mb-6 mt-14 text-xl font-semibold tracking-tight">Нам доверяют</h3>
+          <h3 className="mb-6 mt-14 text-center text-xl font-semibold tracking-tight">Нам доверяют</h3>
           <LogoMarquee items={home.clients} />
           <p className="mt-8 text-sm text-muted-foreground">
             О нас писали:{" "}
@@ -66,9 +66,9 @@ export default function Home() {
 
       <Section id="tariffs" className="border-t">
         <Container>
-          <Eyebrow>Тарифы Wi-Fi</Eyebrow>
-          <h2 className="mb-3 text-3xl font-semibold tracking-tight">Платёж в ваших руках</h2>
-          <p className="mb-8 max-w-2xl text-muted-foreground">Подключение — от 2 рабочих дней. Выберите модель оплаты: разовый платёж или подписку без сторонней рекламы.</p>
+          <Eyebrow className="text-center">Тарифы Wi-Fi</Eyebrow>
+          <h2 className="mb-3 text-center text-3xl font-semibold tracking-tight text-balance">Платёж в ваших руках</h2>
+          <p className="mx-auto mb-8 max-w-2xl text-center text-muted-foreground">Подключение — от 2 рабочих дней. Выберите модель оплаты: разовый платёж или подписку без сторонней рекламы.</p>
           <div className="grid gap-4 md:grid-cols-2">
             {home.tariffs.map((t) => (
               <div key={t.name} className={cn("flex flex-col rounded-2xl border p-6 sm:p-8", "featured" in t && t.featured && "border-2 border-primary bg-brand-bg shadow-lg shadow-primary/10")}>
@@ -90,10 +90,10 @@ export default function Home() {
       <Section className="relative isolate overflow-hidden border-t bg-card">
         <Bitmap alpha={0.14} density={0.5} className="[mask-image:linear-gradient(to_bottom,transparent,black)]" />
         <Container>
-          <Eyebrow>Для рекламодателей</Eyebrow>
-          <h2 className="mb-3 text-3xl font-semibold tracking-tight">Реклама в момент подключения к Wi-Fi</h2>
-          <p className="mb-8 max-w-2xl text-muted-foreground">HVALA mobile показывает баннер бренда на весь экран, когда человек подключается к Wi-Fi в заведении. На экране только один баннер, и его видят.</p>
-          <dl className="grid grid-cols-2 gap-6 border-y py-6 sm:grid-cols-4">
+          <Eyebrow className="text-center">Для рекламодателей</Eyebrow>
+          <h2 className="mb-3 text-center text-3xl font-semibold tracking-tight text-balance">Реклама в момент подключения к Wi-Fi</h2>
+          <p className="mx-auto mb-8 max-w-2xl text-center text-muted-foreground">HVALA mobile показывает баннер бренда на весь экран, когда человек подключается к Wi-Fi в заведении. На экране только один баннер, и его видят.</p>
+          <dl className="grid grid-cols-2 gap-6 border-y py-6 text-center sm:grid-cols-4">
             {home.network.stats.map((s) => (
               <div key={s.label}>
                 <dd className="text-3xl font-semibold tracking-tight tabular-nums">{s.value}</dd>
@@ -101,7 +101,7 @@ export default function Home() {
               </div>
             ))}
           </dl>
-          <h3 className="mb-4 mt-10 text-xl font-semibold tracking-tight">Таргетинги: кому показать рекламу</h3>
+          <h3 className="mb-4 mt-10 text-center text-xl font-semibold tracking-tight">Таргетинги: кому показать рекламу</h3>
           <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {home.network.targeting.map((t) => {
               const Icon = targetingIcons[t.icon];
@@ -116,7 +116,7 @@ export default function Home() {
               );
             })}
           </ul>
-          <div className="mt-6 flex flex-wrap gap-3">
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Button asChild variant="outline"><a href="#formats">Форматы с примерами</a></Button>
             <Button asChild variant="ghost"><Link href="/services/advertising/">Подробнее о сети</Link></Button>
           </div>
@@ -125,22 +125,22 @@ export default function Home() {
 
       <Section id="formats" className="scroll-mt-14 border-t">
         <Container>
-          <Eyebrow>Форматы</Eyebrow>
-          <h2 className="mb-3 text-3xl font-semibold tracking-tight">4 формата рекламы в Wi-Fi</h2>
-          <p className="mb-8 max-w-2xl text-muted-foreground">Все форматы показываются на весь экран в момент подключения к Wi-Fi. Оплата — за тысячу показов (CPM), медиаплан рассчитываем по запросу.</p>
+          <Eyebrow className="text-center">Форматы</Eyebrow>
+          <h2 className="mb-3 text-center text-3xl font-semibold tracking-tight text-balance">4 формата рекламы в Wi-Fi</h2>
+          <p className="mx-auto mb-8 max-w-2xl text-center text-muted-foreground">Все форматы показываются на весь экран в момент подключения к Wi-Fi. Оплата — за тысячу показов (CPM), медиаплан рассчитываем по запросу.</p>
           <FormatTabs items={formats} />
-          <Button asChild size="lg" className="mt-8"><a href={site.cta.href} data-os-app="mail" data-os-payload="Реклама в Wi-Fi">Рассчитать медиаплан</a></Button>
+          <div className="mt-8 flex justify-center"><Button asChild size="lg"><a href={site.cta.href} data-os-app="mail" data-os-payload="Реклама в Wi-Fi">Рассчитать медиаплан</a></Button></div>
         </Container>
       </Section>
 
       <Section id="cases" className="border-t">
         <Container>
-          <Eyebrow>Кейсы</Eyebrow>
-          <h2 className="mb-8 text-3xl font-semibold tracking-tight">Результаты клиентов в цифрах</h2>
+          <Eyebrow className="text-center">Кейсы</Eyebrow>
+          <h2 className="mb-8 text-center text-3xl font-semibold tracking-tight text-balance">Результаты клиентов в цифрах</h2>
           <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {home.caseIds.map((id) => cases.find((c) => c.id === id)!).map((c) => <li key={c.id} className="flex"><CaseCard c={c.id === "akadem" ? { ...c, video: undefined } : c} showGroup className="w-full" /></li>)}
           </ul>
-          <Button asChild variant="outline" className="mt-8"><Link href="/cases/">Все кейсы</Link></Button>
+          <div className="mt-8 flex justify-center"><Button asChild variant="outline"><Link href="/cases/">Все кейсы</Link></Button></div>
         </Container>
       </Section>
 
@@ -164,8 +164,8 @@ export default function Home() {
 
       <Section id="faq" className="border-t">
         <Container className="max-w-3xl">
-          <Eyebrow>Вопросы</Eyebrow>
-          <h2 className="mb-6 text-3xl font-semibold tracking-tight">Частые вопросы</h2>
+          <Eyebrow className="text-center">Вопросы</Eyebrow>
+          <h2 className="mb-6 text-center text-3xl font-semibold tracking-tight text-balance">Частые вопросы</h2>
           <FaqList items={home.faq} />
         </Container>
       </Section>
