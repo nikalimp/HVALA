@@ -165,3 +165,37 @@
   .boot { animation-delay: .3s; }
   .boot-bar { animation: none; width: 100%; }
 }
+
+/* Иллюстрации направлений (components/service-illustration.tsx) */
+.il .il-arc { animation: il-arc 2.4s ease-in-out infinite; }
+.il .il-arc-2 { animation-delay: .3s; }
+.il .il-arc-3 { animation-delay: .6s; }
+@keyframes il-arc { 0%, 100% { opacity: .2; } 40% { opacity: 1; } }
+.il .il-type circle { opacity: 0; animation: il-type 4s steps(1) infinite; }
+@keyframes il-type { 0% { opacity: 0; } 10%, 90% { opacity: 1; } 100% { opacity: 0; } }
+.il .il-press, .il .il-pop, .il .il-tap, .il .il-pin { transform-box: fill-box; transform-origin: center; }
+.il .il-press { animation: il-press 4s ease-in-out infinite; }
+@keyframes il-press { 0%, 52%, 62%, 100% { transform: scale(1); } 57% { transform: scale(.94); } }
+.il .il-pop { opacity: 0; animation: il-pop 4s cubic-bezier(.2, .8, .2, 1) infinite; }
+@keyframes il-pop { 0%, 60% { opacity: 0; transform: translateY(10px) scale(.9); } 70%, 92% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+.il .il-banner { animation: il-banner 4s cubic-bezier(.2, .8, .2, 1) infinite; }
+@keyframes il-banner { 0%, 15% { transform: translateY(190px); } 32%, 88% { transform: none; } 100% { transform: translateY(190px); } }
+.il .il-tap { opacity: 0; animation: il-tap 4s ease-out infinite; }
+@keyframes il-tap { 0%, 44% { opacity: 0; transform: scale(1.4); } 50% { opacity: 1; transform: scale(1); } 58%, 100% { opacity: 0; transform: scale(.9); } }
+.il .il-guest { opacity: .35; animation: il-guest 3.2s ease-in-out infinite; }
+@keyframes il-guest { 0%, 100% { opacity: .35; color: currentColor; } 35%, 65% { opacity: 1; color: var(--brand-vivid); } }
+.il .il-sweep { animation: il-spin 4s linear infinite; }
+@keyframes il-spin { to { transform: rotate(360deg); } }
+.il .il-blip { opacity: .25; animation: il-blip 4s ease-in-out infinite; }
+@keyframes il-blip { 0%, 100% { opacity: .25; } 20%, 50% { opacity: 1; } }
+.il .il-led { animation: il-arc 1.2s ease-in-out infinite; }
+.il .il-link { stroke-dasharray: 1; stroke-dashoffset: 1; opacity: .5; animation: il-link 4.8s ease-in-out infinite; }
+@keyframes il-link { 0% { stroke-dashoffset: 1; } 30%, 85% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: 0; opacity: 0; } }
+.il .il-pin { animation: il-pin 4.8s cubic-bezier(.2, .8, .2, 1.4) infinite; }
+@keyframes il-pin { 0% { transform: scale(0); } 12%, 90% { transform: scale(1); } 100% { transform: scale(0); } }
+@media (prefers-reduced-motion: reduce) {
+  .il *, .il * * { animation: none !important; }
+  .il .il-type circle, .il .il-pop, .il .il-blip { opacity: 1; }
+  .il .il-tap { opacity: 0; }
+  .il .il-link { stroke-dashoffset: 0; }
+}

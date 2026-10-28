@@ -67,7 +67,7 @@ export default function Home() {
       <Section id="tariffs" className="border-t">
         <Container>
           <Eyebrow className="text-center">Тарифы Wi-Fi</Eyebrow>
-          <h2 className="mb-3 text-center text-3xl font-semibold tracking-tight text-balance">Платёж в ваших руках</h2>
+          <h2 className="mb-3 text-center text-3xl font-semibold tracking-tight text-balance">Тариф: 29 900 ₽ один раз или в год без рекламы</h2>
           <p className="mx-auto mb-8 max-w-2xl text-center text-muted-foreground">Подключение — от 2 рабочих дней. Выберите модель оплаты: разовый платёж или подписку без сторонней рекламы.</p>
           <div className="grid gap-4 md:grid-cols-2">
             {home.tariffs.map((t) => (
@@ -80,7 +80,7 @@ export default function Home() {
                     <li key={p} className="flex gap-2.5 text-sm"><Check className="mt-0.5 size-4 shrink-0 text-brand" aria-hidden />{p}</li>
                   ))}
                 </ul>
-                <Button asChild size="lg" variant={"featured" in t && t.featured ? "default" : "outline"} className="mt-8"><a href={site.cta.href} data-os-app="mail" data-os-payload={services[0].title}>Получить консультацию</a></Button>
+                <Button asChild size="lg" variant={"featured" in t && t.featured ? "default" : "outline"} className="mt-8"><a href={site.cta.href} data-os-app="mail" data-os-payload={services[0].title}>Подключить Wi-Fi</a></Button>
               </div>
             ))}
           </div>
@@ -92,7 +92,7 @@ export default function Home() {
         <Container>
           <Eyebrow className="text-center">Для рекламодателей</Eyebrow>
           <h2 className="mb-3 text-center text-3xl font-semibold tracking-tight text-balance">Реклама в момент подключения к Wi-Fi</h2>
-          <p className="mx-auto mb-8 max-w-2xl text-center text-muted-foreground">HVALA mobile показывает баннер бренда на весь экран, когда человек подключается к Wi-Fi в заведении. На экране только один баннер, и его видят.</p>
+          <p className="mx-auto mb-8 max-w-2xl text-center text-muted-foreground">HVALA mobile показывает ваш баннер на весь экран, когда человек подключается к Wi-Fi в заведении. На экране только один баннер — ваш, и его видят.</p>
           <dl className="grid grid-cols-2 gap-6 border-y py-6 text-center sm:grid-cols-4">
             {home.network.stats.map((s) => (
               <div key={s.label}>
@@ -129,14 +129,14 @@ export default function Home() {
           <h2 className="mb-3 text-center text-3xl font-semibold tracking-tight text-balance">4 формата рекламы в Wi-Fi</h2>
           <p className="mx-auto mb-8 max-w-2xl text-center text-muted-foreground">Все форматы показываются на весь экран в момент подключения к Wi-Fi. Оплата — за тысячу показов (CPM), медиаплан рассчитываем по запросу.</p>
           <FormatTabs items={formats} />
-          <div className="mt-8 flex justify-center"><Button asChild size="lg"><a href={site.cta.href} data-os-app="mail" data-os-payload="Реклама в Wi-Fi">Рассчитать медиаплан</a></Button></div>
+          <div className="mt-8 flex justify-center"><Button asChild size="lg"><a href={site.cta.href} data-os-app="mail" data-os-payload="Реклама в Wi-Fi">Получить медиаплан</a></Button></div>
         </Container>
       </Section>
 
       <Section id="cases" className="border-t">
         <Container>
           <Eyebrow className="text-center">Кейсы</Eyebrow>
-          <h2 className="mb-8 text-center text-3xl font-semibold tracking-tight text-balance">Результаты клиентов в цифрах</h2>
+          <h2 className="mb-8 text-center text-3xl font-semibold tracking-tight text-balance">Что получили заведения и бренды</h2>
           <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {home.caseIds.map((id) => cases.find((c) => c.id === id)!).map((c) => <li key={c.id} className="flex"><CaseCard c={c.id === "akadem" ? { ...c, video: undefined } : c} showGroup className="w-full" /></li>)}
           </ul>
