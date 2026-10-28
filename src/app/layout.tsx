@@ -7,6 +7,7 @@ import { Footer } from "@/components/footer";
 import { CookieBanner } from "@/components/cookie-banner";
 import { OverlayHost } from "@/components/os/overlay-host";
 import { JsonLd } from "@/components/json-ld";
+import { BootScreen, bootScript } from "@/components/boot-screen";
 import { graph, orgSchema, personSchema, websiteSchema } from "@/lib/schema";
 
 export const metadata: Metadata = {
@@ -28,10 +29,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang={site.lang} suppressHydrationWarning>
       <head>
         {site.darkTheme && <script dangerouslySetInnerHTML={{ __html: themeScript }} />}
+        <script dangerouslySetInnerHTML={{ __html: bootScript }} />
         {site.metrikaId > 0 && <script dangerouslySetInnerHTML={{ __html: metrikaScript(site.metrikaId) }} />}
         <JsonLd data={graph(websiteSchema, orgSchema, personSchema)} />
       </head>
       <body className="flex min-h-screen flex-col">
+        <BootScreen />
         {site.metrikaId > 0 && (
           <noscript><div><img src={`https://mc.yandex.ru/watch/${site.metrikaId}`} style={{ position: "absolute", left: "-9999px" }} alt="" /></div></noscript>
         )}

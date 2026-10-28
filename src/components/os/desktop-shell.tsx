@@ -289,7 +289,7 @@ export function DesktopShell() {
 
   return (
     <section ref={sectionRef} aria-labelledby="hero-title" className="desktop relative -mt-14 overflow-hidden pt-14 lg:h-[100svh] lg:min-h-[640px]">
-      <Bitmap className="z-0" cell={6} alpha={0.2} density={0.45} interactive logo isBackground={(el) => el === area.current || el === sectionRef.current} />
+      <Bitmap className="z-0" cell={6} alpha={0.2} density={0.45} interactive quiet logo isBackground={(el) => el === area.current || el === sectionRef.current} />
       <div ref={area} className="relative mx-auto flex w-full max-w-[1680px] flex-col px-4 pb-10 pt-6 sm:px-6 lg:block lg:absolute lg:inset-x-0 lg:bottom-24 lg:top-14 lg:isolate lg:p-0" onPointerDown={(e) => { if (e.target === e.currentTarget) setSelected(null); }}>
         {/* Иконки рабочего стола */}
         <nav aria-label="Разделы сайта" className="order-2 mt-8 lg:absolute lg:left-6 lg:top-4 lg:mt-0">
@@ -386,7 +386,7 @@ export function DesktopShell() {
 
       {/* Призыв листать: первый экран — не весь сайт */}
       <a href="#after-desktop" className="scroll-cue absolute bottom-6 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-1 rounded-full px-4 py-2 text-xs font-medium text-desktop-ink lg:flex">
-        <span className="rounded-full bg-background/70 px-3 py-1 backdrop-blur-md">Листайте вниз — там тарифы, кейсы и ответы</span>
+        <span className="rounded-full bg-background/70 px-3 py-1 backdrop-blur-md">Скрольте вниз</span>
         <ChevronDown className="scroll-cue-arrow size-5" aria-hidden />
       </a>
 
