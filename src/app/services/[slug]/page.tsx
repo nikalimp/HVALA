@@ -1,6 +1,20 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Check } from "lucide-react";
+import {
+  Award, Briefcase, ChartColumn, Check, ClipboardList, Cpu, CreditCard, Crosshair, ExternalLink, FileText, Gamepad2, GraduationCap,
+  LayoutTemplate, Layers, ListChecks, Mail, Maximize, Megaphone, Network, Palette, Radar, Repeat, ShieldCheck, Smartphone, Target,
+  Ticket, TrendingUp, Truck, Upload, Users, UsersRound, Wifi, Wrench, type LucideIcon,
+} from "lucide-react";
+import { ServiceIllustration } from "@/components/service-illustration";
+
+// Иконки пунктов «Что входит» — по полю icon в src/content/services.ts
+const icons: Record<string, LucideIcon> = {
+  award: Award, briefcase: Briefcase, chart: ChartColumn, clipboard: ClipboardList, cpu: Cpu, card: CreditCard, crosshair: Crosshair,
+  external: ExternalLink, report: FileText, game: Gamepad2, study: GraduationCap, layout: LayoutTemplate, layers: Layers, list: ListChecks,
+  mail: Mail, fullscreen: Maximize, megaphone: Megaphone, network: Network, palette: Palette, radar: Radar, repeat: Repeat, shield: ShieldCheck,
+  phone: Smartphone, target: Target, ticket: Ticket, trend: TrendingUp, truck: Truck, upload: Upload, users: Users, lookalike: UsersRound,
+  wifi: Wifi, wrench: Wrench,
+};
 import { serviceBySlug, services } from "@/content/services";
 import { site } from "@/content/site";
 import { Container, Eyebrow, Section } from "@/components/container";
@@ -40,14 +54,17 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
 
       <Section className="relative isolate overflow-hidden pt-12">
         <Bitmap variant="ripple" alpha={0.22} density={0.5} className="[mask-image:linear-gradient(to_top,black_10%,transparent_90%)]" />
-        <Container className="max-w-3xl">
-          <Crumbs items={[{ name: "Главная", path: "/" }, { name: "Направления", path: "/services/" }, { name: s.title }]} />
-          <h1 className="text-3xl font-semibold leading-tight tracking-tight text-balance sm:text-4xl">{s.h1}</h1>
-          <p className="mt-5 text-lg leading-relaxed text-muted-foreground">{s.answer}</p>
-          <div className="mt-8 flex flex-wrap items-center gap-4">
-            <Button asChild size="lg"><a href={site.cta.href} data-os-app="mail" data-os-payload={s.title}>{site.cta.label}</a></Button>
-            {s.prices[0] && <p className="text-sm text-muted-foreground">{s.prices[0].value} · {s.timeline}</p>}
+        <Container className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-16">
+          <div className="max-w-3xl">
+            <Crumbs items={[{ name: "Главная", path: "/" }, { name: "Направления", path: "/services/" }, { name: s.title }]} />
+            <h1 className="text-3xl font-semibold leading-tight tracking-tight text-balance sm:text-4xl">{s.h1}</h1>
+            <p className="mt-5 text-lg leading-relaxed text-muted-foreground">{s.answer}</p>
+            <div className="mt-8 flex flex-wrap items-center gap-4">
+              <Button asChild size="lg"><a href={site.cta.href} data-os-app="mail" data-os-payload={s.title}>{s.ctaLabel}</a></Button>
+              {s.prices[0] && <p className="text-sm text-muted-foreground">{s.prices[0].value} · {s.timeline}</p>}
+            </div>
           </div>
+          <ServiceIllustration slug={s.slug} className="mx-auto w-full max-w-72 lg:max-w-none" />
         </Container>
       </Section>
 
@@ -67,13 +84,19 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
       <Section className="border-t">
         <Container className="max-w-3xl">
           <h2 className="mb-8 text-2xl font-semibold tracking-tight">Что входит</h2>
-          <div className="grid gap-6 sm:grid-cols-2">
-            {s.includes.map((i) => (
-              <div key={i.title}>
-                <h3 className="font-medium">{i.title}</h3>
-                <p className="mt-1.5 text-muted-foreground">{i.text}</p>
-              </div>
-            ))}
+          <div className="grid gap-x-8 gap-y-7 sm:grid-cols-2">
+            {s.includes.map((i) => {
+              const Icon = icons[i.icon] ?? Check;
+              return (
+                <div key={i.title} className="flex gap-4">
+                  <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-bg text-brand"><Icon className="size-5" aria-hidden /></span>
+                  <div>
+                    <h3 className="font-medium">{i.title}</h3>
+                    <p className="mt-1.5 text-muted-foreground">{i.text}</p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </Container>
       </Section>
@@ -136,7 +159,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
         </Section>
       )}
 
-      <Cta />
+      <Cta label={s.ctaLabel} payload={s.title} />
     </>
   );
 }
