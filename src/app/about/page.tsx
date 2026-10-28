@@ -21,7 +21,7 @@ export default function About() {
       <Section className="relative isolate overflow-hidden pt-12">
         <Bitmap variant="ripple" alpha={0.2} density={0.45} className="[mask-image:linear-gradient(to_top,black_10%,transparent_90%)]" />
         <Container className="max-w-3xl">
-          <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">{about.h1}</h1>
+          <h1 className="text-3xl font-semibold tracking-tight sm:text-5xl">{about.h1}</h1>
           <div className="prose-site mt-8">
             <Markdown remarkPlugins={[remarkGfm]}>{about.body}</Markdown>
           </div>

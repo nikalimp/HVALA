@@ -48,6 +48,7 @@ export function Footer() {
       </Container>
       <Container className="mt-10 flex flex-col gap-1 text-xs text-muted-foreground sm:flex-row sm:flex-wrap sm:justify-between">
         <span>© {new Date().getFullYear()} {site.legalName} · ИНН {site.legal.inn} · ОГРН {site.legal.ogrn}</span>
+        <a href="https://nikalimp.ru/?utm_source=HVALA" target="_blank" rel="noopener" className="hover:text-foreground">Сайт сделал NikAlimp</a>
         <Link href="/privacy-policy/" className="hover:text-foreground">Политика обработки персональных данных</Link>
         {site.metaNote && <span className="w-full">{site.metaNote}</span>}
       </Container>

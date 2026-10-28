@@ -57,7 +57,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
         <Container className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-16">
           <div className="max-w-3xl">
             <Crumbs items={[{ name: "Главная", path: "/" }, { name: "Направления", path: "/services/" }, { name: s.title }]} />
-            <h1 className="text-3xl font-semibold leading-tight tracking-tight text-balance sm:text-4xl">{s.h1}</h1>
+            <h1 className="text-3xl font-semibold leading-tight tracking-tight text-balance sm:text-5xl">{s.h1}</h1>
             <p className="mt-5 text-lg leading-relaxed text-muted-foreground">{s.answer}</p>
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <Button asChild size="lg"><a href={site.cta.href} data-os-app="mail" data-os-payload={s.title}>{s.ctaLabel}</a></Button>
@@ -71,7 +71,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
       {s.forWhom.length > 0 && (
         <Section className="border-t bg-card">
           <Container className="max-w-3xl">
-            <h2 className="mb-6 text-2xl font-semibold tracking-tight">Кому подходит</h2>
+            <h2 className="mb-6 text-3xl sm:text-4xl font-semibold tracking-tight">Кому подходит</h2>
             <ul className="space-y-3">
               {s.forWhom.map((f) => (
                 <li key={f} className="flex gap-3"><Check className="mt-0.5 size-4 shrink-0 text-brand" />{f}</li>
@@ -83,7 +83,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
 
       <Section className="border-t">
         <Container className="max-w-3xl">
-          <h2 className="mb-8 text-2xl font-semibold tracking-tight">Что входит</h2>
+          <h2 className="mb-8 text-3xl sm:text-4xl font-semibold tracking-tight">Что входит</h2>
           <div className="grid gap-x-8 gap-y-7 sm:grid-cols-2">
             {s.includes.map((i) => {
               const Icon = icons[i.icon] ?? Check;
@@ -103,7 +103,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
 
       <Section className="border-t bg-card">
         <Container className="max-w-3xl">
-          <h2 className="mb-8 text-2xl font-semibold tracking-tight">Этапы</h2>
+          <h2 className="mb-8 text-3xl sm:text-4xl font-semibold tracking-tight">Этапы</h2>
           <ol className="space-y-6">
             {s.process.map((p, i) => (
               <li key={p.title} className="flex gap-4">
@@ -120,7 +120,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
 
       <Section className="border-t">
         <Container className="max-w-3xl">
-          <h2 className="mb-8 text-2xl font-semibold tracking-tight">Стоимость</h2>
+          <h2 className="mb-8 text-3xl sm:text-4xl font-semibold tracking-tight">Стоимость</h2>
           <table className="w-full text-left">
             <tbody className="divide-y border-y">
               {s.prices.map((p) => (
@@ -141,7 +141,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
       {s.faq.length > 0 && (
         <Section className="border-t bg-card">
           <Container className="max-w-3xl">
-            <h2 className="mb-6 text-2xl font-semibold tracking-tight">Частые вопросы</h2>
+            <h2 className="mb-6 text-3xl sm:text-4xl font-semibold tracking-tight">Частые вопросы</h2>
             <FaqList items={s.faq} />
           </Container>
         </Section>
@@ -151,7 +151,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
         <Section className="border-t">
           <Container>
             <Eyebrow>Вместе с этим</Eyebrow>
-            <h2 className="mb-8 text-2xl font-semibold tracking-tight">Связанные направления</h2>
+            <h2 className="mb-8 text-3xl sm:text-4xl font-semibold tracking-tight">Связанные направления</h2>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {related.map((r) => <ServiceCard key={r.slug} s={r} />)}
             </div>
