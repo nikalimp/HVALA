@@ -14,7 +14,7 @@ export default function NotFound() {
     <Section>
       <Container className="max-w-xl text-center">
         <p className="font-mono text-sm text-muted-foreground">404</p>
-        <h1 className="mt-2 text-3xl font-semibold tracking-tight">Страница не найдена</h1>
+        <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-5xl">Страница не найдена</h1>
         <Button asChild className="mt-6"><Link href="/">На главную</Link></Button>
       </Container>
     </Section>

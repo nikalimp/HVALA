@@ -3,6 +3,7 @@ import { Check, MapPin, RefreshCw, Smartphone, Store, Users, Wallet, type Lucide
 import { cases, formats } from "@/content/os";
 import { FormatTabs } from "@/components/format-tabs";
 import { CaseCard } from "@/components/case-card";
+import { CountUp } from "@/components/count-up";
 import { LogoMarquee } from "@/components/logo-marquee";
 import { ReviewWidget } from "@/components/review-widget";
 import { TwoGisReviews } from "@/components/twogis-reviews";
@@ -32,19 +33,19 @@ export default function Home() {
       <Section id="after-desktop" className="scroll-mt-14 border-t bg-card">
         <Container>
           <Eyebrow className="text-center">Для заведений</Eyebrow>
-          <h2 className="mb-8 text-center text-3xl font-semibold tracking-tight text-balance">Каждое подключение — новый контакт</h2>
+          <h2 className="mb-8 text-center text-3xl sm:text-4xl lg:text-[2.75rem] lg:leading-tight font-semibold tracking-tight text-balance">Каждое подключение — новый контакт</h2>
           {/* 4 этапа на одной линии: точки-номера соединены линией (на телефоне — вертикально) */}
           <ol className="relative grid gap-8 lg:grid-cols-4 lg:gap-6">
-            <span aria-hidden className="absolute bottom-0 left-4 top-0 w-px bg-border lg:bottom-auto lg:left-4 lg:right-4 lg:top-4 lg:h-px lg:w-auto" />
+            <span aria-hidden className="absolute bottom-0 left-4 top-0 w-px bg-border lg:bottom-auto lg:left-[12.5%] lg:right-[12.5%] lg:top-4 lg:h-px lg:w-auto" />
             {home.venueSteps.map((s, i) => (
-              <li key={s.title} className="relative pl-12 lg:pl-0 lg:pt-14">
-                <span className="absolute left-0 top-0 flex size-8 items-center justify-center rounded-full bg-primary font-mono text-sm font-semibold text-primary-foreground ring-4 ring-card">{i + 1}</span>
+              <li key={s.title} className="relative pl-12 lg:pl-0 lg:pt-14 lg:text-center">
+                <span className="absolute left-0 top-0 flex size-8 items-center lg:left-1/2 lg:-translate-x-1/2 justify-center rounded-full bg-primary font-mono text-sm font-semibold text-primary-foreground ring-4 ring-card">{i + 1}</span>
                 <h3 className="font-semibold">{s.title}</h3>
                 <p className="mt-2 text-sm text-muted-foreground">{s.text}</p>
               </li>
             ))}
           </ol>
-          <h3 className="mb-5 mt-14 text-center text-xl font-semibold tracking-tight">10 инструментов на странице входа</h3>
+          <h3 className="mb-5 mt-14 text-center text-2xl font-semibold tracking-tight">10 инструментов на странице входа</h3>
           <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
             {home.tools.map((t) => (
               <li key={t.title} className="rounded-xl border bg-background p-4">
@@ -53,9 +54,9 @@ export default function Home() {
               </li>
             ))}
           </ul>
-          <h3 className="mb-6 mt-14 text-center text-xl font-semibold tracking-tight">Нам доверяют</h3>
+          <h3 className="mb-6 mt-14 text-center text-2xl font-semibold tracking-tight">Нам доверяют</h3>
           <LogoMarquee items={home.clients} />
-          <p className="mt-8 text-sm text-muted-foreground">
+          <p className="mt-8 text-center text-sm text-muted-foreground">
             О нас писали:{" "}
             {home.press.map((p, i) => (
               <span key={p.name}>{i > 0 && ", "}<a href={p.href} target="_blank" rel="noopener" className="underline underline-offset-4 hover:text-foreground">{p.name}</a></span>
@@ -67,7 +68,7 @@ export default function Home() {
       <Section id="tariffs" className="border-t">
         <Container>
           <Eyebrow className="text-center">Тарифы Wi-Fi</Eyebrow>
-          <h2 className="mb-3 text-center text-3xl font-semibold tracking-tight text-balance">Тариф: 29 900 ₽ один раз или в год без рекламы</h2>
+          <h2 className="mb-3 text-center text-3xl sm:text-4xl lg:text-[2.75rem] lg:leading-tight font-semibold tracking-tight text-balance">Тариф: 29 900 ₽ один раз или в год без рекламы</h2>
           <p className="mx-auto mb-8 max-w-2xl text-center text-muted-foreground">Подключение — от 2 рабочих дней. Выберите модель оплаты: разовый платёж или подписку без сторонней рекламы.</p>
           <div className="grid gap-4 md:grid-cols-2">
             {home.tariffs.map((t) => (
@@ -91,22 +92,22 @@ export default function Home() {
         <Bitmap alpha={0.14} density={0.5} className="[mask-image:linear-gradient(to_bottom,transparent,black)]" />
         <Container>
           <Eyebrow className="text-center">Для рекламодателей</Eyebrow>
-          <h2 className="mb-3 text-center text-3xl font-semibold tracking-tight text-balance">Реклама в момент подключения к Wi-Fi</h2>
+          <h2 className="mb-3 text-center text-3xl sm:text-4xl lg:text-[2.75rem] lg:leading-tight font-semibold tracking-tight text-balance">Реклама в момент подключения к Wi-Fi</h2>
           <p className="mx-auto mb-8 max-w-2xl text-center text-muted-foreground">HVALA mobile показывает ваш баннер на весь экран, когда человек подключается к Wi-Fi в заведении. На экране только один баннер — ваш, и его видят.</p>
           <dl className="grid grid-cols-2 gap-6 border-y py-6 text-center sm:grid-cols-4">
             {home.network.stats.map((s) => (
               <div key={s.label}>
-                <dd className="text-3xl font-semibold tracking-tight tabular-nums">{s.value}</dd>
+                <dd className="text-3xl font-semibold tracking-tight tabular-nums sm:text-4xl"><CountUp value={s.value} /></dd>
                 <dt className="mt-1 text-sm text-muted-foreground">{s.label}</dt>
               </div>
             ))}
           </dl>
-          <h3 className="mb-4 mt-10 text-center text-xl font-semibold tracking-tight">Таргетинги: кому показать рекламу</h3>
+          <h3 className="mb-4 mt-10 text-center text-2xl font-semibold tracking-tight">Таргетинги: кому показать рекламу</h3>
           <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {home.network.targeting.map((t) => {
               const Icon = targetingIcons[t.icon];
               return (
-                <li key={t.title} className="flex gap-4 rounded-xl border bg-background p-4">
+                <li key={t.title} className="flex flex-col gap-4 rounded-xl border bg-background p-5">
                   <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-bg text-brand"><Icon className="size-5" aria-hidden /></span>
                   <span>
                     <span className="block font-medium">{t.title}</span>
@@ -117,8 +118,8 @@ export default function Home() {
             })}
           </ul>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Button asChild variant="outline"><a href="#formats">Форматы с примерами</a></Button>
-            <Button asChild variant="ghost"><Link href="/services/advertising/">Подробнее о сети</Link></Button>
+            <Button asChild size="lg" className="h-12 px-8 text-base"><a href="#formats">Форматы с примерами</a></Button>
+            <Button asChild size="lg" variant="outline" className="h-12 px-8 text-base"><Link href="/services/advertising/">Подробнее о сети</Link></Button>
           </div>
         </Container>
       </Section>
@@ -126,28 +127,28 @@ export default function Home() {
       <Section id="formats" className="scroll-mt-14 border-t">
         <Container>
           <Eyebrow className="text-center">Форматы</Eyebrow>
-          <h2 className="mb-3 text-center text-3xl font-semibold tracking-tight text-balance">4 формата рекламы в Wi-Fi</h2>
+          <h2 className="mb-3 text-center text-3xl sm:text-4xl lg:text-[2.75rem] lg:leading-tight font-semibold tracking-tight text-balance">4 формата рекламы в Wi-Fi</h2>
           <p className="mx-auto mb-8 max-w-2xl text-center text-muted-foreground">Все форматы показываются на весь экран в момент подключения к Wi-Fi. Оплата — за тысячу показов (CPM), медиаплан рассчитываем по запросу.</p>
           <FormatTabs items={formats} />
-          <div className="mt-8 flex justify-center"><Button asChild size="lg"><a href={site.cta.href} data-os-app="mail" data-os-payload="Реклама в Wi-Fi">Получить медиаплан</a></Button></div>
+          <div className="mt-8 flex justify-center"><Button asChild size="lg" className="h-12 px-8 text-base"><a href={site.cta.href} data-os-app="mail" data-os-payload="Реклама в Wi-Fi">Получить медиаплан</a></Button></div>
         </Container>
       </Section>
 
       <Section id="cases" className="border-t">
         <Container>
           <Eyebrow className="text-center">Кейсы</Eyebrow>
-          <h2 className="mb-8 text-center text-3xl font-semibold tracking-tight text-balance">Что получили заведения и бренды</h2>
+          <h2 className="mb-8 text-center text-3xl sm:text-4xl lg:text-[2.75rem] lg:leading-tight font-semibold tracking-tight text-balance">Что получили заведения и бренды</h2>
           <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {home.caseIds.map((id) => cases.find((c) => c.id === id)!).map((c) => <li key={c.id} className="flex"><CaseCard c={c.id === "akadem" ? { ...c, video: undefined } : c} showGroup className="w-full" /></li>)}
           </ul>
-          <div className="mt-8 flex justify-center"><Button asChild variant="outline"><Link href="/cases/">Все кейсы</Link></Button></div>
+          <div className="mt-8 flex justify-center"><Button asChild size="lg" className="h-12 px-8 text-base"><Link href="/cases/">Все кейсы</Link></Button></div>
         </Container>
       </Section>
 
       <Section id="reviews" className="border-t bg-card">
         <Container className="max-w-3xl">
           <Eyebrow className="text-center">Отзывы</Eyebrow>
-          <h2 className="mb-8 text-center text-3xl font-semibold tracking-tight">Что говорят клиенты</h2>
+          <h2 className="mb-8 text-center text-3xl sm:text-4xl lg:text-[2.75rem] lg:leading-tight font-semibold tracking-tight">Что говорят клиенты</h2>
           {home.rating.widget.orgId ? (
             <>
               <TwoGisReviews orgId={home.rating.widget.orgId} branchId={home.rating.widget.branchId} title="Отзывы о HVALA в 2ГИС" className="block h-[824px] w-full rounded-2xl border bg-background" />
@@ -165,7 +166,7 @@ export default function Home() {
       <Section id="faq" className="border-t">
         <Container className="max-w-3xl">
           <Eyebrow className="text-center">Вопросы</Eyebrow>
-          <h2 className="mb-6 text-center text-3xl font-semibold tracking-tight text-balance">Частые вопросы</h2>
+          <h2 className="mb-6 text-center text-3xl sm:text-4xl lg:text-[2.75rem] lg:leading-tight font-semibold tracking-tight text-balance">Частые вопросы</h2>
           <FaqList items={home.faq} />
         </Container>
       </Section>

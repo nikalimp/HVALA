@@ -15,7 +15,7 @@ export default function Privacy() {
   return (
     <Section className="pt-12">
       <Container className="max-w-3xl">
-        <h1 className="text-3xl font-semibold tracking-tight">Политика обработки персональных данных</h1>
+        <h1 className="text-3xl font-semibold tracking-tight sm:text-5xl">Политика обработки персональных данных</h1>
         <div className="prose-site mt-8">
           <h2>1. Кто обрабатывает данные</h2>
           <p>Оператор персональных данных — {site.legalName}, ИНН {site.legal.inn}, ОГРН {site.legal.ogrn} (далее — Оператор). Политика действует для сайта {site.url} и составлена по Федеральному закону № 152-ФЗ «О персональных данных».</p>

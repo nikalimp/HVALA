@@ -38,7 +38,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       <Section className="pt-12">
         <Container className="max-w-3xl">
           <Crumbs items={[{ name: "Главная", path: "/" }, { name: "Блог", path: "/blog/" }, { name: p.title }]} />
-          <h1 className="text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">{p.title}</h1>
+          <h1 className="text-3xl font-semibold leading-tight tracking-tight sm:text-5xl">{p.title}</h1>
           <p className="mt-4 text-sm text-muted-foreground">
             {site.person ? site.person.name : site.name} · <time dateTime={p.date}>{formatDate(p.date)}</time>
             {p.updated && p.updated !== p.date && <> · обновлено <time dateTime={p.updated}>{formatDate(p.updated)}</time></>}

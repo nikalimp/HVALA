@@ -17,7 +17,7 @@ export default function Consent() {
   return (
     <Section className="pt-12">
       <Container className="max-w-3xl">
-        <h1 className="text-3xl font-semibold tracking-tight">Согласие на обработку персональных данных</h1>
+        <h1 className="text-3xl font-semibold tracking-tight sm:text-5xl">Согласие на обработку персональных данных</h1>
         <div className="prose-site mt-8">
           <p>Отправляя форму на сайте {site.url}, я свободно, своей волей и в своём интересе даю согласие {site.legalName} (ИНН {site.legal.inn}, ОГРН {site.legal.ogrn}) на обработку моих персональных данных на условиях ниже.</p>
           <h2>Какие данные</h2>
