@@ -3,6 +3,7 @@ import { Check, MapPin, RefreshCw, Smartphone, Store, Users, Wallet, type Lucide
 import { cases, formats } from "@/content/os";
 import { FormatTabs } from "@/components/format-tabs";
 import { CaseCard } from "@/components/case-card";
+import { CaseSlider } from "@/components/case-slider";
 import { CountUp } from "@/components/count-up";
 import { LogoMarquee } from "@/components/logo-marquee";
 import { ReviewWidget } from "@/components/review-widget";
@@ -138,9 +139,9 @@ export default function Home() {
         <Container>
           <Eyebrow className="text-center">Кейсы</Eyebrow>
           <h2 className="mb-8 text-center text-3xl sm:text-4xl lg:text-[2.75rem] lg:leading-tight font-semibold tracking-tight text-balance">Что получили заведения и бренды</h2>
-          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {home.caseIds.map((id) => cases.find((c) => c.id === id)!).map((c) => <li key={c.id} className="flex"><CaseCard c={c.id === "akadem" ? { ...c, video: undefined } : c} showGroup className="w-full" /></li>)}
-          </ul>
+          <CaseSlider label="Кейсы HVALA">
+            {home.caseIds.map((id) => cases.find((c) => c.id === id)!).map((c) => <CaseCard key={c.id} c={c.id === "akadem" ? { ...c, video: undefined } : c} showGroup className="w-full" />)}
+          </CaseSlider>
           <div className="mt-8 flex justify-center"><Button asChild size="lg" className="h-12 px-8 text-base"><Link href="/cases/">Все кейсы</Link></Button></div>
         </Container>
       </Section>
