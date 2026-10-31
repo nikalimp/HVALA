@@ -4,7 +4,7 @@
 // на странице кейсов их много, а внешние файлы тяжёлые. prefers-reduced-motion — без автозапуска, с кнопками.
 import { useEffect, useRef, useState } from "react";
 
-export function CaseVideo({ src, label }: { src: string; label: string }) {
+export function CaseVideo({ src, label, className }: { src: string; label: string; className?: string }) {
   const ref = useRef<HTMLVideoElement>(null);
   const [still, setStill] = useState(false);
   useEffect(() => {
@@ -25,7 +25,7 @@ export function CaseVideo({ src, label }: { src: string; label: string }) {
       src={still ? src : undefined}
       muted loop playsInline preload="none" controls={still}
       aria-label={label}
-      className="aspect-[9/16] w-full rounded-[0.9rem] border-[3px] border-desktop-ink bg-muted object-cover"
+      className={className ?? "aspect-[4/5] w-full rounded-xl bg-muted object-cover"}
     />
   );
 }

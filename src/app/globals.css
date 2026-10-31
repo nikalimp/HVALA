@@ -199,3 +199,10 @@
   .il .il-tap { opacity: 0; }
   .il .il-link { stroke-dashoffset: 0; }
 }
+
+/* Слайдер кейсов: без полосы прокрутки (прокрутка — свайпом, колесом и кнопками) */
+.case-track { scrollbar-width: none; }
+.case-track::-webkit-scrollbar { display: none; }
+
+/* Медиа без острых углов: все фото и видео сайта скруглены */
+main video, .prose-site img, .prose-site figure { border-radius: 0.75rem; }

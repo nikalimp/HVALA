@@ -9,6 +9,22 @@ import { Crumbs } from "@/components/crumbs";
 import { Cta } from "@/components/cta";
 import { JsonLd } from "@/components/json-ld";
 import { articleSchema, breadcrumbs, graph } from "@/lib/schema";
+import { BlogCover, Infographic } from "@/components/blog-art";
+import type { Components } from "react-markdown";
+
+// Картинка /infographic/<id> в markdown — векторная инфографика из components/blog-art.tsx
+const md: Components = {
+  p: ({ node, children }) => {
+    const only = node?.children.length === 1 && node.children[0].type === "element" && node.children[0].tagName === "img";
+    return only ? <>{children}</> : <p>{children}</p>;
+  },
+  img: ({ src, alt }) => {
+    const s = typeof src === "string" ? src : "";
+    if (s.startsWith("/infographic/")) return <Infographic id={s.slice(13)} alt={alt ?? ""} />;
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img src={s} alt={alt ?? ""} loading="lazy" className="rounded-xl" />;
+  },
+};
 
 export const dynamicParams = false;
 
@@ -37,14 +53,17 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       <JsonLd data={graph(articleSchema(p), breadcrumbs([{ name: "Главная", path: "/" }, { name: "Блог", path: "/blog/" }, { name: p.title, path: `/blog/${p.slug}/` }]))} />
       <Section className="pt-12">
         <Container className="max-w-3xl">
+          <div className="text-center">
           <Crumbs items={[{ name: "Главная", path: "/" }, { name: "Блог", path: "/blog/" }, { name: p.title }]} />
-          <h1 className="text-3xl font-semibold leading-tight tracking-tight sm:text-5xl">{p.title}</h1>
+          <h1 className="text-3xl font-semibold leading-tight tracking-tight text-balance sm:text-5xl">{p.title}</h1>
           <p className="mt-4 text-sm text-muted-foreground">
             {site.person ? site.person.name : site.name} · <time dateTime={p.date}>{formatDate(p.date)}</time>
             {p.updated && p.updated !== p.date && <> · обновлено <time dateTime={p.updated}>{formatDate(p.updated)}</time></>}
           </p>
+          </div>
+          <BlogCover slug={p.slug} className="mt-8" />
           <article className="prose-site mt-10">
-            <Markdown remarkPlugins={[remarkGfm]}>{p.body}</Markdown>
+            <Markdown remarkPlugins={[remarkGfm]} components={md}>{p.body}</Markdown>
           </article>
         </Container>
       </Section>
