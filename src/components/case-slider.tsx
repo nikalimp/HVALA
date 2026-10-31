@@ -1,21 +1,22 @@
 "use client";
 
 // Кейсы в один ряд: горизонтальная прокрутка со «скользящими» карточками (scroll-snap) и кнопками «назад/вперёд».
-// Все карточки — в HTML. Колесо, свайп и клавиатура (Tab по карточкам) работают без кнопок. Счётчик — «3 / 6».
+// Все карточки — в HTML. Колесо, свайп и клавиатура (Tab по карточкам) работают без кнопок.
+// Между стрелками — ползунок прокрутки (input range): его можно тянуть мышью и двигать стрелками клавиатуры.
 import { Children, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function CaseSlider({ children, label }: { children: React.ReactNode; label: string }) {
   const track = useRef<HTMLUListElement>(null);
-  const [state, setState] = useState({ start: true, end: false, idx: 1 });
+  const [state, setState] = useState({ start: true, end: false, pos: 0 });
   const items = Children.toArray(children);
   useEffect(() => {
     const el = track.current;
     if (!el) return;
     const upd = () => {
-      const w = (el.firstElementChild as HTMLElement | null)?.offsetWidth ?? 1;
-      setState({ start: el.scrollLeft < 8, end: el.scrollLeft + el.clientWidth > el.scrollWidth - 8, idx: Math.min(items.length, Math.round(el.scrollLeft / (w + 16)) + 1) });
+      const max = el.scrollWidth - el.clientWidth;
+      setState({ start: el.scrollLeft < 8, end: el.scrollLeft > max - 8, pos: max > 0 ? Math.round((el.scrollLeft / max) * 1000) : 0 });
     };
     upd();
     el.addEventListener("scroll", upd, { passive: true });
@@ -38,7 +39,14 @@ export function CaseSlider({ children, label }: { children: React.ReactNode; lab
       </ul>
       <div className="mt-6 flex items-center justify-center gap-4">
         <button type="button" className={btn} onClick={() => go(-1)} disabled={state.start} aria-label="Предыдущие кейсы"><ChevronLeft className="size-5" aria-hidden /></button>
-        <p className="min-w-16 text-center text-sm tabular-nums text-muted-foreground" aria-live="polite">{state.idx} / {items.length}</p>
+        <input
+          type="range" min={0} max={1000} value={state.pos} aria-label="Прокрутка кейсов"
+          className="case-scrub w-40 sm:w-56"
+          onChange={(e) => {
+            const el = track.current;
+            if (el) el.scrollLeft = (Number(e.target.value) / 1000) * (el.scrollWidth - el.clientWidth);
+          }}
+        />
         <button type="button" className={cn(btn)} onClick={() => go(1)} disabled={state.end} aria-label="Следующие кейсы"><ChevronRight className="size-5" aria-hidden /></button>
       </div>
     </div>
