@@ -1,4 +1,5 @@
 // Проверка перед запуском (стандарт AI-Ready сайта, §11). Запуск: npm run check — сначала собирает сайт, потом проверяет out/.
+// @nikitos-shared check.mjs — общая версия в nikalimp/deploy-kit/shared; проектные проверки — scripts/check.local.mjs
 //  1. В готовом сайте нет TODO и домена-заглушки example.ru.
 //  2. geo-check: robots.txt, sitemap, llms.txt, мета-теги, JSON-LD, текст без JS. Балл ≥ 8 и ни одной проблемы P1.
 //  3. Индексация (стандарт §2 «Индексация» и §3): страницы из sitemap без noindex, с canonical на себя и title от 40 символов —
@@ -19,6 +20,8 @@ const ROOT = path.resolve(import.meta.dirname, "..");
 const OUT = path.join(ROOT, "out");
 // Проектные настройки проверок — scripts/check.local.mjs (необязательный, переживает обновление этого файла из стартера):
 //   export const glavredSkip = ["/privacy-policy/", …] — страницы, которые Главред не проверяет (юридические тексты переносятся дословно)
+//   export const thinOk = ["/consent/", …] — служебные страницы, которым не нужен минимум 250 слов
+//   export const exceptions = { privacy: "причина", requisites: "причина" } — исключения из spec §9 «Исключения»: блок становится предупреждением
 //   export default async ({ ROOT, OUT, fail, ok, warn, prodFail }) => { … } — свои проверки, раздел 8
 const localPath = path.join(ROOT, "scripts", "check.local.mjs");
 let localMod = null;
@@ -81,7 +84,7 @@ if (md) {
 
 // 3. Индексация
 const MIN_WORDS = 250; // минимум слов в <main> для каждой страницы из sitemap (стандарт §2 «Индексация»)
-const THIN_OK = ["/contacts/"]; // служебные страницы, где объём не важен; добавлять сюда только с причиной в specs/02-spec.md, §9
+const THIN_OK = ["/contacts/", ...(localMod?.thinOk ?? [])]; // служебные страницы, где объём не важен; свои — export const thinOk в check.local.mjs, с причиной в specs/02-spec.md, §9
 const sitemapXml = fs.readFileSync(path.join(OUT, "sitemap.xml"), "utf8");
 const entries = [...sitemapXml.matchAll(/<url>([\s\S]*?)<\/url>/g)].map(([, u]) => ({
   loc: (u.match(/<loc>([^<]+)<\/loc>/) || [])[1], lastmod: (u.match(/<lastmod>([^<]+)<\/lastmod>/) || [])[1],
@@ -119,16 +122,33 @@ const buildDated = entries.filter((e) => e.lastmod?.startsWith(today)).length;
 if (entries.length > 3 && buildDated / entries.length > 0.5) console.log(`  ⚠ lastmod = сегодня у ${buildDated} из ${entries.length} URL — похоже на дату сборки, ставь только реальные даты изменений`);
 if (!fs.readdirSync(path.join(ROOT, "public")).some((f) => /^[a-f0-9]{32}\.txt$/.test(f))) console.log("  ⚠ Нет ключа IndexNow — npm run indexnow:key");
 
+// 3б. Хостинг и внешние ресурсы (стандарт §1, «Хостинги — что проверено»)
+{
+  const ht = path.join(ROOT, "public", ".htaccess");
+  const htBad = fs.existsSync(ht) && fs.readFileSync(ht, "utf8").split("\n").some((l) => !/^\s*#/.test(l) && /RewriteCond\s+%\{(HTTPS|SERVER_PORT)\}/i.test(l));
+  if (htBad)
+    fail("public/.htaccess: редирект на HTTPS по %{HTTPS}/%{SERVER_PORT} — за nginx REG.RU это бесконечный цикл; HTTPS включать галочкой в ISPmanager");
+  const extFonts = [];
+  const allOut = (function walkAll(d) { return fs.readdirSync(d, { withFileTypes: true }).flatMap((e) => e.isDirectory() ? walkAll(path.join(d, e.name)) : [path.join(d, e.name)]); })(OUT);
+  for (const f of allOut.filter((f) => /\.(html|css)$/.test(f))) if (/fonts\.(googleapis|gstatic)\.com/.test(fs.readFileSync(f, "utf8"))) extFonts.push(path.relative(OUT, f));
+  if (extFonts.length) fail(`Google Fonts блокируются в РФ — шрифты только локально (@fontsource): ${extFonts.slice(0, 5).join(", ")}`);
+  else if (!htBad) ok("Хостинг: .htaccess без цикла HTTPS, внешних шрифтов нет");
+}
+
 // 4. Блокирующее перед выкладкой
 const home = fs.readFileSync(path.join(OUT, "index.html"), "utf8");
 if (/mc\.yandex\.ru\/metrika/.test(home)) ok("Яндекс Метрика подключена");
-else if (/Метрика/.test(fs.readFileSync(path.join(ROOT, "specs", "02-spec.md"), "utf8").split(/^## 9\./m)[1]?.split(/^## 10\./m)[0] ?? "")) warn("Яндекс Метрика не подключена — исключение в specs/02-spec.md §9 (тестовый адрес); к запуску обязательна");
-else prodFail("Яндекс Метрика не подключена — номер счётчика в site.metrikaId (src/content/site.ts)");
+else warn("Яндекс Метрика не подключена — напоминание (стандарт §9.0): свой проект — сразу, клиентский — после публикации на его домене; номер — site.metrikaId");
+const EXC = localMod?.exceptions ?? {};
 for (const page of ["privacy-policy", "consent"]) {
-  if (!fs.existsSync(path.join(OUT, page, "index.html"))) prodFail(`Нет страницы /${page}/ — политика и отдельное согласие на обработку ПДн обязательны (стандарт §8)`);
+  if (fs.existsSync(path.join(OUT, page, "index.html"))) continue;
+  if (EXC.privacy) warn(`Нет /${page}/ — исключение проекта: ${EXC.privacy}`);
+  else prodFail(`Нет страницы /${page}/ — политика и отдельное согласие на обработку ПДн обязательны (стандарт §8)`);
 }
 // ИНН и ОГРН — контрольные суммы ФНС: ловят КПП вместо ИНН, опечатки и перепутанные поля
-const siteTs = fs.readFileSync(path.join(ROOT, "src", "content", "site.ts"), "utf8");
+// site.ts — в src/content/ (стартер) или src/lib/ (nikalimp.ru и старые проекты)
+const siteTsPath = [path.join(ROOT, "src", "content", "site.ts"), path.join(ROOT, "src", "lib", "site.ts")].find((f) => fs.existsSync(f));
+const siteTs = siteTsPath ? fs.readFileSync(siteTsPath, "utf8") : "";
 const field = (name) => (siteTs.match(new RegExp(`${name}:\\s*"([^"]*)"`)) || [])[1] ?? "";
 const digits = (v) => v.split("").map(Number);
 const innOk = (v) => {
@@ -143,7 +163,14 @@ const ogrnOk = (v) => {
   return false;
 };
 const inn = field("inn"), ogrn = field("ogrn") || field("ogrnip"); // у ИП поле ogrnip
-if (/TODO/.test(inn + ogrn) || !inn || !ogrn) prodFail("Реквизиты не заполнены: legal.inn и legal.ogrn (у ИП — legal.ogrnip) в src/content/site.ts");
+// Самозанятый (НПД) — без ОГРН: только ИНН физлица, 12 цифр. Признак — «самозанят» или «НПД» в legal.status
+const npd = /status:\s*"[^"]*(самозанят|НПД|профессиональный доход)/i.test(siteTs);
+if (npd) {
+  if (!/^\d{12}$/.test(inn) || !innOk(inn)) fail(`Самозанятый: ИНН ${inn || "пусто"} — нужен ИНН физлица из 12 цифр с верной контрольной суммой`);
+  else ok(`Реквизиты: самозанятый, ИНН ${inn} корректен по контрольной сумме`);
+} else if (EXC.requisites) {
+  ok(`Реквизиты не требуются — исключение проекта: ${EXC.requisites}`);
+} else if (/TODO/.test(inn + ogrn) || !inn || !ogrn) prodFail("Реквизиты не заполнены: legal.inn и legal.ogrn (у ИП — legal.ogrnip) в src/content/site.ts");
 else {
   if (!innOk(inn)) fail(`ИНН ${inn} не проходит контрольную сумму (10 цифр — ООО, 12 — ИП; 9 цифр — это КПП, не ИНН). Сверь с ЕГРЮЛ: egrul.nalog.ru`);
   if (!ogrnOk(ogrn)) fail(`ОГРН ${ogrn} не проходит контрольную сумму (13 цифр — ООО, 15 — ОГРНИП). Сверь с ЕГРЮЛ: egrul.nalog.ru`);
@@ -209,7 +236,8 @@ if (estimates.length) warn(`Ориентиры без подтверждения
 const crumbsTop = fs.readdirSync(OUT, { withFileTypes: true })
   .filter((e) => e.isDirectory() && fs.existsSync(path.join(OUT, e.name, "index.html")))
   .filter((e) => /aria-label="Хлебные крошки"|"BreadcrumbList"/.test(fs.readFileSync(path.join(OUT, e.name, "index.html"), "utf8")))
-  .map((e) => `/${e.name}/`);
+  .map((e) => `/${e.name}/`)
+  .filter((u) => !(localMod?.crumbsOk ?? []).includes(u)); // check.local.mjs: export const crumbsOk = ["/semantics/"] — страницы-исключения с двойной вложенностью
 if (crumbsTop.length) warn(`Хлебные крошки на страницах первого уровня (стандарт §2.4 — только со второго уровня): ${crumbsTop.join(", ")}`);
 
 // 8. Проектные проверки — scripts/check.local.mjs (переживает обновление этого файла из стартера).
