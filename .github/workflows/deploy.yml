@@ -18,7 +18,7 @@ jobs:
     permissions: { contents: write }
     uses: nikalimp/deploy-kit/.github/workflows/site.yml@main
     with:
-      adapter: ftp                # ssh-ftp | ftp | s3 | manual-zip | tilda
+      adapter: ssh-ftp            # ssh-ftp | ftp | s3 | manual-zip | tilda (стандарт: сначала SSH, потом FTP)
       site_dir: "."               # монорепо: apps/site
       out_dir: out                # Vite: dist
       app_path: ""                # приложение в подпапке сайта: "test/app/"

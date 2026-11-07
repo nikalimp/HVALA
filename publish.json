@@ -3,11 +3,16 @@
   "repo": "nikalimp/hvala",
   "site_dir": ".",
   "url": "https://hvala.nikalimp.ru",
-  "adapter": "ftp",
+  "adapter": "ssh-ftp",
   "mode": "approval",
   "content_dir": "content",
   "factory": "content/factory/content.config.json",
-  "schedule": { "daily": "09:05", "weekly": "mon 08:50", "tz": "Europe/Moscow", "days": "1-5" },
+  "schedule": {
+    "daily": "09:05",
+    "weekly": "mon 08:50",
+    "tz": "Europe/Moscow",
+    "days": "1-5"
+  },
   "version": 1,
   "notes": "тестовая выкладка v1 — поддомен hvala.nikalimp.ru на reg.ru Ника, FTP (SSH из Actions на reg.ru закрыт); боевой домен и хостинг заказчика — к запуску; контент-завод — позже",
   "out_dir": "out",
