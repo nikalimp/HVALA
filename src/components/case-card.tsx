@@ -15,22 +15,26 @@ export function CaseCard({ c, showGroup = false, tall = true, className }: { c: 
       <p className="mt-2 text-sm text-muted-foreground">{c.kpi.label}</p>
     </div>
   );
+  const poster = (
+    <div className={cn("relative flex flex-col justify-end overflow-hidden rounded-xl bg-brand-bg p-6", tall ? "aspect-[4/5]" : "aspect-[4/3]")}>
+      <span aria-hidden className="absolute inset-0 opacity-25 [background-image:radial-gradient(var(--brand-vivid)_2px,transparent_2.5px)] [background-size:16px_16px] [mask-image:linear-gradient(to_bottom,black,transparent_75%)]" />
+      <div className="relative">{kpi(true)}</div>
+    </div>
+  );
+  // eslint-disable-next-line @next/next/no-img-element
+  const shot = c.image && <img src={c.image} alt={`Креатив кампании ${c.brand ?? c.title}`} loading="lazy" className="aspect-[4/5] w-full rounded-xl bg-muted object-cover object-top" />;
+  const hasMedia = Boolean(c.video || c.image);
   return (
     <article id={c.id} className={cn("flex scroll-mt-20 flex-col rounded-2xl border bg-background p-3", className)}>
       {c.video ? (
-        <CaseVideo src={c.video} label={`Креатив кампании ${c.brand ?? c.title}`} />
-      ) : (
-        <div className={cn("relative flex flex-col", tall ? "aspect-[4/5]" : "aspect-[4/3]", "justify-end overflow-hidden rounded-xl bg-brand-bg p-6")}>
-          <span aria-hidden className="absolute inset-0 opacity-25 [background-image:radial-gradient(var(--brand-vivid)_2px,transparent_2.5px)] [background-size:16px_16px] [mask-image:linear-gradient(to_bottom,black,transparent_75%)]" />
-          <div className="relative">{kpi(true)}</div>
-        </div>
-      )}
+        <CaseVideo src={c.video} label={`Креатив кампании ${c.brand ?? c.title}`} fallback={c.image ? shot : poster} />
+      ) : c.image ? shot : poster}
       <div className="flex flex-1 flex-col px-3 pb-3 pt-5">
         <p className="flex items-center justify-between gap-2 text-sm">
           <span className="font-semibold text-brand">{c.brand ?? (showGroup ? c.group : "")}</span>
           {showGroup && c.brand && <span className="rounded-full bg-brand-bg px-2.5 py-0.5 text-xs font-medium text-brand">{c.group}</span>}
         </p>
-        {c.video && <div className="mt-4">{kpi(false)}</div>}
+        {hasMedia && <div className="mt-4">{kpi(false)}</div>}
         <h3 className="mt-5 font-semibold leading-snug">{c.title}</h3>
         <p className="mt-1.5 text-sm text-muted-foreground">{c.text}</p>
         {rest.length > 0 && (

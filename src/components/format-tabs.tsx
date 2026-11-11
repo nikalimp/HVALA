@@ -1,6 +1,6 @@
 "use client";
 
-// Форматы рекламы: табы отдельной строкой под заголовком секции, ниже — плашка выбранного формата: описание слева, видео справа (без рамки и обрезки).
+// Форматы рекламы: табы отдельной строкой под заголовком секции, ниже — плашка выбранного формата: описание слева, видео справа в мокапе iPhone.
 // Все 4 панели — в HTML (неактивные скрыты атрибутом hidden). Все 4 видео грузятся сразу (preload=auto), чтобы переключение было мгновенным.
 // Клавиатура: стрелки влево/вправо, Home, End — как у табов WAI-ARIA.
 import { useEffect, useRef, useState } from "react";
@@ -49,7 +49,10 @@ export function FormatTabs({ items }: { items: Format[] }) {
               {f.points.map((p) => <li key={p} className="flex gap-2.5 text-sm"><Check className="mt-0.5 size-4 shrink-0 text-brand" aria-hidden />{p}</li>)}
             </ul>
           </div>
-          <video src={f.video} autoPlay muted loop playsInline preload="auto" className="mx-auto h-auto max-h-[32rem] w-full max-w-64 rounded-xl md:mx-0" aria-label={`Пример формата ${f.title}`} />
+          <div className="relative mx-auto w-full max-w-60 rounded-[2.6rem] border-[7px] border-desktop-ink bg-desktop-ink shadow-xl md:mx-0">
+            <span aria-hidden className="absolute left-1/2 top-2 z-10 h-5 w-20 -translate-x-1/2 rounded-full bg-desktop-ink" />
+            <video src={f.video} poster={f.video.replace(/\.mp4$/, ".jpg")} autoPlay muted loop playsInline preload="auto" className="aspect-[9/19.5] w-full rounded-[2.1rem] bg-muted object-cover" aria-label={`Пример формата ${f.title}`} />
+          </div>
         </div>
       ))}
     </div>

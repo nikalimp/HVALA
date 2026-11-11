@@ -51,7 +51,7 @@ export default function Cases() {
             <h2 className="mb-3 text-center text-3xl sm:text-4xl font-semibold tracking-tight">{g === "Заведения" ? "Кейсы заведений" : g === "Реклама" ? "Рекламные кампании" : "Кейсы TRAP"}</h2>
             <p className="mx-auto mb-8 max-w-2xl text-center text-muted-foreground">{groupIntro[g]}</p>
             <CaseSlider label={`Кейсы: ${g}`}>
-              {cases.filter((c) => c.group === g).map((c) => <CaseCard key={c.id} c={c} tall={cases.some((x) => x.group === g && x.video)} className="w-full" />)}
+              {cases.filter((c) => c.group === g).map((c) => <CaseCard key={c.id} c={c} tall={cases.some((x) => x.group === g && (x.video || x.image))} className="w-full" />)}
             </CaseSlider>
           </Container>
         </Section>
