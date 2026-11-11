@@ -3,7 +3,7 @@
 // пауза при наведении; prefers-reduced-motion — без движения, строки переносятся.
 import { cn } from "@/lib/utils";
 
-export type Client = { name: string; logo?: string };
+export type Client = { name: string; logo?: string; invert?: boolean };
 
 export function LogoMarquee({ items, className }: { items: Client[]; className?: string }) {
   const row = (hidden: boolean) => (
@@ -12,7 +12,7 @@ export function LogoMarquee({ items, className }: { items: Client[]; className?:
         <li key={c.name} className="shrink-0">
           {c.logo ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={c.logo} alt={hidden ? "" : c.name} className="h-8 w-auto opacity-70 grayscale transition hover:opacity-100 hover:grayscale-0" />
+            <img src={c.logo} alt={hidden ? "" : c.name} className={cn("h-9 w-auto opacity-60 grayscale transition hover:opacity-100 hover:grayscale-0", c.invert ? "invert dark:invert-0" : "dark:invert")} />
           ) : (
             <span className="whitespace-nowrap text-xl font-semibold tracking-tight text-foreground/55">{c.name}</span>
           )}

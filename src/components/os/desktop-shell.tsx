@@ -259,8 +259,8 @@ export function DesktopShell() {
     if (id.startsWith("page:") && !isDesktop) return; // телефон: обычная ссылка
     e.preventDefault();
     if (dragged.current) { dragged.current = false; return; }
-    if (!isDesktop || e.detail === 0) open(id); // телефон или клавиатура
-    else setSelected(id);
+    setSelected(id);
+    open(id); // один клик открывает окно (просьба клиента 11.11.2026)
   };
 
   const glyph = useCallback((icon: string) => (icon === "logo" ? <Logo className="h-3 w-auto text-brand-vivid" /> : <AppGlyph icon={icon} today={today} />), [today]);
@@ -301,7 +301,6 @@ export function DesktopShell() {
                   <a
                     href={a.href}
                     onClick={clickIcon(a.id)}
-                    onDoubleClick={() => isDesktop && open(a.id)}
                     onPointerDown={dragIcon(a.id)}
                     draggable={false}
                     aria-current={selected === a.id ? "true" : undefined}
@@ -325,7 +324,6 @@ export function DesktopShell() {
                   <a
                     href={a.href}
                     onClick={clickIcon(a.id)}
-                    onDoubleClick={() => isDesktop && open(a.id)}
                     onPointerDown={dragIcon(a.id)}
                     draggable={false}
                     aria-current={selected === a.id ? "true" : undefined}

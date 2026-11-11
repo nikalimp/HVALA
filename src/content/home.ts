@@ -73,10 +73,19 @@ export const home = {
 
   // Логотипы — public/clients/<файл>.svg (поле logo), пока файлов нет — названия
   clients: [
-    { name: "METRO" }, { name: "Шоколадница" }, { name: "Tele2" }, { name: "Toyota" }, { name: "World Class" }, { name: "Engels" },
-    { name: "Екатеринбург Арена" }, { name: "Simple Coffee" }, { name: "Совкомбанк" }, { name: "ВкусВилл" }, { name: "ЛитРес" },
+    // Логотипы — с hvalacloud.com (public/clients/); остальные клиенты — названием, пока нет файла логотипа
+    { name: "Шоколадница", logo: "/clients/shokoladnitsa.webp" }, { name: "World Class", logo: "/clients/world-class.webp" },
+    { name: "Toyota", logo: "/clients/toyota.svg" }, { name: "Lexus", logo: "/clients/lexus.webp", invert: true },
+    { name: "Volkswagen", logo: "/clients/volkswagen.svg" }, { name: "Engels", logo: "/clients/engels.webp" },
+    { name: "Simple Coffee", logo: "/clients/simple-coffee.svg" }, { name: "Surf Coffee", logo: "/clients/surf-coffee.webp" },
+    { name: "Регинас", logo: "/clients/reginas.webp" }, { name: "Wagner Auto", logo: "/clients/wagner-auto.webp" },
+    { name: "Alex Fitness", logo: "/clients/alex-fitness.webp" }, { name: "Drive Fitness", logo: "/clients/drive-fitness.webp" },
+    { name: "Bright Fit", logo: "/clients/bright-fit.webp" }, { name: "Академия единоборств РМК", logo: "/clients/akademiya-edinoborstv.webp" },
+    { name: "Baden Family", logo: "/clients/baden-family.webp" }, { name: "Сыроварня", logo: "/clients/syrovarnya.svg" },
+    { name: "Своя компания", logo: "/clients/svoya-kompaniya.webp" }, { name: "Dasko", logo: "/clients/dasko.webp" },
+    { name: "METRO" }, { name: "Tele2" }, { name: "Екатеринбург Арена" }, { name: "Совкомбанк" }, { name: "ВкусВилл" }, { name: "ЛитРес" },
     { name: "Соколов" }, { name: "Технопарк" }, { name: "СКМ" }, { name: "MOJO" }, { name: "RCC" },
-  ] as { name: string; logo?: string }[],
+  ] as { name: string; logo?: string; invert?: boolean }[],
   press: [
     { name: "The Village", href: "https://www.the-village.ru/business/businessmen/338577-hvala" },
     { name: "DK.ru", href: "https://www.dk.ru/news/237138733" },
