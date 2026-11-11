@@ -73,7 +73,8 @@ export const home = {
 
   // Логотипы — public/clients/<файл>.svg (поле logo), пока файлов нет — названия
   clients: [
-    // Логотипы — с hvalacloud.com (public/clients/); остальные клиенты — названием, пока нет файла логотипа
+    // Логотипы: hvalacloud.com и hvalawifi.ru (сайты клиента), Wikimedia Commons (METRO, Совкомбанк, ВкусВилл, ЛитРес),
+    // официальные сайты (SOKOLOV, Технопарк), Яндекс Недвижимость (СКМ Девелопмент). Файлы — public/clients/
     { name: "Шоколадница", logo: "/clients/shokoladnitsa.webp" }, { name: "World Class", logo: "/clients/world-class.webp" },
     { name: "Toyota", logo: "/clients/toyota.svg" }, { name: "Lexus", logo: "/clients/lexus.webp", invert: true },
     { name: "Volkswagen", logo: "/clients/volkswagen.svg" }, { name: "Engels", logo: "/clients/engels.webp" },
@@ -83,8 +84,11 @@ export const home = {
     { name: "Bright Fit", logo: "/clients/bright-fit.webp" }, { name: "Академия единоборств РМК", logo: "/clients/akademiya-edinoborstv.webp" },
     { name: "Baden Family", logo: "/clients/baden-family.webp" }, { name: "Сыроварня", logo: "/clients/syrovarnya.svg" },
     { name: "Своя компания", logo: "/clients/svoya-kompaniya.webp" }, { name: "Dasko", logo: "/clients/dasko.webp" },
-    { name: "METRO" }, { name: "Tele2" }, { name: "Екатеринбург Арена" }, { name: "Совкомбанк" }, { name: "ВкусВилл" }, { name: "ЛитРес" },
-    { name: "Соколов" }, { name: "Технопарк" }, { name: "СКМ" }, { name: "MOJO" }, { name: "RCC" },
+    { name: "METRO", logo: "/clients/metro.svg" }, { name: "T2", logo: "/clients/t2.svg" },
+    { name: "Екатеринбург Арена", logo: "/clients/ekaterinburg-arena.webp" }, { name: "Совкомбанк", logo: "/clients/sovcombank.webp" },
+    { name: "ВкусВилл", logo: "/clients/vkusvill.svg" }, { name: "ЛитРес", logo: "/clients/litres.webp" },
+    { name: "SOKOLOV", logo: "/clients/sokolov.svg" }, { name: "Технопарк", logo: "/clients/technopark.webp" },
+    { name: "СКМ Девелопмент", logo: "/clients/skm.webp" }, { name: "MOJO", logo: "/clients/mojo.svg" }, { name: "RCC", logo: "/clients/rcc.svg" },
   ] as { name: string; logo?: string; invert?: boolean }[],
   press: [
     { name: "The Village", href: "https://www.the-village.ru/business/businessmen/338577-hvala" },
