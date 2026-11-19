@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { Check, MapPin, RefreshCw, Smartphone, Store, Users, Wallet, type LucideIcon } from "lucide-react";
-import { cases, formats } from "@/content/os";
+import { Check, MapPin, Minus, RefreshCw, Scale, Smartphone, Store, Users, Wallet, X, type LucideIcon } from "lucide-react";
+import { caseGroups, cases, formats } from "@/content/os";
 import { FormatTabs } from "@/components/format-tabs";
 import { CaseCard } from "@/components/case-card";
 import { CaseSlider } from "@/components/case-slider";
@@ -8,6 +8,12 @@ import { CountUp } from "@/components/count-up";
 import { LogoMarquee } from "@/components/logo-marquee";
 import { ReviewWidget } from "@/components/review-widget";
 import { TwoGisReviews } from "@/components/twogis-reviews";
+import { Reveal } from "@/components/home/reveal";
+import { GuestPhone } from "@/components/home/guest-phone";
+import { Cabinet } from "@/components/home/cabinet";
+import { Tariffs } from "@/components/home/tariffs";
+import { CasesBento } from "@/components/home/cases-bento";
+import { ItBlock } from "@/components/home/it-block";
 
 const targetingIcons: Record<string, LucideIcon> = { geo: MapPin, venue: Store, people: Users, income: Wallet, os: Smartphone, freq: RefreshCw };
 import { home } from "@/content/home";
@@ -31,31 +37,65 @@ export default function Home() {
 
       <DesktopShell />
 
-      <Section id="after-desktop" className="scroll-mt-14 border-t bg-card">
+      <Reveal />
+
+      {/* Закон — «вынужденная мера», которую HVALA превращает в маркетинг (Евгений, 12.11.2026) */}
+      <Section id="after-desktop" className="scroll-mt-14 border-t">
         <Container>
-          <Eyebrow className="text-center">Для заведений</Eyebrow>
-          <h2 className="mb-8 text-center text-3xl sm:text-4xl lg:text-[2.75rem] lg:leading-tight font-semibold tracking-tight text-balance">Каждое подключение — новый контакт</h2>
-          {/* 4 этапа на одной линии: точки-номера соединены линией (на телефоне — вертикально) */}
-          <ol className="relative grid gap-8 lg:grid-cols-4 lg:gap-6">
-            <span aria-hidden className="absolute bottom-0 left-4 top-0 w-px bg-border lg:bottom-auto lg:left-[12.5%] lg:right-[12.5%] lg:top-4 lg:h-px lg:w-auto" />
-            {home.venueSteps.map((s, i) => (
-              <li key={s.title} className="relative pl-12 lg:pl-0 lg:pt-14 lg:text-center">
-                <span className="absolute left-0 top-0 flex size-8 items-center lg:left-1/2 lg:-translate-x-1/2 justify-center rounded-full bg-primary font-mono text-sm font-semibold text-primary-foreground ring-4 ring-card">{i + 1}</span>
-                <h3 className="font-semibold">{s.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{s.text}</p>
-              </li>
-            ))}
-          </ol>
-          <h3 className="mb-5 mt-14 text-center text-2xl font-semibold tracking-tight">10 инструментов на странице входа</h3>
-          <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-            {home.tools.map((t) => (
-              <li key={t.title} className="rounded-xl border bg-background p-4">
-                <p className="font-medium">{t.title}</p>
-                <p className="mt-1 text-sm text-muted-foreground">{t.text}</p>
-              </li>
+          <div data-reveal>
+            <Eyebrow className="flex items-center justify-center gap-2"><Scale className="size-3.5" aria-hidden />Закон о Wi-Fi</Eyebrow>
+            <h2 className="mx-auto mb-3 max-w-4xl text-center text-3xl sm:text-4xl lg:text-[2.75rem] lg:leading-tight font-semibold tracking-tight text-balance">{home.law.title}</h2>
+            <p className="mx-auto mb-10 max-w-2xl text-center text-muted-foreground">{home.law.text}</p>
+          </div>
+          <ul className="grid gap-4 md:grid-cols-3">
+            {home.law.compare.map((c, i) => {
+              const good = c.tone === "good";
+              const Mark = good ? Check : c.tone === "bad" ? X : Minus;
+              return (
+                <li key={c.title} data-reveal style={{ "--i": i * 2 } as React.CSSProperties} className={cn("relative flex flex-col rounded-2xl border p-6", good ? "border-2 border-primary bg-brand-bg shadow-lg shadow-primary/10 md:-my-3 md:py-9" : "bg-card")}>
+                  <h3 className={cn("font-semibold", good && "text-brand")}>{c.title}</h3>
+                  <ul className="mt-4 space-y-2.5">
+                    {c.points.map((p, j) => (
+                      <li key={p} className={cn("flex gap-2.5 text-sm", !good && "text-muted-foreground")}><Mark className={cn("mt-0.5 size-4 shrink-0", good ? "text-brand" : "opacity-60")} aria-hidden /><span className={cn(c.tone === "bad" && "strike")} style={{ "--j": j } as React.CSSProperties}>{p}</span></li>
+                    ))}
+                  </ul>
+                  {good && <span aria-hidden className="stamp absolute -right-2 -top-4 rounded-lg border-2 border-primary bg-background px-3 py-1 text-xs font-bold uppercase tracking-wide text-brand shadow-sm">По закону ✓</span>}
+                </li>
+              );
+            })}
+          </ul>
+          {/* Две аудитории (Евгений): управляющий и IT-специалист — каждому свой путь по странице */}
+          <nav aria-label="Кому интересно" className="mt-12 flex flex-wrap justify-center gap-3" data-reveal>
+            <Button asChild size="lg" className="h-12 px-6 text-base"><a href="#how">Я управляющий — что получу</a></Button>
+            <Button asChild size="lg" variant="outline" className="h-12 px-6 text-base"><a href="#it">Я IT-специалист — как подключить</a></Button>
+          </nav>
+        </Container>
+      </Section>
+
+      <Section id="how" className="scroll-mt-14 border-t bg-card">
+        <Container>
+          <div data-reveal>
+            <Eyebrow className="text-center">Глазами гостя</Eyebrow>
+            <h2 className="mb-3 text-center text-3xl sm:text-4xl lg:text-[2.75rem] lg:leading-tight font-semibold tracking-tight text-balance">Каждое подключение — новый контакт</h2>
+            <p className="mx-auto mb-10 max-w-2xl text-center text-muted-foreground lg:mb-0">Вот что видит гость, когда подключается к Wi‑Fi вашего заведения. Листайте — экран меняется.</p>
+          </div>
+          <GuestPhone />
+          <h3 className="mb-5 mt-14 text-center text-xl font-semibold tracking-tight">Все 10 инструментов страницы входа</h3>
+          <ul className="flex flex-wrap justify-center gap-2">
+            {home.tools.map((t, i) => (
+              <li key={t.title} data-reveal style={{ "--i": i } as React.CSSProperties} title={t.text} className="rounded-full border bg-background px-4 py-2 text-sm"><span className="font-medium">{t.title}</span><span className="sr-only">: {t.text}</span></li>
             ))}
           </ul>
-          <h3 className="mb-6 mt-14 text-center text-2xl font-semibold tracking-tight">Нам доверяют</h3>
+        </Container>
+      </Section>
+
+      <Section id="cabinet" className="border-t">
+        <Container><Cabinet /></Container>
+      </Section>
+
+      <Section className="border-t bg-card py-12 sm:py-14">
+        <Container>
+          <h2 data-reveal className="mb-6 text-center text-2xl font-semibold tracking-tight">2000+ заведений уже собирают базу гостей</h2>
           <LogoMarquee items={home.clients} />
           <p className="mt-8 text-center text-sm text-muted-foreground">
             О нас писали:{" "}
@@ -66,29 +106,18 @@ export default function Home() {
         </Container>
       </Section>
 
-      <Section id="tariffs" className="border-t">
+      <Section id="tariffs" className="scroll-mt-14 border-t">
         <Container>
-          <Eyebrow className="text-center">Тарифы Wi-Fi</Eyebrow>
-          <h2 className="mb-3 text-center text-3xl sm:text-4xl lg:text-[2.75rem] lg:leading-tight font-semibold tracking-tight text-balance">Тариф: 29 900 ₽ один раз или в год без рекламы</h2>
-          <p className="mx-auto mb-8 max-w-2xl text-center text-muted-foreground">Подключение — от 2 рабочих дней. Выберите модель оплаты: разовый платёж или подписку без сторонней рекламы.</p>
-          <div className="grid gap-4 md:grid-cols-2">
-            {home.tariffs.map((t) => (
-              <div key={t.name} className={cn("flex flex-col rounded-2xl border p-6 sm:p-8", "featured" in t && t.featured && "border-2 border-primary bg-brand-bg shadow-lg shadow-primary/10")}>
-                <h3 className="flex items-center justify-between gap-3 font-semibold">{t.name}{"badge" in t && t.badge && <span className="rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-foreground">{t.badge}</span>}</h3>
-                <p className="mt-4 text-4xl font-semibold tracking-tight tabular-nums">{t.price}</p>
-                <p className="mt-1 text-sm text-muted-foreground">{t.note}</p>
-                <ul className="mt-6 flex-1 space-y-2.5">
-                  {t.points.map((p) => (
-                    <li key={p} className="flex gap-2.5 text-sm"><Check className="mt-0.5 size-4 shrink-0 text-brand" aria-hidden />{p}</li>
-                  ))}
-                </ul>
-                <Button asChild size="lg" variant={"featured" in t && t.featured ? "default" : "outline"} className="mt-8"><a href={site.cta.href} data-os-app="mail" data-os-payload={services[0].title}>Подключить Wi-Fi</a></Button>
-              </div>
-            ))}
+          <div data-reveal>
+            <Eyebrow className="text-center">Тарифы Wi-Fi</Eyebrow>
+            <h2 className="mb-3 text-center text-3xl sm:text-4xl lg:text-[2.75rem] lg:leading-tight font-semibold tracking-tight text-balance">29 900 ₽ один раз — и никакой абонентской платы</h2>
+            <p className="mx-auto mb-6 max-w-2xl text-center text-muted-foreground">Подключение — от 2 рабочих дней. Платите один раз за подключение, дальше обслуживание бесплатно. Нужна страница входа только с вашим брендом — выберите годовую подписку.</p>
           </div>
+          <Tariffs />
         </Container>
       </Section>
 
+      {site.features.advertising && (<>
       <Section className="relative isolate overflow-hidden border-t bg-card">
         <Bitmap alpha={0.14} density={0.5} className="[mask-image:linear-gradient(to_bottom,transparent,black)]" />
         <Container>
@@ -134,22 +163,31 @@ export default function Home() {
           <div className="mt-8 flex justify-center"><Button asChild size="lg" className="h-12 px-8 text-base"><a href={site.cta.href} data-os-app="mail" data-os-payload="Реклама в Wi-Fi">Получить медиаплан</a></Button></div>
         </Container>
       </Section>
+      </>)}
 
       <Section id="cases" className="border-t">
         <Container>
-          <Eyebrow className="text-center">Кейсы</Eyebrow>
-          <h2 className="mb-8 text-center text-3xl sm:text-4xl lg:text-[2.75rem] lg:leading-tight font-semibold tracking-tight text-balance">Что получили заведения и бренды</h2>
-          <CaseSlider label="Кейсы HVALA">
-            {home.caseIds.map((id) => cases.find((c) => c.id === id)!).map((c) => <CaseCard key={c.id} c={c.id === "akadem" ? { ...c, video: undefined } : c} showGroup className="w-full" />)}
-          </CaseSlider>
+          <div data-reveal>
+            <Eyebrow className="text-center">Кейсы</Eyebrow>
+            <h2 className="mb-8 text-center text-3xl sm:text-4xl lg:text-[2.75rem] lg:leading-tight font-semibold tracking-tight text-balance">Что получили заведения</h2>
+          </div>
+          {site.features.advertising ? (
+            <CaseSlider label="Кейсы HVALA">
+              {home.caseIds.map((id) => cases.find((c) => c.id === id)!).map((c) => <CaseCard key={c.id} c={c.id === "akadem" ? { ...c, video: undefined } : c} showGroup={caseGroups.length > 1} className="w-full" />)}
+            </CaseSlider>
+          ) : (
+            <CasesBento items={home.caseIds.map((id) => cases.find((c) => c.id === id)!)} big="return" />
+          )}
           <div className="mt-8 flex justify-center"><Button asChild size="lg" className="h-12 px-8 text-base"><Link href="/cases/">Все кейсы</Link></Button></div>
         </Container>
       </Section>
 
+      <ItBlock />
+
       <Section id="reviews" className="border-t bg-card">
         <Container className="max-w-3xl">
           <Eyebrow className="text-center">Отзывы</Eyebrow>
-          <h2 className="mb-8 text-center text-3xl sm:text-4xl lg:text-[2.75rem] lg:leading-tight font-semibold tracking-tight">Что говорят клиенты</h2>
+          <h2 className="mb-8 text-center text-3xl sm:text-4xl lg:text-[2.75rem] lg:leading-tight font-semibold tracking-tight text-balance" data-reveal>{home.rating.value} в 2ГИС: что пишут клиенты</h2>
           {home.rating.widget.orgId ? (
             <>
               <TwoGisReviews orgId={home.rating.widget.orgId} branchId={home.rating.widget.branchId} title="Отзывы о HVALA в 2ГИС" className="block h-[824px] w-full rounded-2xl border bg-background" />
@@ -167,12 +205,12 @@ export default function Home() {
       <Section id="faq" className="border-t">
         <Container className="max-w-3xl">
           <Eyebrow className="text-center">Вопросы</Eyebrow>
-          <h2 className="mb-6 text-center text-3xl sm:text-4xl lg:text-[2.75rem] lg:leading-tight font-semibold tracking-tight text-balance">Частые вопросы</h2>
+          <h2 data-reveal className="mb-6 text-center text-3xl sm:text-4xl lg:text-[2.75rem] lg:leading-tight font-semibold tracking-tight text-balance">Что спрашивают перед подключением</h2>
           <FaqList items={home.faq} />
         </Container>
       </Section>
 
-      <Cta title="Обсудим ваш проект" text="Расскажите о заведении, мероприятии или рекламной задаче. Менеджер ответит в Telegram и подберёт решение." />
+      <Cta title="Подключим гостевой Wi-Fi с авторизацией" text="Расскажите о заведении: город, площадь и оборудование. Менеджер ответит в Telegram и рассчитает подключение." />
     </>
   );
 }

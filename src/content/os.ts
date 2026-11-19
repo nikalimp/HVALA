@@ -1,4 +1,6 @@
 // Данные рабочего стола (первый экран главной): приложения, кейсы, форматы рекламы, корзина.
+import { site } from "./site";
+
 // Факты — из specs/00-brief.md и specs/source/ (действующие сайты HVALA, снято 23.10.2026). Не выдумывать.
 
 export type AppId =
@@ -17,7 +19,7 @@ export type AppId =
   | "directions";
 
 // Страницы сайта, которые открываются окнами поверх рабочего стола
-export const pageApps = [
+const allPageApps = [
   { id: "page:guest-wifi", href: "/services/guest-wifi/", label: "Wi‑Fi для заведений", icon: "wifi" },
   { id: "page:advertising", href: "/services/advertising/", label: "Реклама в Wi‑Fi", icon: "megaphone" },
   { id: "page:event-wifi", href: "/services/event-wifi/", label: "Мероприятия", icon: "party" },
@@ -27,9 +29,12 @@ export const pageApps = [
   { id: "page:contacts", href: "/contacts/", label: "Контакты", icon: "phone" },
   { id: "page:blog", href: "/blog/", label: "Блог", icon: "newspaper" },
 ] as const;
+// Выключенные флагами site.features направления не появляются на рабочем столе
+export const pageApps = allPageApps.filter((p) => (site.features.advertising || p.id !== "page:advertising") && (site.features.trap || p.id !== "page:trap"));
 
 // Приложения: окна, которые существуют только на рабочем столе
-export const apps: { id: AppId; label: string; title: string; icon: string; dock: boolean; desktop?: boolean; fallback: string }[] = [
+type App = { id: AppId; label: string; title: string; icon: string; dock: boolean; desktop?: boolean; fallback: string };
+const allApps: App[] = [
   { id: "directions", label: "Направления", title: "Направления", icon: "folder-wifi", dock: false, desktop: true, fallback: "/services/" },
   { id: "cases", label: "Кейсы", title: "Кейсы", icon: "folder", dock: false, desktop: true, fallback: "/cases/" },
   { id: "launchpad", label: "Все разделы", title: "Все разделы", icon: "grid", dock: true, fallback: "/services/" },
@@ -42,6 +47,7 @@ export const apps: { id: AppId; label: string; title: string; icon: string; dock
   { id: "gallery", label: "Форматы рекламы", title: "Форматы рекламы", icon: "images", dock: false, fallback: "/services/advertising/" },
   { id: "trash", label: "Корзина", title: "Корзина", icon: "trash", dock: true, fallback: "/" },
 ];
+export const apps = allApps.filter((a) => site.features.advertising || a.id !== "gallery");
 
 export type CaseItem = {
   id: string;
@@ -56,13 +62,15 @@ export type CaseItem = {
   image?: string; // скриншот креатива с hvalamobile.com, WebP в public/media (если видео нет)
 };
 
-export const caseGroups = ["Заведения", "Реклама", "TRAP"] as const;
+const allCaseGroups = ["Заведения", "Реклама", "TRAP"] as const;
+const groupOn = (g: (typeof allCaseGroups)[number]) => (g !== "Реклама" || site.features.advertising) && (g !== "TRAP" || site.features.trap);
+export const caseGroups = allCaseGroups.filter(groupOn);
 
-export const cases: CaseItem[] = [
+const allCases: CaseItem[] = [
   { id: "popup", kpi: { value: "4%", label: "конверсия акции" }, group: "Заведения", title: "Всплывающая акция", text: "Акция на весь экран при входе в Wi-Fi заведения.", metrics: ["40 уникальных подключений в день (~1 200 показов в месяц)", "средний чек 1 500 ₽", "конверсия 4%"], tags: ["Акции"] },
   { id: "sms", kpi: { value: "1,5%", label: "конверсия SMS" }, group: "Заведения", title: "SMS со скидкой на доставку", text: "Собрали номера гостей из Wi-Fi и отправили SMS со скидкой на доставку.", metrics: ["80% SMS доставлено", "конверсия 1,5%", "средний чек доставки 1 000 ₽"], tags: ["SMS"] },
-  { id: "festival", kpi: { value: "13 862", label: "человек в аудитории Яндекса" }, group: "Заведения", title: "Реклама фестиваля по базе гостей", text: "Выгрузили номера гостей в Яндекс и показали рекламу фестиваля.", metrics: ["25 000 номеров выгружено", "аудитория в Яндексе — 13 862", "45 000 показов, CTR 1,41%"], tags: ["Яндекс Аудитории"] },
-  { id: "return", kpi: { value: "1 723", label: "гостя вернулись" }, group: "Заведения", title: "Возврат гостей сети ресторанов", text: "Реклама с новым меню и спецпредложениями для гостей, которые давно не приходили.", metrics: ["охват 26 000", "вернулись 1 723 гостя"], tags: ["Ретаргетинг"] },
+  { id: "festival", kpi: { value: "13 862", label: "человек в аудитории Яндекса" }, group: "Заведения", title: "Анонс фестиваля гостям из базы", text: "Выгрузили номера гостей в Яндекс Аудитории и показали им анонс фестиваля.", metrics: ["25 000 номеров выгружено", "аудитория в Яндексе — 13 862", "45 000 показов, CTR 1,41%"], tags: ["Яндекс Аудитории"] },
+  { id: "return", kpi: { value: "1 723", label: "гостя вернулись" }, group: "Заведения", title: "Возврат гостей сети ресторанов", text: "Показали новое меню и спецпредложения гостям, которые давно не приходили.", metrics: ["охват 26 000", "вернулись 1 723 гостя"], tags: ["Ретаргетинг"] },
   { id: "sokolov", kpi: { value: "5,4%", label: "CTR" }, group: "Реклама", brand: "Соколов", title: "Подвеска за визит в магазин", text: "Анимированный баннер в ресторанах рядом с магазинами, ЦА 18⁠–⁠45.", metrics: ["охват 540 000", "CTR 5,4%"], tags: ["Анимация", "Гео"], image: "/media/cases/sokolov.webp" },
   { id: "t2", kpi: { value: "4,7%", label: "CTR" }, group: "Реклама", brand: "T2", title: "Максимальный охват в кафе и ресторанах", text: "Fullscreen в кафе, кофейнях и ресторанах.", metrics: ["CTR 4,7%"], tags: ["Fullscreen"], video: "/media/cases/t2.mp4" },
   { id: "tank", kpi: { value: "4,9%", label: "CTR" }, group: "Реклама", brand: "Tank", title: "Переход на лендинг бренда", text: "Fullscreen для мужчин 25⁠–⁠45.", metrics: ["охват 230 000", "CTR 4,9%"], tags: ["Fullscreen"], image: "/media/cases/tank.webp" },
@@ -80,6 +88,8 @@ export const cases: CaseItem[] = [
   { id: "trap-lunch", kpi: { value: "+59 607 ₽", label: "выручки при бюджете 10 000 ₽" }, group: "TRAP", title: "Бизнес-ланч для прохожих", text: "Месяц сбора аудитории, реклама прохожим с 12:00 до 16:00 в Яндексе и Mail.", metrics: ["33 759 MAC-адресов", "173 гостя вернулись", "+253 ланча за месяц", "+59 607 ₽ выручки при бюджете 10 000 ₽"], tags: ["Офлайн-аудитория", "Яндекс Аудитории"] },
   { id: "trap-promo", kpi: { value: "870", label: "человек вернулись" }, group: "TRAP", title: "Промопродукция", text: "78 799 MAC-адресов, 12 279 из них обогащены номерами телефонов через HVALA.", metrics: ["56 000 показов за 6 000 ₽", "870 человек вернулись", "конверсия 1,5%"], tags: ["Офлайн-аудитория"] },
 ];
+
+export const cases = allCases.filter((c) => groupOn(c.group));
 
 export const caseTags = [...new Set(cases.flatMap((c) => c.tags))];
 
