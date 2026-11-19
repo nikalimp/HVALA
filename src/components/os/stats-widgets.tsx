@@ -1,12 +1,12 @@
 // Виджеты справа на рабочем столе: квадратные плитки 2 × 3 — иконка сверху, крупно цифра, ниже подпись.
 // Цифры — как на hvalawifi.ru/4u и hvalamobile.com (decisions.md), рейтинг — 2ГИС.
-import { CalendarDays, MapPin, Megaphone, Star, Store, Users, type LucideIcon } from "lucide-react";
+import { CalendarDays, Headset, MapPin, Star, Store, Users, type LucideIcon } from "lucide-react";
 import { site } from "@/content/site";
 
 const icons: LucideIcon[] = [CalendarDays, MapPin, Store, Users];
 const tiles = [
   ...site.stats.map((s, i) => ({ value: s.value, label: s.label, Icon: icons[i] })),
-  { value: "500+", label: "рекламодателей", Icon: Megaphone },
+  { value: "24/7", label: "техподдержка", Icon: Headset },
   { value: "5,0", label: "рейтинг в 2ГИС", Icon: Star },
 ];
 

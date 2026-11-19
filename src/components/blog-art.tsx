@@ -60,7 +60,7 @@ const covers: Record<string, { tag: string; big: string; small: string; art: Rea
     tag: "Тарифы", big: "29 900 ₽", small: "раз или в год — что выбрать",
     art: (
       <g>
-        {[{ x: 720, t: "Разово", s: "реклама партнёров", hot: false }, { x: 930, t: "В год", s: "без рекламы", hot: true }].map((c) => (
+        {[{ x: 720, t: "Разово", s: "без абонплаты", hot: true }, { x: 930, t: "В год", s: "только ваш бренд", hot: false }].map((c) => (
           <g key={c.t} transform={`translate(${c.x} 190)`}>
             <rect width="190" height="270" rx="24" fill={c.hot ? SOFT : BG} stroke={c.hot ? RED : INK} strokeWidth="5" />
             <text x="24" y="58" fontSize="26" fontWeight="600" fill={INK}>{c.t}</text>
@@ -140,7 +140,7 @@ function TariffCompare() {
   const rows: [string, string, string][] = [
     ["Цена", "29 900 ₽ один раз", "29 900 ₽ в год"],
     ["Подключение", "входит в платёж", "бесплатно"],
-    ["Реклама партнёров", "есть", "нет"],
+    ["Баннеры партнёров", "возможны", "нет"],
     ["Поддержка 24/7", "да", "да"],
     ["Кабинет и инструменты", "да", "да"],
   ];

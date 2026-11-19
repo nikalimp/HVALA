@@ -10,14 +10,14 @@ import { JsonLd } from "@/components/json-ld";
 import { graph } from "@/lib/schema";
 
 export const metadata: Metadata = {
-  title: "Кейсы: гостевой Wi-Fi, реклама в Wi-Fi и TRAP в цифрах",
-  description: "20 кейсов HVALA: акции и SMS для заведений, рекламные кампании брендов в Wi-Fi с CTR до 6,7% и офлайн-аудитории TRAP. Результаты в цифрах.",
+  title: "Кейсы: гостевой Wi-Fi для заведений в цифрах",
+  description: "Кейсы HVALA: заведения собирают базу гостей через Wi-Fi и возвращают их акциями, SMS и ретаргетингом. 1 723 гостя вернулись в сеть ресторанов.",
   alternates: { canonical: "/cases/" },
 };
 
 const groupAnchor: Record<string, string> = { Заведения: "venues", Реклама: "advertising", TRAP: "trap" };
 const groupIntro: Record<string, string> = {
-  Заведения: "Кафе и рестораны собирают базу гостей через Wi-Fi и возвращают их акциями, SMS и рекламой по базе.",
+  Заведения: "Кафе и рестораны собирают базу гостей через Wi-Fi и возвращают их акциями, SMS и ретаргетингом по базе.",
   Реклама: "Бренды показывают полноэкранную рекламу в момент подключения к Wi-Fi в заведениях сети HVALA mobile.",
   TRAP: "Ритейл и заведения собирают офлайн-аудиторию у своей точки и запускают на неё рекламу в интернете.",
 };
@@ -35,13 +35,13 @@ export default function Cases() {
         <Container className="max-w-3xl text-center">
           <h1 className="text-3xl font-semibold tracking-tight sm:text-5xl">Кейсы HVALA</h1>
           <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
-            Здесь собраны результаты клиентов HVALA по трём направлениям. Заведения возвращают гостей акциями и SMS по базе из Wi-Fi. Бренды получают CTR рекламы в Wi-Fi от 4% до 6,7%. TRAP переносит офлайн-аудиторию в онлайн-рекламу: в одном из кейсов бизнес-ланч получил 59 607 ₽ выручки при бюджете 10 000 ₽.
+            Здесь собраны результаты заведений, которые подключили гостевой Wi-Fi HVALA. Они собирают базу гостей через авторизацию и возвращают их акциями, SMS и ретаргетингом. В одном из кейсов сеть ресторанов вернула 1 723 гостя, которые давно не приходили.
           </p>
-          <nav aria-label="Разделы кейсов" className="mt-6 flex flex-wrap justify-center gap-2">
+          {caseGroups.length > 1 && <nav aria-label="Разделы кейсов" className="mt-6 flex flex-wrap justify-center gap-2">
             {caseGroups.map((g) => (
               <a key={g} href={`#${groupAnchor[g]}`} className="rounded-full border bg-background px-3.5 py-1.5 text-sm font-medium hover:border-brand">{g}</a>
             ))}
-          </nav>
+          </nav>}
         </Container>
       </Section>
       {caseGroups.map((g, gi) => (
@@ -56,7 +56,19 @@ export default function Cases() {
           </Container>
         </Section>
       ))}
-      <Cta title="Хотите такой же результат?" text="Расскажите о заведении или рекламной задаче. Менеджер ответит в Telegram и предложит решение." />
+      <Section className="border-t">
+        <Container className="max-w-3xl">
+          <h2 className="mb-6 text-center text-3xl sm:text-4xl font-semibold tracking-tight">Как заведения получают такие результаты</h2>
+          <ol className="list-decimal space-y-3 pl-5 text-muted-foreground">
+            <li>Гость подключается к Wi-Fi и проходит авторизацию по номеру телефона — так требует закон о публичном Wi-Fi.</li>
+            <li>Номер, пол, возраст и частота визитов сохраняются в личном кабинете заведения.</li>
+            <li>Кабинет сам делит гостей на сегменты: новые, постоянные, давно не приходившие, именинники.</li>
+            <li>Заведение показывает акцию на странице входа, отправляет SMS или выгружает сегмент в Яндекс Аудитории и MyTarget.</li>
+            <li>Аналитика визитов показывает, сколько гостей вернулись после кампании.</li>
+          </ol>
+        </Container>
+      </Section>
+      <Cta title="Хотите такой же результат?" text="Расскажите о заведении. Менеджер ответит в Telegram и предложит решение." />
     </>
   );
 }

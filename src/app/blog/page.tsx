@@ -9,8 +9,8 @@ import { JsonLd } from "@/components/json-ld";
 import { graph } from "@/lib/schema";
 
 export const metadata: Metadata = {
-  title: "Блог о гостевом Wi-Fi и рекламе в Wi-Fi",
-  description: "Статьи HVALA о гостевом Wi-Fi для бизнеса: авторизация по закону, сбор базы гостей, маркетинг заведения и реклама в Wi-Fi-сетях.",
+  title: "Блог о гостевом Wi-Fi для бизнеса",
+  description: "Статьи HVALA о гостевом Wi-Fi для бизнеса: авторизация по закону, сбор базы гостей, акции, SMS и ретаргетинг для заведения, выбор тарифа.",
   alternates: { canonical: "/blog/" },
   ...(!site.features.blog && { robots: { index: false, follow: true } }),
 };
@@ -24,7 +24,7 @@ export default function Blog() {
         <Bitmap variant="ripple" alpha={0.2} density={0.45} className="[mask-image:linear-gradient(to_top,black_10%,transparent_90%)]" />
         <Container className="max-w-3xl text-center">
           <h1 className="text-3xl font-semibold tracking-tight sm:text-5xl">Блог HVALA</h1>
-          <p className="mt-5 text-lg leading-relaxed text-muted-foreground">Статьи о гостевом Wi-Fi для бизнеса от команды HVALA. Мы пишем о том, как заведению собрать базу гостей через Wi-Fi и вернуть их акциями, какой тариф выбрать и как бренды покупают рекламу в момент подключения к Wi-Fi. В статьях — только факты из нашей работы: цены, сроки и цифры кейсов. Ответ на главный вопрос — в первом абзаце каждой статьи, подробности, таблицы и частые вопросы — ниже.</p>
+          <p className="mt-5 text-lg leading-relaxed text-muted-foreground">Статьи о гостевом Wi-Fi для бизнеса от команды HVALA. Мы пишем о том, как заведению собрать базу гостей через Wi-Fi и вернуть их акциями, какой тариф выбрать и зачем закон требует авторизацию в публичном Wi-Fi. Статьи пригодятся владельцам и управляющим кафе, ресторанов, отелей, фитнес-клубов и салонов, а также IT-специалистам, которые настраивают сеть. В статьях — только факты из нашей работы: цены, сроки и цифры кейсов. Ответ на главный вопрос — в первом абзаце каждой статьи, подробности, таблицы и частые вопросы — ниже. Не нашли ответ на свой вопрос — напишите менеджеру в Telegram, и мы разберём его в одной из следующих статей.</p>
         </Container>
         <Container className="mt-12">
           {posts.length === 0 && <p className="py-6 text-center text-muted-foreground">Статьи скоро появятся.</p>}

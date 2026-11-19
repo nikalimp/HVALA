@@ -4,7 +4,7 @@ import { typograf } from "./typograf.mjs";
 import { site } from "@/content/site";
 
 // Статьи: content/blog/<slug>.md с frontmatter title, description, date (YYYY-MM-DD), опционально updated.
-export type Post = { slug: string; title: string; description: string; date: string; updated?: string; body: string };
+export type Post = { slug: string; title: string; description: string; date: string; updated?: string; feature?: string; body: string };
 
 const dir = path.join(process.cwd(), "content/blog");
 
@@ -18,7 +18,7 @@ function parse(file: string): Post {
     if (i > 0) meta[line.slice(0, i).trim()] = line.slice(i + 1).trim().replace(/^"|"$/g, "");
   }
   // Типограф при сборке: файлы статей не меняются
-  return { slug: file.replace(/\.md$/, ""), title: typograf(meta.title), description: typograf(meta.description), date: meta.date, updated: meta.updated, body: typograf(m[2].trim()) };
+  return { slug: file.replace(/\.md$/, ""), title: typograf(meta.title), description: typograf(meta.description), date: meta.date, updated: meta.updated, feature: meta.feature, body: typograf(m[2].trim()) };
 }
 
 export function getPosts(): Post[] {
@@ -28,6 +28,8 @@ export function getPosts(): Post[] {
     .readdirSync(dir)
     .filter((f) => f.endsWith(".md") && !f.startsWith("_"))
     .map(parse)
+    // feature во frontmatter: статья видна, только когда флаг site.features включён
+    .filter((p) => !p.feature || (site.features as Record<string, boolean>)[p.feature] !== false)
     .sort((a, b) => b.date.localeCompare(a.date));
 }
 

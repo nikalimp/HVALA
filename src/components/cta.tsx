@@ -3,7 +3,7 @@ import { Bitmap } from "./bitmap";
 import { Container, Section } from "./container";
 import { Button } from "./ui/button";
 
-export function Cta({ title = "Подключим Wi-Fi или запустим рекламу", text = "Оставьте заявку в Telegram — менеджер ответит и рассчитает стоимость под вашу задачу.", label = site.cta.label, payload }: { title?: string; text?: string; label?: string; payload?: string }) {
+export function Cta({ title = "Подключим гостевой Wi-Fi с авторизацией", text = "Оставьте заявку в Telegram — менеджер ответит и рассчитает стоимость под вашу задачу.", label = site.cta.label, payload }: { title?: string; text?: string; label?: string; payload?: string }) {
   return (
     // Финальный призыв перед подвалом — на красном фоне бренда, битмап белыми точками
     <Section className="relative isolate overflow-hidden bg-primary py-20 text-primary-foreground sm:py-28">

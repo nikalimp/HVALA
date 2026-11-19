@@ -156,7 +156,7 @@ export function MailApp({ payload }: { payload?: string }) {
       </div>
       <label className="flex min-h-0 flex-1 flex-col px-3 py-2">
         <span className="sr-only">Сообщение</span>
-        <textarea name="message" className="min-h-28 flex-1 resize-none bg-transparent outline-none" placeholder="Расскажите о задаче: заведение и город, мероприятие или рекламная кампания." />
+        <textarea name="message" className="min-h-28 flex-1 resize-none bg-transparent outline-none" placeholder="Расскажите о задаче: заведение и город или мероприятие." />
       </label>
       <div className="border-t px-3 py-2"><ConsentCheckbox id="mail-consent" /></div>
       <p className="px-3 pb-2 text-xs text-muted-foreground">«Написать в Telegram» копирует текст заявки — вставьте его в чат менеджера.</p>
@@ -276,7 +276,7 @@ export function NowApp() {
       <p className="text-xs opacity-70">{d || "Сегодня"}</p>
       <p className="mt-1 text-lg font-semibold">HVALA сегодня</p>
       <ul className="mt-3 space-y-2 text-sm">
-        {[...site.stats.map((s) => `${s.value} ${s.label}`), "500+ брендов в рекламной сети", "рейтинг 5,0 в 2ГИС"].map((s) => (
+        {[...site.stats.map((s) => `${s.value} ${s.label}`), "техподдержка 24/7", "рейтинг 5,0 в 2ГИС"].map((s) => (
           <li key={s} className="flex items-center gap-2"><span className="flex size-4 items-center justify-center rounded border border-current/40"><Check className="size-3" aria-hidden /></span>{s}</li>
         ))}
       </ul>
