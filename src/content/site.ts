@@ -13,7 +13,9 @@ export type OrgType =
   | "Store";
 
 export const site = {
-  url: "https://hvala.nikalimp.ru", // тестовый адрес v1; боевой домен — в «Пробелах» брифа
+  // Адрес для canonical, sitemap и llms.txt. deploy-kit 2.0.0 задаёт его перед сборкой: боевой домен hvalacloud.com
+  // и для прода, и для теста (тест закрывает от поисковиков сам deploy-kit). Локально — тестовый адрес.
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://hvala.nikalimp.ru",
   name: "HVALA",
   legalName: "ООО «Креативный синдикат»",
   // Тип организации в Schema.org — самый точный из подходящих: https://schema.org/LocalBusiness#subtypes
