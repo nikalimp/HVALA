@@ -39,7 +39,7 @@ export const site = {
     phone: "+78002341166", // формат +7XXXXXXXXXX; пусто — блок не показывается
     phoneDisplay: "8 800 234-11-66",
     email: "sales@hvalacloud.ru",
-    telegram: "https://t.me/kirillSyndicate", // менеджер по продажам
+    telegram: "https://t.me/HVA_LA", // менеджер по продажам
     support: "https://t.me/hvalacloud_support", // инженер техподдержки
     whatsapp: "",
     address: {
@@ -57,7 +57,7 @@ export const site = {
   // Главное целевое действие — на него ведут все CTA. v1: Telegram менеджера; форма — P1 (spec §7)
   cta: {
     label: "Оставить заявку",
-    href: "https://t.me/kirillSyndicate",
+    href: "https://t.me/HVA_LA",
   },
 
   // Реквизиты для футера и политики ПДн (152-ФЗ)
@@ -84,6 +84,8 @@ export const site = {
     // false — страниц, кейсов, форматов, статей и упоминаний нет нигде: ни в меню, ни в sitemap, ни в llms.txt
     advertising: false,
     trap: false,
+    // Франшизу HVALA давно не продаёт (Евгений, 20.11.2026): страница, меню, связи и упоминания скрыты
+    franchise: false,
   },
 };
 

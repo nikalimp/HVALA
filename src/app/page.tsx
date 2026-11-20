@@ -111,7 +111,7 @@ export default function Home() {
           <div data-reveal>
             <Eyebrow className="text-center">Тарифы Wi-Fi</Eyebrow>
             <h2 className="mb-3 text-center text-3xl sm:text-4xl lg:text-[2.75rem] lg:leading-tight font-semibold tracking-tight text-balance">29 900 ₽ один раз — и никакой абонентской платы</h2>
-            <p className="mx-auto mb-6 max-w-2xl text-center text-muted-foreground">Подключение — от 2 рабочих дней. Платите один раз за подключение, дальше обслуживание бесплатно. Нужна страница входа только с вашим брендом — выберите годовую подписку.</p>
+            <p className="mx-auto mb-6 max-w-2xl text-center text-muted-foreground">Подключение — от 2 рабочих дней. Платите один раз за подключение, дальше обслуживание бесплатно. Нужна страница входа без сторонней рекламы — выберите годовую подписку.</p>
           </div>
           <Tariffs />
         </Container>
