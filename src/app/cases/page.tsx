@@ -11,7 +11,7 @@ import { graph } from "@/lib/schema";
 
 export const metadata: Metadata = {
   title: "Кейсы: гостевой Wi-Fi для заведений в цифрах",
-  description: "Кейсы HVALA: заведения собирают базу гостей через Wi-Fi и возвращают их акциями, SMS и ретаргетингом. 1 723 гостя вернулись в сеть ресторанов.",
+  description: "Кейсы HVALA: заведения собирают базу гостей через Wi-Fi и возвращают их акциями, SMS и ретаргетингом. 172 гостя вернулись в сеть ресторанов.",
   alternates: { canonical: "/cases/" },
 };
 
@@ -35,7 +35,7 @@ export default function Cases() {
         <Container className="max-w-3xl text-center">
           <h1 className="text-3xl font-semibold tracking-tight sm:text-5xl">Кейсы HVALA</h1>
           <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
-            Здесь собраны результаты заведений, которые подключили гостевой Wi-Fi HVALA. Они собирают базу гостей через авторизацию и возвращают их акциями, SMS и ретаргетингом. В одном из кейсов сеть ресторанов вернула 1 723 гостя, которые давно не приходили.
+            Здесь собраны результаты заведений, которые подключили гостевой Wi-Fi HVALA. Они собирают базу гостей через авторизацию и возвращают их акциями, SMS и ретаргетингом. В одном из кейсов сеть ресторанов вернула 172 гостя, которые давно не приходили. Каждый кейс начинается одинаково: гость входит в Wi-Fi заведения по номеру телефона и попадает в базу.
           </p>
           {caseGroups.length > 1 && <nav aria-label="Разделы кейсов" className="mt-6 flex flex-wrap justify-center gap-2">
             {caseGroups.map((g) => (

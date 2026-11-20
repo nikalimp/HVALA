@@ -30,7 +30,7 @@ const allPageApps = [
   { id: "page:blog", href: "/blog/", label: "Блог", icon: "newspaper" },
 ] as const;
 // Выключенные флагами site.features направления не появляются на рабочем столе
-export const pageApps = allPageApps.filter((p) => (site.features.advertising || p.id !== "page:advertising") && (site.features.trap || p.id !== "page:trap"));
+export const pageApps = allPageApps.filter((p) => (site.features.advertising || p.id !== "page:advertising") && (site.features.trap || p.id !== "page:trap") && (site.features.franchise || p.id !== "page:franchise"));
 
 // Приложения: окна, которые существуют только на рабочем столе
 type App = { id: AppId; label: string; title: string; icon: string; dock: boolean; desktop?: boolean; fallback: string };
@@ -38,8 +38,8 @@ const allApps: App[] = [
   { id: "directions", label: "Направления", title: "Направления", icon: "folder-wifi", dock: false, desktop: true, fallback: "/services/" },
   { id: "cases", label: "Кейсы", title: "Кейсы", icon: "folder", dock: false, desktop: true, fallback: "/cases/" },
   { id: "launchpad", label: "Все разделы", title: "Все разделы", icon: "grid", dock: true, fallback: "/services/" },
-  { id: "mail", label: "Заявка", title: "Новая заявка", icon: "mail", dock: false, fallback: "https://t.me/kirillSyndicate" },
-  { id: "calendar", label: "Созвон", title: "Созвон", icon: "calendar", dock: false, fallback: "https://t.me/kirillSyndicate" },
+  { id: "mail", label: "Заявка", title: "Новая заявка", icon: "mail", dock: false, fallback: "https://t.me/HVA_LA" },
+  { id: "calendar", label: "Созвон", title: "Созвон", icon: "calendar", dock: false, fallback: "https://t.me/HVA_LA" },
   { id: "messages", label: "Спросить HVALA", title: "Сообщения", icon: "message", dock: true, fallback: "/#faq" },
   { id: "spotlight", label: "Поиск", title: "Поиск", icon: "search", dock: false, fallback: "/services/" },
   { id: "wifi", label: "Демо Wi‑Fi", title: "Демо: Wi-Fi гостя", icon: "smartphone", dock: false, fallback: "/services/guest-wifi/" },
@@ -70,7 +70,7 @@ const allCases: CaseItem[] = [
   { id: "popup", kpi: { value: "4%", label: "конверсия акции" }, group: "Заведения", title: "Всплывающая акция", text: "Акция на весь экран при входе в Wi-Fi заведения.", metrics: ["40 уникальных подключений в день (~1 200 показов в месяц)", "средний чек 1 500 ₽", "конверсия 4%"], tags: ["Акции"] },
   { id: "sms", kpi: { value: "1,5%", label: "конверсия SMS" }, group: "Заведения", title: "SMS со скидкой на доставку", text: "Собрали номера гостей из Wi-Fi и отправили SMS со скидкой на доставку.", metrics: ["80% SMS доставлено", "конверсия 1,5%", "средний чек доставки 1 000 ₽"], tags: ["SMS"] },
   { id: "festival", kpi: { value: "13 862", label: "человек в аудитории Яндекса" }, group: "Заведения", title: "Анонс фестиваля гостям из базы", text: "Выгрузили номера гостей в Яндекс Аудитории и показали им анонс фестиваля.", metrics: ["25 000 номеров выгружено", "аудитория в Яндексе — 13 862", "45 000 показов, CTR 1,41%"], tags: ["Яндекс Аудитории"] },
-  { id: "return", kpi: { value: "1 723", label: "гостя вернулись" }, group: "Заведения", title: "Возврат гостей сети ресторанов", text: "Показали новое меню и спецпредложения гостям, которые давно не приходили.", metrics: ["охват 26 000", "вернулись 1 723 гостя"], tags: ["Ретаргетинг"] },
+  { id: "return", kpi: { value: "172", label: "гостя вернулись" }, group: "Заведения", title: "Возврат гостей сети ресторанов", text: "Показали новое меню и спецпредложения гостям, которые давно не приходили.", metrics: ["охват 26 000", "вернулись 172 гостя"], tags: ["Ретаргетинг"] },
   { id: "sokolov", kpi: { value: "5,4%", label: "CTR" }, group: "Реклама", brand: "Соколов", title: "Подвеска за визит в магазин", text: "Анимированный баннер в ресторанах рядом с магазинами, ЦА 18⁠–⁠45.", metrics: ["охват 540 000", "CTR 5,4%"], tags: ["Анимация", "Гео"], image: "/media/cases/sokolov.webp" },
   { id: "t2", kpi: { value: "4,7%", label: "CTR" }, group: "Реклама", brand: "T2", title: "Максимальный охват в кафе и ресторанах", text: "Fullscreen в кафе, кофейнях и ресторанах.", metrics: ["CTR 4,7%"], tags: ["Fullscreen"], video: "/media/cases/t2.mp4" },
   { id: "tank", kpi: { value: "4,9%", label: "CTR" }, group: "Реклама", brand: "Tank", title: "Переход на лендинг бренда", text: "Fullscreen для мужчин 25⁠–⁠45.", metrics: ["охват 230 000", "CTR 4,9%"], tags: ["Fullscreen"], image: "/media/cases/tank.webp" },
