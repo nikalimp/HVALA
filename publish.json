@@ -1,10 +1,22 @@
 {
   "project": "HVALA",
-  "repo": "nikalimp/hvala",
+  "repo": "nikalimp/HVALA",
   "site_dir": ".",
+  "targets": {
+    "test": {
+      "url": "https://hvala.nikalimp.ru",
+      "ftp_dir_secret": "FTP_DIR",
+      "indexable": false
+    },
+    "prod": {
+      "url": "https://hvalacloud.com",
+      "ftp_dir_secret": "FTP_DIR_PROD",
+      "indexable": true
+    }
+  },
   "url": "https://hvala.nikalimp.ru",
   "adapter": "ssh-ftp",
-  "mode": "approval",
+  "mode": "auto",
   "content_dir": "content",
   "factory": "content/factory/content.config.json",
   "schedule": {
@@ -13,8 +25,8 @@
     "tz": "Europe/Moscow",
     "days": "1-5"
   },
-  "version": 1,
-  "notes": "тестовая выкладка v1 — поддомен hvala.nikalimp.ru на reg.ru Ника, FTP (SSH из Actions на reg.ru закрыт); боевой домен и хостинг заказчика — к запуску; контент-завод — позже",
+  "version": 2,
+  "notes": "тест и прод параллельно (deploy-kit 2.0.0, 20.11.2026): тест hvala.nikalimp.ru (www/hvala.nikalimp.ru/, секрет FTP_DIR, закрыт от поисковиков) и прод hvalacloud.com (www/hvalacloud.com/, секрет FTP_DIR_PROD). Хостинг reg.ru server284, выкладка по FTP — SSH из GitHub Actions на reg.ru закрыт. url — адрес теста для старых скриптов; контент-завод — позже",
   "out_dir": "out",
   "app_path": "",
   "rsync_exclude": "",
