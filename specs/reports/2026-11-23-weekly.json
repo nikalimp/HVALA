@@ -1,0 +1,27 @@
+{
+  "title": "Отчёт недели: HVALA",
+  "period": "16.11–22.11.2026",
+  "date": "23.11.2026",
+  "kpi": [
+    {
+      "label": "Прод",
+      "value": "LIVE",
+      "note": "hvalacloud.com с 20.11"
+    },
+    {
+      "label": "SEO / Метрика",
+      "value": "—",
+      "note": "подключить после запуска"
+    },
+    {
+      "label": "GEO",
+      "value": "33 %",
+      "note": "бренд и Wi-Fi в выдаче"
+    },
+    {
+      "label": "PageSpeed mob.",
+      "value": "72",
+      "note": "было 63 · LCP 4.0 s"
+    }
+  ]
+}
