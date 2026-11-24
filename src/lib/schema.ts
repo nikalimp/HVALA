@@ -1,6 +1,7 @@
 // JSON-LD по стандарту AI-Ready сайта, §5. Один @graph на страницу, сущности связаны через @id.
 import { site } from "@/content/site";
 import type { Faq, Service } from "@/content/services";
+import type { GlossaryTerm } from "@/content/glossary";
 
 export const orgId = `${site.url}/#org`;
 export const websiteId = `${site.url}/#website`;
@@ -88,6 +89,33 @@ export function articleSchema(p: { slug: string; title: string; description: str
     author: site.person ? { "@id": personId } : { "@id": orgId },
     publisher: { "@id": orgId },
     mainEntityOfPage: `${site.url}/blog/${p.slug}/`,
+  };
+}
+
+export function definedTermSetSchema(terms: GlossaryTerm[]) {
+  return {
+    "@type": "DefinedTermSet",
+    "@id": `${site.url}/glossary/#termset`,
+    name: `Глоссарий гостевого Wi-Fi — ${site.name}`,
+    url: `${site.url}/glossary/`,
+    inLanguage: "ru-RU",
+    hasDefinedTerm: terms.map((t) => ({
+      "@type": "DefinedTerm",
+      name: t.term,
+      description: t.answer,
+      url: `${site.url}/glossary/${t.slug}/`,
+    })),
+  };
+}
+
+export function definedTermSchema(t: GlossaryTerm) {
+  return {
+    "@type": "DefinedTerm",
+    name: t.term,
+    description: t.answer,
+    url: `${site.url}/glossary/${t.slug}/`,
+    inDefinedTermSet: `${site.url}/glossary/#termset`,
+    inLanguage: "ru-RU",
   };
 }
 

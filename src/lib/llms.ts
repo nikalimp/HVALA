@@ -1,6 +1,7 @@
 // llms.txt и llms-full.txt (https://llmstxt.org) — генерируются из того же контента, что и страницы.
 import { site } from "@/content/site";
 import { services } from "@/content/services";
+import { glossaryTerms } from "@/content/glossary";
 import { about, home } from "@/content/home";
 import { getPosts } from "./posts";
 
@@ -31,6 +32,9 @@ export function llmsTxt() {
 ## Направления
 ${services.map((s) => `- [${s.title}](${site.url}/services/${s.slug}/): ${s.short} ${s.prices[0] ? `${s.prices[0].name} — ${s.prices[0].value}.` : ""}`).join("\n")}
 ${posts.length ? `\n## Статьи\n${posts.map((p) => `- [${p.title}](${site.url}/blog/${p.slug}/): ${p.description}`).join("\n")}\n` : ""}
+## Глоссарий
+- [Глоссарий гостевого Wi-Fi](${site.url}/glossary/): справочник терминов по авторизации, закону и Wi-Fi-маркетингу
+${glossaryTerms.map((t) => `- [${t.term}](${site.url}/glossary/${t.slug}/): ${t.metaDescription}`).join("\n")}
 ${site.features.advertising ? `## Форматы рекламы
 - [Форматы рекламы](${site.url}/#formats): Fullscreen, Action banner, Survey banner, 2 Level Banner — оплата за показы (CPM)
 ` : ""}

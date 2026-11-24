@@ -1,0 +1,22 @@
+{
+  "name": "HVALA",
+  "site": "https://hvalacloud.com",
+  "siteLabel": "hvalacloud.com",
+  "colors": {
+    "bg": "#ffffff",
+    "fg": "#2D1B1E",
+    "card": "#FFF9FA",
+    "muted": "#FFECEE",
+    "mfg": "#5A4448",
+    "border": "#F2D5D9",
+    "brand": "#FF1C35",
+    "brandBg": "#FFECEE",
+    "onBrand": "#ffffff"
+  },
+  "font": {
+    "family": "Inter",
+    "source": "fontsource:inter"
+  },
+  "radius": 14,
+  "cta": "Подключить гостевой Wi-Fi — hvalacloud.com"
+}

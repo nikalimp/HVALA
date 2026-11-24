@@ -32,7 +32,12 @@ export default function Blog() {
             {posts.map((p) => (
               <li key={p.slug} className="flex">
                 <Link href={`/blog/${p.slug}/`} className="group flex w-full flex-col overflow-hidden rounded-2xl border bg-background p-3 transition-colors hover:border-brand">
-                  <BlogCover slug={p.slug} />
+                  {p.cover ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={p.cover} alt={p.coverAlt ?? p.title} loading="lazy" className="aspect-video w-full rounded-xl object-cover" />
+                  ) : (
+                    <BlogCover slug={p.slug} />
+                  )}
                   <div className="flex flex-1 flex-col px-3 pb-3 pt-5">
                     <p className="text-sm text-muted-foreground"><time dateTime={p.date}>{formatDate(p.date)}</time></p>
                     <h2 className="mt-2 text-xl font-semibold leading-snug group-hover:text-brand">{p.title}</h2>

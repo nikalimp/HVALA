@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { site } from "@/content/site";
 import { services } from "@/content/services";
+import { glossaryTerms } from "@/content/glossary";
 import { getPosts } from "@/lib/posts";
 
 export const dynamic = "force-static";
@@ -20,5 +21,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${site.url}/contacts/`, priority: 0.6 },
     ...(posts.length ? [{ url: `${site.url}/blog/`, lastModified: posts.map((p) => p.updated ?? p.date).sort().at(-1), priority: 0.7 }] : []),
     ...posts.map((p) => ({ url: `${site.url}/blog/${p.slug}/`, lastModified: p.updated ?? p.date, priority: 0.7 })),
+    { url: `${site.url}/glossary/`, lastModified: glossaryTerms.map((t) => t.updated).sort().at(-1), priority: 0.7 },
+    ...glossaryTerms.map((t) => ({ url: `${site.url}/glossary/${t.slug}/`, lastModified: t.updated, priority: 0.6 })),
   ];
 }

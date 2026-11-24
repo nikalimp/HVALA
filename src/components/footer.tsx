@@ -26,6 +26,7 @@ export function Footer() {
             {nav.map((n) => (
               <li key={n.href}><Link href={n.href} className="hover:text-foreground">{n.label}</Link></li>
             ))}
+            <li><Link href="/glossary/" className="hover:text-foreground">Глоссарий</Link></li>
             {site.socials.map((s) => (
               <li key={s.href}><a href={s.href} target="_blank" rel="noopener me" className="hover:text-foreground">{s.label}</a></li>
             ))}

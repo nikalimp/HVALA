@@ -61,7 +61,12 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             {p.updated && p.updated !== p.date && <> · обновлено <time dateTime={p.updated}>{formatDate(p.updated)}</time></>}
           </p>
           </div>
-          <BlogCover slug={p.slug} className="mt-8" />
+          {p.cover ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={p.cover} alt={p.coverAlt ?? p.title} className="mt-8 aspect-video w-full rounded-2xl border object-cover" />
+          ) : (
+            <BlogCover slug={p.slug} className="mt-8" />
+          )}
           <article className="prose-site mt-10">
             <Markdown remarkPlugins={[remarkGfm]} components={md}>{p.body}</Markdown>
           </article>

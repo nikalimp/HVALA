@@ -1,0 +1,119 @@
+{
+  "factory_version": 2,
+  "project": "HVALA",
+  "site": "https://hvalacloud.com",
+  "root": "../..",
+  "stack": "nextjs-github",
+  "language": "ru",
+  "timezone": "Asia/Bangkok",
+  "cadence": "20",
+  "approval": false,
+  "author": "HVALA",
+  "voice_mode": "we",
+  "paths": {
+    "plan": "content/factory/plan.md",
+    "strategy": "content/factory/strategy.md",
+    "voice": [
+      "content/factory/voice.md"
+    ],
+    "facts": "content/factory/facts.md",
+    "brand": "content/factory/brand.json",
+    "reports": "content/factory/reports/{date}-weekly.md",
+    "journal": "",
+    "article": "content/blog/{slug}.md",
+    "drafts": "content/factory/drafts/{slug}.md",
+    "media_spec": "content/media/{slug}.json",
+    "media_out": "public/blog/{slug}",
+    "photos": "",
+    "secrets": "content/factory/.env",
+    "channels_registry": "content/media/channels.json"
+  },
+  "article": {
+    "url": "https://hvalacloud.com/blog/{slug}/",
+    "image_url": "/blog/{slug}/",
+    "cover_url": "/blog/{slug}/cover.jpg",
+    "frontmatter_required": [
+      "title",
+      "description",
+      "date",
+      "cover",
+      "coverAlt",
+      "rubric"
+    ],
+    "frontmatter_optional": [
+      "seoTitle",
+      "updated"
+    ],
+    "photo_field": "",
+    "cover_rule": "Обложка — /blog/{slug}/cover.jpg, типографская в стиле бренда HVALA (рисует media.mjs по спецификации content/media/{slug}.json)."
+  },
+  "links": {
+    "blog_prefix": "/blog/",
+    "internal": [
+      "/blog/",
+      "/glossary/",
+      "/cases/",
+      "/about/",
+      "/contacts/"
+    ],
+    "services": {
+      "list": [
+        "guest-wifi",
+        "event-wifi"
+      ],
+      "prefix": "/services/"
+    },
+    "service_extra": [
+      "/#tariffs"
+    ],
+    "catalogs": [
+      "/glossary/"
+    ]
+  },
+  "rules": {
+    "meta_asterisk": false,
+    "forbidden": [
+      "HVALA mobile",
+      "рекламная сеть HVALA",
+      "TRAP",
+      "франшиза HVALA",
+      "гарантируем рост продаж"
+    ],
+    "emoji": false,
+    "first_person": false,
+    "we_voice": true
+  },
+  "publish": {
+    "how": "Push в main nikalimp/HVALA: субботняя задача «Администратор сайтов» кладёт готовые статьи в content/factory/drafts/{slug}.md (статус ready), а GitHub Actions (deploy.yml → deploy-kit queue.yml) по будням в 11:11 Asia/Bangkok переносит статью дня в content/blog/{slug}.md, рисует медиа и выкладывает на тест и прод hvalacloud.com",
+    "verify": "https://hvalacloud.com/blog/{slug}/",
+    "wait_minutes": 15
+  },
+  "channels": {
+    "runner": "ci",
+    "telegram": "",
+    "telegram_public": "",
+    "max": null,
+    "enabled": false
+  },
+  "notify": "telegram_bot",
+  "analytics": {
+    "metrika": "",
+    "webmaster": "hvalacloud.com",
+    "gsc": "hvalacloud.com",
+    "geo_pool": "content/factory/strategy.md"
+  },
+  "schedule": {
+    "daily": "Пн–Пт 11:11 Asia/Bangkok — очередь GitHub Actions (deploy.yml → deploy-kit queue.yml) выпускает статью ready с датой ≤ сегодня",
+    "weekly": "Сб 12:34 Asia/Bangkok — общая задача bb «Администратор сайтов»: отчёт, план и статьи следующей недели (5 штук) в ready"
+  },
+  "tasks": {
+    "daily": "очередь Actions (deploy.yml)",
+    "weekly": "Администратор сайтов (bb)"
+  },
+  "tilda": {
+    "projectid": "",
+    "feeduid": "",
+    "parts": {},
+    "fields": {}
+  }
+}

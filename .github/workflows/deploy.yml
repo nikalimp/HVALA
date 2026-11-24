@@ -10,14 +10,24 @@ on:
   push:
     branches: [main]
     paths-ignore: ["specs/**", "*.md", "content/factory/**"]
+  schedule:
+    - cron: "11 4 * * 1-5"   # очередь контент-завода: Пн–Пт 11:11 по Бангкоку; статьи пишет «Администратор сайтов» в субботу
   workflow_dispatch: {}
 concurrency: { group: deploy, cancel-in-progress: false }
 jobs:
+  queue:
+    permissions: { contents: write }
+    uses: nikalimp/deploy-kit/.github/workflows/queue.yml@main
+    with:
+      config: content/factory/content.config.json
   test:
+    needs: queue
+    if: github.event_name != 'schedule' || needs.queue.outputs.published == 'true'
     # без этой строки запуск падает со startup_failure: сценарий коммитит медиа обратно в репозиторий
     permissions: { contents: write }
     uses: nikalimp/deploy-kit/.github/workflows/site.yml@main
     with:
+      ref: main
       target: test
       adapter: ssh-ftp            # ssh-ftp | ftp | s3 | manual-zip | tilda
       site_dir: "."               # монорепо: apps/site
