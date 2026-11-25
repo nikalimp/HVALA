@@ -9,8 +9,8 @@ import { JsonLd } from "@/components/json-ld";
 import { definedTermSetSchema, graph } from "@/lib/schema";
 
 export const metadata: Metadata = {
-  title: "Глоссарий гостевого Wi-Fi и Wi-Fi-маркетинга",
-  description: "Словарь терминов HVALA о гостевом Wi-Fi: Captive Portal, ПП РФ № 758 и 801, авторизация по SMS и звонку, MAC-адрес, RADIUS, Mesh и Wi-Fi-маркетинг.",
+  title: "Глоссарий Wi-Fi, рекламы и маркетинга в общепите",
+  description: "Словарь терминов HVALA о гостевом Wi-Fi, рекламе и общепите (HoReCa): Captive Portal, ПП РФ № 758 и 801, ретаргетинг, CPM, CTR, LTV, Retention и RFM.",
   alternates: { canonical: "/glossary/" },
 };
 
@@ -21,9 +21,9 @@ export default function GlossaryPage() {
       <Section className="relative isolate overflow-hidden pt-12">
         <Bitmap variant="ripple" alpha={0.2} density={0.45} className="[mask-image:linear-gradient(to_top,black_10%,transparent_90%)]" />
         <Container className="max-w-3xl text-center">
-          <h1 className="text-3xl font-semibold tracking-tight sm:text-5xl">Глоссарий гостевого Wi-Fi</h1>
+          <h1 className="text-3xl font-semibold tracking-tight sm:text-5xl">Глоссарий Wi-Fi, рекламы и общепита</h1>
           <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
-            Справочник терминов о гостевом Wi-Fi для владельцев заведений, маркетологов и IT-специалистов. Команда HVALA простым языком объясняет, как работают страница авторизации (Captive Portal), подтверждение номера по SMS и звонку, требования Постановлений Правительства № 758 и № 801, бесшовный Wi-Fi, RADIUS-сервер и инструменты Wi-Fi-маркетинга. В каждой статье — прямой ответ в первом абзаце, практический разбор для бизнеса, реальные цифры и ответы на частые вопросы.
+            Справочник терминов для владельцев заведений, маркетологов и IT-специалистов. Команда HVALA простым языком объясняет, как работают гостевой Wi-Fi и авторизация по закону (Captive Portal, ПП РФ № 758 и № 801, SMS и Flash Call), сетевые технологии (RADIUS, Mesh, MAC-адрес), инструменты рекламы (ретаргетинг, CPM, CTR, Look-alike, O2O) и метрики общепита (HoReCa, LTV, Retention Rate, средний чек, RFM-анализ). В каждой статье — прямой ответ в первом абзаце, практический разбор для бизнеса, реальные цифры и ответы на частые вопросы.
           </p>
         </Container>
         <Container className="mt-12 space-y-12">
