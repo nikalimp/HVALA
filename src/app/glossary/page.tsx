@@ -10,7 +10,7 @@ import { definedTermSetSchema, graph } from "@/lib/schema";
 
 export const metadata: Metadata = {
   title: "Глоссарий Wi-Fi, рекламы и маркетинга в общепите",
-  description: "Словарь терминов HVALA о гостевом Wi-Fi, рекламе и общепите (HoReCa): Captive Portal, ПП РФ № 758 и 801, ретаргетинг, CPM, CTR, LTV, Retention и RFM.",
+  description: "Словарь терминов HVALA о гостевом Wi-Fi, рекламе и общепите (HoReCa): Captive Portal, ПП РФ № 2607, Walled Garden, O2O-конверсии, NPS, ретаргетинг и LTV.",
   alternates: { canonical: "/glossary/" },
 };
 
@@ -23,7 +23,7 @@ export default function GlossaryPage() {
         <Container className="max-w-3xl text-center">
           <h1 className="text-3xl font-semibold tracking-tight sm:text-5xl">Глоссарий Wi-Fi, рекламы и общепита</h1>
           <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
-            Справочник терминов для владельцев заведений, маркетологов и IT-специалистов. Команда HVALA простым языком объясняет, как работают гостевой Wi-Fi и авторизация по закону (Captive Portal, ПП РФ № 758 и № 801, SMS и Flash Call), сетевые технологии (RADIUS, Mesh, MAC-адрес), инструменты рекламы (ретаргетинг, CPM, CTR, Look-alike, O2O) и метрики общепита (HoReCa, LTV, Retention Rate, средний чек, RFM-анализ). В каждой статье — прямой ответ в первом абзаце, практический разбор для бизнеса, реальные цифры и ответы на частые вопросы.
+            Справочник терминов для владельцев заведений, маркетологов и IT-специалистов. Команда HVALA простым языком объясняет, как работают гостевой Wi-Fi и авторизация по закону (Captive Portal, ПП РФ № 2607, SMS и Flash Call, лимиты сессий и трафика), сетевые технологии (Hotspot, Walled Garden, Mesh, MAC-адрес), инструменты рекламы (O2O-конверсии, ретаргетинг, CPM, CTR, Look-alike) и метрики общепита (HoReCa, NPS, потерянные гости, LTV, Retention Rate, средний чек, RFM-анализ). В каждой статье — прямой ответ в первом абзаце, практический разбор для бизнеса, реальные цифры и ответы на частые вопросы.
           </p>
         </Container>
         <Container className="mt-12 space-y-12">
