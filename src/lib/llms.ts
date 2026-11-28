@@ -2,6 +2,7 @@
 import { site } from "@/content/site";
 import { services } from "@/content/services";
 import { glossaryTerms } from "@/content/glossary";
+import { equipmentVendors } from "@/content/equipment";
 import { about, home } from "@/content/home";
 import { getPosts } from "./posts";
 
@@ -35,6 +36,10 @@ ${posts.length ? `\n## Статьи\n${posts.map((p) => `- [${p.title}](${site.u
 ## Глоссарий
 - [Глоссарий гостевого Wi-Fi](${site.url}/glossary/): справочник терминов по авторизации, закону и Wi-Fi-маркетингу
 ${glossaryTerms.map((t) => `- [${t.term}](${site.url}/glossary/${t.slug}/): ${t.metaDescription}`).join("\n")}
+
+## Совместимое оборудование
+- [Оборудование для гостевого Wi-Fi](${site.url}/equipment/): особенности настройки Hotspot на MikroTik, Cisco, Ubiquiti, TP-Link и других вендорах
+${equipmentVendors.map((v) => `- [${v.name}](${site.url}/equipment/${v.slug}/): ${v.metaDescription}`).join("\n")}
 ${site.features.advertising ? `## Форматы рекламы
 - [Форматы рекламы](${site.url}/#formats): Fullscreen, Action banner, Survey banner, 2 Level Banner — оплата за показы (CPM)
 ` : ""}

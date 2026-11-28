@@ -2,6 +2,7 @@
 import { site } from "@/content/site";
 import type { Faq, Service } from "@/content/services";
 import type { GlossaryTerm } from "@/content/glossary";
+import type { EquipmentVendor } from "@/content/equipment";
 
 export const orgId = `${site.url}/#org`;
 export const websiteId = `${site.url}/#website`;
@@ -116,6 +117,35 @@ export function definedTermSchema(t: GlossaryTerm) {
     url: `${site.url}/glossary/${t.slug}/`,
     inDefinedTermSet: `${site.url}/glossary/#termset`,
     inLanguage: "ru-RU",
+  };
+}
+
+export function equipmentListSchema(vendors: EquipmentVendor[]) {
+  return {
+    "@type": "ItemList",
+    "@id": `${site.url}/equipment/#list`,
+    name: `Совместимое оборудование для гостевого Wi-Fi — ${site.name}`,
+    url: `${site.url}/equipment/`,
+    itemListElement: vendors.map((v, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: v.name,
+      url: `${site.url}/equipment/${v.slug}/`,
+    })),
+  };
+}
+
+export function equipmentSchema(v: EquipmentVendor) {
+  return {
+    "@type": "TechArticle",
+    headline: v.name,
+    description: v.metaDescription,
+    url: `${site.url}/equipment/${v.slug}/`,
+    dateModified: v.updated,
+    inLanguage: "ru-RU",
+    author: { "@id": orgId },
+    publisher: { "@id": orgId },
+    mainEntityOfPage: `${site.url}/equipment/${v.slug}/`,
   };
 }
 

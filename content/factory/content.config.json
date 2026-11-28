@@ -52,6 +52,7 @@
     "internal": [
       "/blog/",
       "/glossary/",
+      "/equipment/",
       "/cases/",
       "/about/",
       "/contacts/"
@@ -67,7 +68,8 @@
       "/#tariffs"
     ],
     "catalogs": [
-      "/glossary/"
+      "/glossary/",
+      "/equipment/"
     ]
   },
   "rules": {
